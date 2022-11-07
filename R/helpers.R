@@ -1,6 +1,6 @@
 fetch_data <- function(chain, era.interval){
 
-  first_era <- era.interval[1]
+  first_era <- era.interval[1] - 1
 
   last_era <- era.interval[2]
 
@@ -72,7 +72,7 @@ update_data <- function(data, era){
 
     updated <- list(
 
-      eras = rbind(data, new_eras$eras),
+      eras = rbind(data$eras, new_eras$eras),
       chain = chain,
       interval = c(data$interval[1], era)
 
