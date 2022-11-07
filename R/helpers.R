@@ -37,6 +37,7 @@ fetch_data <- function(chain, era.interval){
     }
 
     tab <- tab[,colnames(tab) %in% c("era", "session", "block_number", "name",
+                                     "stash_address", "controller_address",
                                      "commission_percent", "self_stake",
                                      "total_stake", "num_stakers", "era_points")]
 
