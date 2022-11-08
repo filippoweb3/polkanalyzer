@@ -133,3 +133,55 @@ select_validator <- function(data, look.back = 80, criteria){
   return(selection)
 
 }
+
+fetch_candidates <- function(){
+
+  URL <- "https://polkadot.w3f.community/candidates"
+
+  candidates <- fromJSON(file = url(URL), unexpected.escape = "skip")
+
+  n <- length(candidates)
+
+  data <- data.frame(NA, ncol = 9, nrow = n)
+
+  for(i in 1:n){
+
+    data[i,1] <- candidates[[i]]$name
+    data[i,2] <- candidates[[i]]$stash
+    data[i,3] <- candidates[[i]]$identity$name
+
+    if(is.null(candidates[[i]]$identity$sub)){
+
+      data[i,4] <- NA
+
+    } else {
+
+      data[i,4] <- candidates[[i]]$identity$sub
+
+    }
+
+    data[i,5] <- candidates[[i]]$identity$verified
+    data[i,6] <- candidates[[i]]$identity$`_id`
+
+    if(is.null(candidates[[i]]$location)){
+
+      data[i,7] <- NA
+
+    } else {
+
+      data[i,7] <- candidates[[i]]$location
+
+    }
+
+    data[i,8] <- candidates[[i]]$provider
+    data[i,9] <- candidates[[i]]$democracyVoteCount
+
+  }
+
+  colnames(data) <- c("name", "stash", "id_name", "id_sub", "id_verified", "id_id", "location", "provider","democracyVoteCount")
+
+  return(data)
+
+  close(URL)
+
+}
