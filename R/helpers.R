@@ -162,9 +162,9 @@ fetch_candidates <- function(){
 
   data <- data.frame(NA, ncol = 9, nrow = n)
 
-  for(i in 1:n){
+  pb <- utils::txtProgressBar(min = 0, max = n, style = 3)
 
-    print(i)
+  for(i in 1:n){
 
     data[i,1] <- candidates[[i]]$name
     data[i,2] <- candidates[[i]]$stash
@@ -195,15 +195,27 @@ fetch_candidates <- function(){
 
     data[i,8] <- candidates[[i]]$provider
 
-    if(is.null(candidates[[i]]$democracyVoteCount)){
+    if(is.null(candidates[[i]]$councilVotes)){
 
       data[i,9] <- NA
 
     } else {
 
-      data[i,9] <- candidates[[i]]$democracyVoteCount
+      data[i,9] <- length(candidates[[i]]$councilVotes)
 
     }
+
+    if(is.null(candidates[[i]]$democracyVoteCount)){
+
+      data[i,10] <- NA
+
+    } else {
+
+      data[i,10] <- candidates[[i]]$democracyVoteCount
+
+    }
+
+    utils::setTxtProgressBar(pb, i)
 
   }
 
@@ -215,6 +227,7 @@ fetch_candidates <- function(){
                       "id_id",
                       "location",
                       "provider",
+                      "councilVoteCount",
                       "democracyVoteCount")
 
   return(data)
