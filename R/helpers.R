@@ -12,19 +12,21 @@ fetch_data <- function(chain, era.interval){
 
   for(i in 1:era_difference){
 
-    utils::setTxtProgressBar(pb, i)
-
     era <- i + first_era
+
+    URL <- url(paste("https://storage.googleapis.com/watcher-csv-exporter/",
+                     chain, "_validators_era_", era, ".csv", sep = ""))
 
     tab <- tryCatch(
 
-      read.csv(url(paste("https://storage.googleapis.com/watcher-csv-exporter/",
-                         chain, "_validators_era_", era, ".csv", sep = ""))),
+      read.csv(URL),
       error = function(e) e
 
     )
 
     if (inherits(tab, "error")) {
+
+      close(URL)
 
       next
 
@@ -36,12 +38,28 @@ fetch_data <- function(chain, era.interval){
 
     }
 
-    tab <- tab[,colnames(tab) %in% c("era", "session", "block_number", "name",
-                                     "stash_address", "controller_address",
-                                     "commission_percent", "self_stake",
-                                     "total_stake", "num_stakers", "era_points")]
+
+    if(is.null(tab$num_voters)){
+
+      tab <- tab[,colnames(tab) %in% c("era", "session", "block_number", "name",
+                                       "stash_address", "controller_address",
+                                       "commission_percent", "self_stake", "voters",
+                                       "total_stake", "num_stakers", "era_points")]
+
+      colnames(tab)[colnames(tab) == "voters"] <- "num_voters"
+
+    } else if(!is.null(tab$num_voters)){
+
+      tab <- tab[,colnames(tab) %in% c("era", "session", "block_number", "name",
+                                       "stash_address", "controller_address",
+                                       "commission_percent", "self_stake", "num_voters",
+                                       "total_stake", "num_stakers", "era_points")]
+
+    }
 
     eras[[i]] <- tab
+
+    utils::setTxtProgressBar(pb, i)
 
   }
 
