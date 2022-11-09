@@ -164,6 +164,8 @@ fetch_candidates <- function(){
 
   for(i in 1:n){
 
+    print(i)
+
     data[i,1] <- candidates[[i]]$name
     data[i,2] <- candidates[[i]]$stash
     data[i,3] <- candidates[[i]]$identity$name
@@ -192,11 +194,18 @@ fetch_candidates <- function(){
     }
 
     data[i,8] <- candidates[[i]]$provider
-    data[i,9] <- candidates[[i]]$democracyVoteCount
+
+    if(is.null(candidates[[i]]$democracyVoteCount)){
+
+      data[i,9] <- NA
+
+    } else {
+
+      data[i,9] <- candidates[[i]]$democracyVoteCount
+
+    }
 
   }
-
-  close(URL)
 
   colnames(data) <- c("name",
                       "stash",
