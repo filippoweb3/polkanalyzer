@@ -134,19 +134,21 @@ select_validator <- function(data, look.back = 80, criteria){
   sub <- subset(data$eras,era > (last_era - look.back))
 
   sum <- data.frame(group_by(sub, name) %>%
-                      summarise(sum(era_points > 50000)/length(era_points),
+                      summarise(sum(era_points >= 40000)/length(era_points),
+                                ep = mean(era_points),
                                 n = length(era_points),
                                 comm = mean(commission_percent),
                                 ss = mean(self_stake)/10^10,
                                 ts = mean(total_stake)/10^10))
 
-  colnames(sum) <- c("name","pct", "n", "m_comm", "m_self", "m_total")
+  colnames(sum) <- c("name","pct", "m_era", "n", "m_comm", "m_self", "m_total")
 
-  selection <- subset(sum, m_self > criteria$self &
-                        m_total < criteria$total &
-                        pct > criteria$pct & pct < 1 &
+  selection <- subset(sum, m_self >= criteria$self &
+                        m_total <= criteria$total &
+                        pct >= criteria$pct &
                         m_comm <= criteria$comm &
-                        n >= criteria$n)
+                        n >= criteria$n & !n == 1 &
+                        m_era >= criteria$era_points)
 
   return(selection)
 
