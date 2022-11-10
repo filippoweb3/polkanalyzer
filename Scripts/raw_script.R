@@ -6,20 +6,32 @@ library(dplyr)
 
 usethis::use_data(eras_data, overwrite = T)
 
+candidates <- fetch_candidates()
+
 # Update data ----
 
 eras_data <- update_watcher_data(data = eras_data, era = 889)
 
 usethis::use_data(eras_data, overwrite = T)
 
-selection <- select_validator(data = eras_data, look.back = 80,
-                 criteria = list(pct = 0.6,
-                                 self = 1000,
-                                 total = 2300000,
-                                 comm = 5,
-                                 n = 8))
+# Select Validators ----
 
-val_names <- selection$name
+selection <- select_validator(data = eras_data, look.back = 40,
+                              criteria = list(pct = 0.7,
+                                              self = 5000,
+                                              total = 2300000,
+                                              comm = 5,
+                                              n = 5, era_points = 55000))
+
+colnames(candidates)[2] <- "stash_address"
+
+selection <- merge(selection, candidates, by = "stash_address")
+
+selection <- selection[!selection$provider == "Hetzner Online GmbH" & selection$id_verified == TRUE & selection$democracyVoteCount >=20,]
+
+val_names <- selection$validator_name
+
+c()
 
 plot_data(data = eras_data$eras, val_names[1])
 
@@ -27,10 +39,6 @@ val_names <- unique(eras_data$name)
 val_names <- val_names[!val_names == ""]
 val_name <- val_names[order(val_names)]
 val_ID <- c(1:length(val_name))
-
-
-
-
 
 
 
@@ -52,7 +60,7 @@ for(i in 1:length(val_names)){
 
   if(i == 1){
 
-    plot(sub_data$era, rep(i, length(sub_data$era)), col = col, pch = 19, cex = 0.5, xlim = c(800, last_era), ylim =c(1,length(val_names)))
+    plot(sub_data$era, rep(i, length(sub_data$era)), col = col, pch = 19, cex = 0.5, xlim = c(840, last_era), ylim =c(1,length(val_names)))
 
   }
 
