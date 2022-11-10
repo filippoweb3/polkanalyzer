@@ -1,4 +1,4 @@
-fetch_data <- function(chain, era.interval){
+fetch_watcher_data <- function(chain, era.interval){
 
   first_era <- era.interval[1] - 1
 
@@ -71,7 +71,7 @@ fetch_data <- function(chain, era.interval){
 
 }
 
-update_data <- function(data, era){
+update_watcher_data <- function(data, era){
 
   chain <- data$chain
 
