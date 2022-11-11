@@ -16,10 +16,10 @@ usethis::use_data(eras_data, overwrite = T)
 
 # Select Validators ----
 
-selection <- select_validator(data = eras_data, look.back = 40,
-                              criteria = list(pct = 0.7,
+selection <- select_validator(data = eras_data, look.back = 30,
+                              criteria = list(pct = 0.6,
                                               self = 5000,
-                                              total = 2300000,
+                                              total = 2500000,
                                               comm = 5,
                                               n = 5, era_points = 55000))
 
@@ -27,11 +27,13 @@ colnames(candidates)[2] <- "stash_address"
 
 selection <- merge(selection, candidates, by = "stash_address")
 
-selection <- selection[!selection$provider == "Hetzner Online GmbH" & selection$id_verified == TRUE & selection$democracyVoteCount >=20,]
+selection <- selection[!selection$provider == "Hetzner Online GmbH" &
+                         selection$id_verified == TRUE &
+                         selection$democracyVoteCount >= 10 &
+                         selection$councilVoteCount >= 1,]
 
 val_names <- selection$validator_name
 
-c()
 
 plot_data(data = eras_data$eras, val_names[1])
 
@@ -60,7 +62,7 @@ for(i in 1:length(val_names)){
 
   if(i == 1){
 
-    plot(sub_data$era, rep(i, length(sub_data$era)), col = col, pch = 19, cex = 0.5, xlim = c(840, last_era), ylim =c(1,length(val_names)))
+    plot(sub_data$era, rep(i, length(sub_data$era)), col = col, pch = 19, cex = 0.5, xlim = c(last_era - 30, last_era), ylim =c(1,length(val_names)))
 
   }
 
