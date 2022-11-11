@@ -179,7 +179,7 @@ update_watcher_data <- function(data, era){
 
     start <- max_era + 1
 
-    new_eras <- fetch_data(chain = chain, era.interval = c(start, era))
+    new_eras <- fetch_watcher_data(chain = chain, era.interval = c(start, era))
 
     updated <- list(
 
