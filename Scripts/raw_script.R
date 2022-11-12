@@ -8,7 +8,6 @@ library(dplyr)
 #usethis::use_data(eras_data, overwrite = T)
 
 candidates <- fetch_candidates()
-
 usethis::use_data(candidates, overwrite = T)
 
 # Update watcher data ----
