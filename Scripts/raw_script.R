@@ -11,7 +11,7 @@ candidates <- fetch_candidates()
 
 usethis::use_data(candidates, overwrite = T)
 
-# Update data ----
+# Update watcher data ----
 
 eras_data <- update_watcher_data(data = eras_data, era = 891)
 
@@ -35,9 +35,7 @@ selection <- selection[!selection$provider == "Hetzner Online GmbH" &
 
 val_names <- selection$validator_name
 
-
 plot_validator(data = eras_data$eras, val_names[1])
-
 
 # Plots ----
 
