@@ -153,16 +153,6 @@ fetch_candidates <- function(){
 
 }
 
-merge_data <- function(watcher.data, candidates){
-
-  wd <- watcher.data$eras
-
-  md <- merge(x = wd, y = candidates, by = "stash_address")
-
-  return(md)
-
-}
-
 update_watcher_data <- function(data, era){
 
   chain <- data$chain
