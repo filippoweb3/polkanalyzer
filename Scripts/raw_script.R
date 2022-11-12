@@ -36,7 +36,7 @@ selection <- selection[!selection$provider == "Hetzner Online GmbH" &
 val_names <- selection$validator_name
 
 
-plot_data(data = eras_data$eras, val_names[1])
+plot_validator(data = eras_data$eras, val_names[1])
 
 
 # Plots ----

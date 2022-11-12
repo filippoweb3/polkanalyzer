@@ -214,7 +214,7 @@ select_validator <- function(data, look.back = 40, criteria){
 
 }
 
-plot_data <- function(data, validator.name, look.back = 80){
+plot_validator <- function(data, validator.name, look.back = 80){
 
   max.era <- max(data$era)
 
