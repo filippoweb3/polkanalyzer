@@ -1,16 +1,21 @@
 library(dplyr)
 
+library(rjson)
+library(dplyr)
+
 # Load data ----
 
 #eras_data <- fetch_watcher_data(chain = "polkadot", era.interval = c(165, 886))
 
-usethis::use_data(eras_data, overwrite = T)
+#usethis::use_data(eras_data, overwrite = T)
 
 candidates <- fetch_candidates()
 
+usethis::use_data(candidates, overwrite = T)
+
 # Update data ----
 
-eras_data <- update_watcher_data(data = eras_data, era = 889)
+eras_data <- update_watcher_data(data = eras_data, era = 891)
 
 usethis::use_data(eras_data, overwrite = T)
 
