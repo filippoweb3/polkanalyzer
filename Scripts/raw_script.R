@@ -1,5 +1,3 @@
-library(dplyr)
-
 library(rjson)
 library(dplyr)
 
@@ -28,8 +26,6 @@ selection <- select_validator(data = eras_data, look.back = 30,
                                               comm = 5,
                                               n = 5, era_points = 55000))
 
-colnames(candidates)[2] <- "stash_address"
-
 selection <- merge(selection, candidates, by = "stash_address")
 
 selection <- selection[!selection$provider == "Hetzner Online GmbH" &
@@ -42,12 +38,6 @@ val_names <- selection$validator_name
 
 plot_data(data = eras_data$eras, val_names[1])
 
-val_names <- unique(eras_data$name)
-val_names <- val_names[!val_names == ""]
-val_name <- val_names[order(val_names)]
-val_ID <- c(1:length(val_name))
-
-
 
 # Plots ----
 
@@ -57,9 +47,11 @@ plot(pct_less_100_comm, xlab = "Eras", ylab = "Pct Valitators < 100% comm", type
 
 
 
-for(i in 1:length(val_names)){
+last_era <- eras_data$interval[2]
 
-  last_era <- eras_data$interval[2]
+par(mfrow = c(2,1))
+
+for(i in 1:length(val_names)){
 
   sub_data <- subset(eras_data$eras, name == val_names[i])
 
@@ -67,7 +59,8 @@ for(i in 1:length(val_names)){
 
   if(i == 1){
 
-    plot(sub_data$era, rep(i, length(sub_data$era)), col = col, pch = 19, cex = 0.5, xlim = c(last_era - 30, last_era), ylim =c(1,length(val_names)))
+    plot(sub_data$era, rep(i, length(sub_data$era)), col = col, pch = 19, cex = 0.5,
+         xlim = c(last_era - 30, last_era), ylim =c(1,length(val_names)), xlab = "Era", ylab = "Validator ID")
 
   }
 
@@ -75,3 +68,22 @@ for(i in 1:length(val_names)){
   points(sub_data$era, rep(i, length(sub_data$era)), col = col, pch = 19, cex = 0.5)
 
 }
+
+for(i in 1:length(val_names)){
+
+  sub_data <- subset(eras_data$eras, name == val_names[i])
+
+  if(i == 1){
+
+  plot(sub_data$era, rep(1, length(sub_data$era)), cex = 3, pch = 19, col = rgb(0,0,0,0.2),
+       xlim = c(last_era - 30, last_era), ylim =c(0,2), xlab = "Era", ylab = "Validator ID")
+  abline(h = 1, col = "grey", lwd = 0.2)
+
+  }
+
+  points(sub_data$era, rep(1, length(sub_data$era)), col = rgb(0,0,0,0.2), pch = 19, cex = 3)
+
+}
+
+
+
