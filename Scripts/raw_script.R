@@ -32,11 +32,91 @@ selection <- selection[!selection$provider == "Hetzner Online GmbH" &
                          selection$democracyVoteCount >= 1 &
                          selection$councilVoteCount >= 1,]
 
-val_names <- selection$validator_name
+val_names <- na.omit(selection$validator_name)
+
+
+
+data_sel <- eras_data$eras[eras_data$eras$name %in% val_names,]
+
+data_sel <- data_sel[data_sel$era <= eras_data$interval[2] & data_sel$era >= (eras_data$interval[2] - 30) ,]
+
+era_coverage <- data.frame(group_by(data_sel, era) %>% summarise(n = length(unique(name))))
+
+
+
+final_selection <- c()
+
+eras <- c()
+
+for(j in 1:16){
+
+  names_left <- val_names[!val_names %in% final_selection]
+
+  best_cov <- c()
+
+  for(i in 1:length(names_left)){
+
+    era_covered <- data_sel[data_sel$name %in% names_left[i],]$era
+
+    sum_cov <- unique(c(era_covered, eras))
+
+    best_cov[i] <- sum(era_coverage$era %in% sum_cov)
+
+  }
+
+  sel_names <- names_left[best_cov == max(best_cov)]
+
+  if(length(sel_names) > 1){#if multiple names, further selection with average era points
+
+    sub_sel <- data_sel[data_sel$name %in% sel_names,]
+
+    sum_sub_sel <- group_by(sub_sel, name) %>% summarize(m = mean(era_points))
+
+    sel_name <- sum_sub_sel[sum_sub_sel$m == max(sum_sub_sel$m),]$name
+
+    final_selection[j] <- sel_name
+
+    eras <- c(eras, data_sel[data_sel$name %in% sel_name,]$era)
+
+  } else if(length(sel_names) == 1){
+
+    final_selection[j] <- sel_names
+
+    eras <- c(eras, data_sel[data_sel$name %in% sel_names,]$era)
+
+  }
+
+  progress <- sum(era_coverage$era %in% eras)/length(era_coverage$era)*100
+
+  print(progress)
+
+  if(progress == 100){
+
+    break
+
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Plots ----
 
 plot_validator(data = eras_data$eras, val_names[1])
 
-# Plots ----
+
 
 pct_less_100_comm <- group_by(eras_data$eras, era) %>% summarise(sum(commission_percent < 100)/length(commission_percent)*100)
 
