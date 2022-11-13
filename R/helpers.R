@@ -191,7 +191,7 @@ select_validator <- function(data, look.back = 40, criteria){
 
   with_id <- data$eras[!data$eras$name == "",]
 
-  sub <- subset(with_id, era > (last_era - look.back))
+  sub <- subset(with_id, era >= (last_era - look.back))
 
   sum <- data.frame(group_by(sub, stash_address, name) %>%
                       summarise(sum(era_points >= 40000)/length(era_points),
@@ -207,7 +207,7 @@ select_validator <- function(data, look.back = 40, criteria){
                         m_total <= criteria$total &
                         pct >= criteria$pct &
                         m_comm <= criteria$comm &
-                        n_active <= criteria$n & !n_active == 1 &
+                        n_active <= criteria$n & n_active > 1 &
                         m_era >= criteria$era_points)
 
   return(selection)
