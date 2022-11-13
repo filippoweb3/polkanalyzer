@@ -207,7 +207,7 @@ select_validator <- function(data, look.back = 40, criteria){
                         m_total <= criteria$total &
                         pct >= criteria$pct &
                         m_comm <= criteria$comm &
-                        n_active >= criteria$n & !n_active == 1 &
+                        n_active <= criteria$n & !n_active == 1 &
                         m_era >= criteria$era_points)
 
   return(selection)
