@@ -23,13 +23,13 @@ selection <- select_validator(data = eras_data, look.back = 30,
                                               self = 5000,
                                               total = 2500000,
                                               comm = 5,
-                                              n = 5, era_points = 55000))
+                                              n = 15, era_points = 55000))
 
 selection <- merge(selection, candidates, by = "stash_address")
 
 selection <- selection[!selection$provider == "Hetzner Online GmbH" &
                          selection$id_verified == TRUE &
-                         selection$democracyVoteCount >= 10 &
+                         selection$democracyVoteCount >= 1 &
                          selection$councilVoteCount >= 1,]
 
 val_names <- selection$validator_name
