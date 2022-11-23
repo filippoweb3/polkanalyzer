@@ -217,7 +217,7 @@ select_validator <- function(data, look.back = 40, criteria){
 sync_validators <- function(data, names, look.back){
 
 
-  data_sel <- eras_data$eras[data$eras$name %in% names,]
+  data_sel <- data$eras[data$eras$name %in% names,]
 
   data_sel <- data_sel[data_sel$era <= data$interval[2] & data_sel$era >= (data$interval[2] - look.back) ,]
 
@@ -232,9 +232,9 @@ sync_validators <- function(data, names, look.back){
 
     partial_selection <- c()
 
-    for(j in 1:16){
+    names_left <- names[!names %in% unlist(final_selection)]
 
-      names_left <- val_names[!names %in% unlist(final_selection)]
+    for(j in 1:16){
 
       best_cov <- c()
 
@@ -249,6 +249,12 @@ sync_validators <- function(data, names, look.back){
       }
 
       sel_names <- names_left[best_cov == max(best_cov)] #prioritize val with best coverage
+
+      if(sum(sel_names %in% partial_selection) > 1){
+
+        break
+
+      }
 
       if(length(sel_names) > 1){#if multiple names with best coverage, further selection with average era points
 
