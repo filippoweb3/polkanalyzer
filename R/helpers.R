@@ -214,6 +214,88 @@ select_validator <- function(data, look.back = 40, criteria){
 
 }
 
+sync_validators <- function(data, names, look.back){
+
+
+  data_sel <- eras_data$eras[data$eras$name %in% names,]
+
+  data_sel <- data_sel[data_sel$era <= data$interval[2] & data_sel$era >= (data$interval[2] - look.back) ,]
+
+  era_coverage <- data.frame(group_by(data_sel, era) %>% summarise(n = length(unique(name))))
+
+
+  final_selection <- list()
+
+  for (k in 1:16){#multiple selection rounds for backup coverage
+
+    eras <- c()
+
+    partial_selection <- c()
+
+    for(j in 1:16){
+
+      names_left <- val_names[!names %in% unlist(final_selection)]
+
+      best_cov <- c()
+
+      for(i in 1:length(names_left)){ #for each val, maxim history covered eras within the specified interval
+
+        era_covered <- data_sel[data_sel$name %in% names_left[i],]$era
+
+        sum_cov <- unique(c(era_covered, eras))
+
+        best_cov[i] <- sum(era_coverage$era %in% sum_cov)
+
+      }
+
+      sel_names <- names_left[best_cov == max(best_cov)] #prioritize val with best coverage
+
+      if(length(sel_names) > 1){#if multiple names with best coverage, further selection with average era points
+
+        sub_sel <- data_sel[data_sel$name %in% sel_names,]
+
+        sum_sub_sel <- group_by(sub_sel, name) %>% summarize(m = mean(era_points))
+
+        sel_name <- sum_sub_sel[sum_sub_sel$m == max(sum_sub_sel$m),]$name
+
+        partial_selection[j] <- sel_name
+
+        eras <- c(eras, data_sel[data_sel$name %in% sel_name,]$era)
+
+      } else if(length(sel_names) == 1){
+
+        partial_selection[j] <- sel_names
+
+        eras <- c(eras, data_sel[data_sel$name %in% sel_names,]$era)
+
+      }
+
+      progress <- sum(era_coverage$era %in% eras)/length(era_coverage$era)*100
+
+      print(progress)
+
+      if(progress == 100){
+
+        break
+
+      }
+
+    }
+
+    final_selection[[k]] <- partial_selection
+
+    if(length(unlist(final_selection)) > 16){
+
+      break
+
+    }
+
+  }
+
+  return(final_selection)
+
+}
+
 plot_validator <- function(data, validator.name, look.back = 80){
 
   max.era <- max(data$era)
