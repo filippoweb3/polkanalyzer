@@ -242,6 +242,49 @@ plot_validator <- function(data, validator.name, look.back = 80){
 
 }
 
+plot_coverage <- function(data, names, look.back){
+
+  last_era <- data$interval[2]
+
+  par(mfrow = c(2,1))
+
+  for(i in 1:length(names)){
+
+    sub_data <- subset(data$eras, name == names[i])
+
+    col <- ifelse(sub_data$era_points <= 40000, "red", ifelse(sub_data$era_points <= 60000 & sub_data$era_points > 40000, "orange", "green"))
+
+    if(i == 1){
+
+      plot(sub_data$era, rep(i, length(sub_data$era)), col = col, pch = 19, cex = 0.5,
+           xlim = c(last_era - look.back, last_era), ylim =c(1,length(names)), xlab = "Era", ylab = "Validator ID")
+
+    }
+
+    abline(h = i, col = "grey", lwd = 0.2)
+    points(sub_data$era, rep(i, length(sub_data$era)), col = col, pch = 19, cex = 0.5)
+
+  }
+
+  for(i in 1:length(names)){
+
+    sub_data <- subset(eras_data$eras, name == names[i])
+
+    if(i == 1){
+
+      plot(sub_data$era, rep(1, length(sub_data$era)), cex = 3, pch = 19, col = rgb(0,0,0,0.2),
+           xlim = c(last_era - look.back, last_era), ylim =c(0,2), xlab = "Era", ylab = "Validator ID")
+      abline(h = 1, col = "grey", lwd = 0.2)
+
+    }
+
+    points(sub_data$era, rep(1, length(sub_data$era)), col = rgb(0,0,0,0.2), pch = 19, cex = 3)
+
+  }
+
+
+}
+
 
 
 
