@@ -207,7 +207,7 @@ select_validator <- function(data, look.back = 40, criteria){
                         m_total <= criteria$total &
                         pct >= criteria$pct &
                         m_comm <= criteria$comm &
-                        n_active <= criteria$n & n_active > 1 &
+                        n_active <= criteria$n & n_active >= 3 &
                         m_era >= criteria$era_points)
 
   return(selection)
@@ -250,7 +250,7 @@ sync_validators <- function(data, names, look.back){
 
       sel_names <- names_left[best_cov == max(best_cov)] #prioritize val with best coverage
 
-      if(sum(sel_names %in% partial_selection) > 1){
+      if(sum(sel_names %in% partial_selection) >= 1){
 
         break
 
