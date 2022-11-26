@@ -89,13 +89,13 @@ fetch_candidates <- function(){
     data[i,2] <- candidates[[i]]$stash
     data[i,3] <- candidates[[i]]$identity$name
 
-    if(is.null(candidates[[i]]$identity$sub)){
+    if(is.null(candidates[[i]]$identity$subIdentities)){
 
       data[i,4] <- NA
 
     } else {
 
-      data[i,4] <- candidates[[i]]$identity$sub
+      data[i,4] <- length(candidates[[i]]$identity$subIdentities)
 
     }
 
@@ -141,7 +141,7 @@ fetch_candidates <- function(){
   colnames(data) <- c("name",
                       "stash_address",
                       "id_name",
-                      "id_sub",
+                      "n_subid",
                       "id_verified",
                       "id_id",
                       "location",
