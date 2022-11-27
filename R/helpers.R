@@ -194,7 +194,7 @@ select_validator <- function(data, look.back = 40, criteria){
   sub <- subset(with_id, era >= (last_era - look.back))
 
   sum <- data.frame(group_by(sub, stash_address, name) %>%
-                      summarise(sum(era_points >= 40000)/length(era_points),
+                      summarise(sum(era_points >= 50000)/length(era_points),
                                 ep = mean(era_points),
                                 n = length(era_points),
                                 comm = mean(commission_percent),
@@ -226,15 +226,23 @@ sync_validators <- function(data, names, look.back){
 
   final_selection <- list()
 
-  for (k in 1:16){#multiple selection rounds for backup coverage
+  for (k in 1:10){#multiple selection rounds for backup coverage
 
     eras <- c()
 
     partial_selection <- c()
 
-    names_left <- names[!names %in% unlist(final_selection)]
+    names <- names[!names %in% unlist(final_selection)]
 
     for(j in 1:16){
+
+      names_left <- names[!names %in% unlist(partial_selection)]
+
+      if(length(names_left) == 0){
+
+        break
+
+      }
 
       best_cov <- c()
 
@@ -250,12 +258,6 @@ sync_validators <- function(data, names, look.back){
 
       sel_names <- names_left[best_cov == max(best_cov)] #prioritize val with best coverage
 
-      if(sum(sel_names %in% partial_selection) >= 1){
-
-        break
-
-      }
-
       if(length(sel_names) > 1){#if multiple names with best coverage, further selection with average era points
 
         sub_sel <- data_sel[data_sel$name %in% sel_names,]
@@ -266,13 +268,13 @@ sync_validators <- function(data, names, look.back){
 
         partial_selection[j] <- sel_name
 
-        eras <- c(eras, data_sel[data_sel$name %in% sel_name,]$era)
+        eras <- unique(c(eras, data_sel[data_sel$name %in% sel_name,]$era))
 
       } else if(length(sel_names) == 1){
 
         partial_selection[j] <- sel_names
 
-        eras <- c(eras, data_sel[data_sel$name %in% sel_names,]$era)
+        eras <- unique(c(eras, data_sel[data_sel$name %in% sel_names,]$era))
 
       }
 
