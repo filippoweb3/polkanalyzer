@@ -19,8 +19,8 @@ usethis::use_data(eras_data, overwrite = T)
 # Select Validators ----
 
 selection <- select_validator(data = eras_data, look.back = 50,
-                              criteria = list(pct = 0.7,
-                                              self = 6000,
+                              criteria = list(pct = 0.8,
+                                              self = 5000,
                                               total = 2500000,
                                               comm = 5,
                                               n = 25, era_points = 50000))
@@ -30,15 +30,15 @@ selection <- merge(selection, candidates, by = "stash_address")
 selection <- selection[!selection$provider == "Hetzner Online GmbH" &
                          selection$id_verified == TRUE &
                          selection$democracyVoteCount >= 5 &
-                         selection$councilVoteCount >= 3,]
+                         selection$councilVoteCount >= 1,]
 
-val_names <- na.omit(selection$validator_name)
+val_names <- as.vector(na.omit(selection$validator_name))
 
 sync_val <- sync_validators(data = eras_data, names = val_names, look.back = 50)
 
 # Plots ----
 
-plot_validator(data = eras_data$eras, sync_val[[1]][1])
+plot_validator(data = eras_data$eras, sync_val[[1]][1], look.back = 50)
 
 
 pct_less_100_comm <- group_by(eras_data$eras, era) %>% summarise(sum(commission_percent < 100)/length(commission_percent)*100)
