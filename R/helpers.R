@@ -216,13 +216,9 @@ select_validator <- function(data, look.back = 40, criteria){
 
 sync_validators <- function(data, names, look.back){
 
+  data_sel <- data$eras
 
-  data_sel <- data$eras[data$eras$name %in% names,]
-
-  data_sel <- data_sel[data_sel$era <= data$interval[2] & data_sel$era >= (data$interval[2] - look.back) ,]
-
-  era_coverage <- data.frame(group_by(data_sel, era) %>% summarise(n = length(unique(name))))
-
+  era_coverage <- seq(eras_data$interval[2] - look.back, eras_data$interval[2])
 
   final_selection <- list()
 
@@ -252,7 +248,7 @@ sync_validators <- function(data, names, look.back){
 
         sum_cov <- unique(c(era_covered, eras))
 
-        best_cov[i] <- sum(era_coverage$era %in% sum_cov)
+        best_cov[i] <- sum(era_coverage %in% sum_cov)
 
       }
 
@@ -278,7 +274,7 @@ sync_validators <- function(data, names, look.back){
 
       }
 
-      progress <- sum(era_coverage$era %in% eras)/length(era_coverage$era)*100
+      progress <- sum(era_coverage %in% eras)/length(era_coverage)*100
 
       print(progress)
 
