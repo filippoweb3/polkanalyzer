@@ -89,13 +89,13 @@ fetch_candidates <- function(){
     data[i,2] <- candidates[[i]]$stash
     data[i,3] <- candidates[[i]]$identity$name
 
-    if(is.null(candidates[[i]]$identity$sub)){
+    if(is.null(candidates[[i]]$identity$subIdentities)){
 
       data[i,4] <- NA
 
     } else {
 
-      data[i,4] <- candidates[[i]]$identity$sub
+      data[i,4] <- length(candidates[[i]]$identity$subIdentities)
 
     }
 
@@ -141,7 +141,7 @@ fetch_candidates <- function(){
   colnames(data) <- c("name",
                       "stash_address",
                       "id_name",
-                      "id_sub",
+                      "n_subid",
                       "id_verified",
                       "id_id",
                       "location",
@@ -191,7 +191,7 @@ select_validator <- function(data, look.back = 40, criteria){
 
   with_id <- data$eras[!data$eras$name == "",]
 
-  sub <- subset(with_id, era > (last_era - look.back))
+  sub <- subset(with_id, era >= (last_era - look.back))
 
   sum <- data.frame(group_by(sub, stash_address, name) %>%
                       summarise(sum(era_points >= 40000)/length(era_points),
@@ -207,10 +207,96 @@ select_validator <- function(data, look.back = 40, criteria){
                         m_total <= criteria$total &
                         pct >= criteria$pct &
                         m_comm <= criteria$comm &
-                        n_active >= criteria$n & !n_active == 1 &
+                        n_active <= criteria$n & n_active >= 5 &
                         m_era >= criteria$era_points)
 
   return(selection)
+
+}
+
+sync_validators <- function(data, names, look.back){
+
+  data_sel <- data$eras
+
+  era_coverage <- seq(eras_data$interval[2] - look.back, eras_data$interval[2])
+
+  final_selection <- list()
+
+  for (k in 1:10){#multiple selection rounds for backup coverage
+
+    eras <- c()
+
+    partial_selection <- c()
+
+    names <- names[!names %in% unlist(final_selection)]
+
+    for(j in 1:16){
+
+      names_left <- names[!names %in% unlist(partial_selection)]
+
+      if(length(names_left) == 0){
+
+        break
+
+      }
+
+      best_cov <- c()
+
+      for(i in 1:length(names_left)){ #for each val, maxim history covered eras within the specified interval
+
+        era_covered <- data_sel[data_sel$name %in% names_left[i],]$era
+
+        sum_cov <- unique(c(era_covered, eras))
+
+        best_cov[i] <- sum(era_coverage %in% sum_cov)
+
+      }
+
+      sel_names <- names_left[best_cov == max(best_cov)] #prioritize val with best coverage
+
+      if(length(sel_names) > 1){#if multiple names with best coverage, further selection with average era points
+
+        sub_sel <- data_sel[data_sel$name %in% sel_names,]
+
+        sum_sub_sel <- group_by(sub_sel, name) %>% summarize(m = mean(era_points))
+
+        sel_name <- sum_sub_sel[sum_sub_sel$m == max(sum_sub_sel$m),]$name
+
+        partial_selection[j] <- sel_name
+
+        eras <- unique(c(eras, data_sel[data_sel$name %in% sel_name,]$era))
+
+      } else if(length(sel_names) == 1){
+
+        partial_selection[j] <- sel_names
+
+        eras <- unique(c(eras, data_sel[data_sel$name %in% sel_names,]$era))
+
+      }
+
+      progress <- sum(era_coverage %in% eras)/length(era_coverage)*100
+
+      print(progress)
+
+      if(progress == 100){
+
+        break
+
+      }
+
+    }
+
+    final_selection[[k]] <- partial_selection
+
+    if(length(unlist(final_selection)) > 16){
+
+      break
+
+    }
+
+  }
+
+  return(final_selection)
 
 }
 
@@ -239,6 +325,49 @@ plot_validator <- function(data, validator.name, look.back = 80){
 
   plot(val.data$era, val.data$commission_percent, type ="b", xlab = "Eras", ylab = "Commission (%)", ylim = c(0, 10))
   abline(h = 5, lty = 2, col = "grey70")
+
+}
+
+plot_coverage <- function(data, names, look.back){
+
+  last_era <- data$interval[2]
+
+  par(mfrow = c(2,1))
+
+  for(i in 1:length(names)){
+
+    sub_data <- subset(data$eras, name == names[i])
+
+    col <- ifelse(sub_data$era_points <= 40000, "red", ifelse(sub_data$era_points <= 60000 & sub_data$era_points > 40000, "orange", "green"))
+
+    if(i == 1){
+
+      plot(sub_data$era, rep(i, length(sub_data$era)), col = col, pch = 19, cex = 0.5,
+           xlim = c(last_era - look.back, last_era), ylim =c(1,length(names)), xlab = "Era", ylab = "Validator ID")
+
+    }
+
+    abline(h = i, col = "grey", lwd = 0.2)
+    points(sub_data$era, rep(i, length(sub_data$era)), col = col, pch = 19, cex = 0.5)
+
+  }
+
+  for(i in 1:length(names)){
+
+    sub_data <- subset(eras_data$eras, name == names[i])
+
+    if(i == 1){
+
+      plot(sub_data$era, rep(1, length(sub_data$era)), cex = 3, pch = 19, col = rgb(0,0,0,0.2),
+           xlim = c(last_era - look.back, last_era), ylim =c(0,2), xlab = "Era", ylab = "Validator ID")
+      abline(h = 1, col = "grey", lwd = 0.2)
+
+    }
+
+    points(sub_data$era, rep(1, length(sub_data$era)), col = rgb(0,0,0,0.2), pch = 19, cex = 3)
+
+  }
+
 
 }
 
