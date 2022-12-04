@@ -99,7 +99,16 @@ fetch_candidates <- function(){
 
     }
 
-    data[i,5] <- candidates[[i]]$identity$verified
+    if(is.null(candidates[[i]]$identity$verified)){
+
+      data[i,5] <- NA
+
+    } else {
+
+      data[i,5] <- candidates[[i]]$identity$verified
+
+    }
+
     data[i,6] <- candidates[[i]]$identity$`_id`
 
     if(is.null(candidates[[i]]$location)){
