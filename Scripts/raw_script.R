@@ -19,7 +19,7 @@ usethis::use_data(eras_data, overwrite = T)
 # Select Validators ----
 
 selection <- select_validator(data = eras_data, look.back = 50,
-                              criteria = list(pct = 0.6,
+                              criteria = list(pct = 0.8,
                                               self = 5800,
                                               total = 2500000,
                                               comm = 5,
