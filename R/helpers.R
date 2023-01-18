@@ -325,14 +325,14 @@ plot_validator <- function(data, validator.name, look.back = 80){
 
   par(mfrow=c(2,2))
 
-  plot(val.data$era, val.data$era_points, type ="b", xlab = "Eras", ylab = "Era Points", ylim = c(0, 90000))
-  abline(h = 40000, lty = 2, col = "grey70")
+  plot(val.data$era, val.data$era_points, type ="b", xlab = "Eras", ylab = "Era Points", ylim = c(0, 100000))
+  abline(h = 60000, lty = 2, col = "grey70")
 
-  plot(val.data$era, val.data$self_stake/10^10, type ="b", xlab = "Eras", ylab = "Self Stake", ylim = c(1000, 15000))
+  plot(val.data$era, val.data$self_stake/10^10, type ="b", xlab = "Eras", ylab = "Self Stake", ylim = c(3000, 30000))
   abline(h = 5000, lty = 2, col = "grey70")
 
-  plot(val.data$era, val.data$total_stake/10^10, type ="b", xlab = "Eras", ylab = "Total Stake", ylim = c(1800000, 2800000))
-  abline(h = 2000000, lty = 2, col = "grey70")
+  plot(val.data$era, val.data$total_stake/10^10, type ="b", xlab = "Eras", ylab = "Total Stake", ylim = c(1000000, 3000000))
+  abline(h = 1800000, lty = 2, col = "grey70")
 
   plot(val.data$era, val.data$commission_percent, type ="b", xlab = "Eras", ylab = "Commission (%)", ylim = c(0, 10))
   abline(h = 5, lty = 2, col = "grey70")

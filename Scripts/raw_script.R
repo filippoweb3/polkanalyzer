@@ -12,7 +12,7 @@ usethis::use_data(candidates, overwrite = T)
 
 # Update watcher data ----
 
-eras_data <- update_watcher_data(data = eras_data, era = 932)
+eras_data <- update_watcher_data(data = eras_data, era = 959)
 
 usethis::use_data(eras_data, overwrite = T)
 
@@ -20,12 +20,12 @@ usethis::use_data(eras_data, overwrite = T)
 
 selection <- select_validator(data = eras_data, look.back = 30,
                               criteria = list(pct = 0.6,
-                                              self_stake = 6000,
-                                              total_stake = 2100000,
+                                              self_stake = 6500,
+                                              total_stake = 1800000,
                                               commission = 5,
-                                              n_active = 39,
-                                              mean_era_points = 50000,
-                                              max_era_points = 70000))
+                                              n_active = 30,
+                                              mean_era_points = 60000,
+                                              max_era_points = 80000))
 
 selection <- merge(selection, candidates, by = "stash_address")
 
@@ -41,7 +41,7 @@ sync_val <- sync_validators(data = eras_data, names = val_names, look.back = 30)
 
 # Plots ----
 
-plot_validator(data = eras_data$eras, sync_val[[1]][1], look.back = 50)
+plot_validator(data = eras_data$eras, sync_val[[1]][1], look.back = 30)
 
 
 pct_less_100_comm <- group_by(eras_data$eras, era) %>% summarise(sum(commission_percent < 100)/length(commission_percent)*100)
@@ -49,5 +49,5 @@ pct_less_100_comm <- group_by(eras_data$eras, era) %>% summarise(sum(commission_
 plot(pct_less_100_comm, xlab = "Eras", ylab = "Pct Valitators < 100% comm", type = "l")
 
 
-plot_coverage(data = eras_data, names = sync_val[[1]], look.back = 40)
+plot_coverage(data = eras_data, names = sync_val[[1]], look.back = 30)
 
