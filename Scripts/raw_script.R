@@ -1,7 +1,7 @@
 library(rjson)
 library(dplyr)
 
-# Load data ----
+# Fetch candidate data ----
 
 #eras_data <- fetch_watcher_data(chain = "polkadot", era.interval = c(165, 886))
 
@@ -37,17 +37,17 @@ selection <- selection[!selection$provider == "Hetzner Online GmbH" &
 
 val_names <- as.vector(na.omit(selection$validator_name))
 
+# Synchronize Validators ----
+
 sync_val <- sync_validators(data = eras_data, names = val_names, look.back = 30)
 
 # Plots ----
 
 plot_validator(data = eras_data$eras, sync_val[[1]][1], look.back = 30)
 
-
 pct_less_100_comm <- group_by(eras_data$eras, era) %>% summarise(sum(commission_percent < 100)/length(commission_percent)*100)
 
 plot(pct_less_100_comm, xlab = "Eras", ylab = "Pct Valitators < 100% comm", type = "l")
-
 
 plot_coverage(data = eras_data, names = sync_val[[1]], look.back = 30)
 
