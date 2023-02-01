@@ -407,29 +407,6 @@ plot_coverage <- function(data, names, look.back){
 
 }
 
-fetch_DOT_price <- function(days){
-
-  url <- paste0("https://api.coingecko.com/api/v3/coins/polkadot/market_chart?vs_currency=usd&days=", days)
-
-  response <- GET(url)
-
-  if (response$status_code == 200) {
-
-    polkadot_price_data <- fromJSON(content(response, as = "text"))
-
-    polkadot_price <- data.frame(date = as.POSIXct(polkadot_price_data$prices[,1]/1000, origin = "1970-01-01"),
-                                 price = polkadot_price_data$prices[,2])
-
-    return(polkadot_price)
-
-  } else {
-
-    print("Error fetching price data")
-
-  }
-
-}
-
 
 
 
