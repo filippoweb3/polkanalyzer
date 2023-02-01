@@ -87,7 +87,16 @@ fetch_candidates <- function(){
 
     data[i,1] <- candidates[[i]]$name
     data[i,2] <- candidates[[i]]$stash
-    data[i,3] <- candidates[[i]]$identity$name
+
+    if(is.null(candidates[[i]]$identity$name)){
+
+      data[i,3] <- NA
+
+    } else {
+
+      data[i,3] <- candidates[[i]]$identity$name
+
+    }
 
     if(is.null(candidates[[i]]$identity$subIdentities)){
 
@@ -109,7 +118,15 @@ fetch_candidates <- function(){
 
     }
 
-    data[i,6] <- candidates[[i]]$identity$`_id`
+    if(is.null(candidates[[i]]$identity$`_id`)){
+
+      data[i,6] <- NA
+
+    } else {
+
+      data[i,6] <- candidates[[i]]$identity$`_id`
+
+    }
 
     if(is.null(candidates[[i]]$location)){
 
@@ -121,7 +138,15 @@ fetch_candidates <- function(){
 
     }
 
-    data[i,8] <- candidates[[i]]$provider
+    if(is.null(candidates[[i]]$provider)){
+
+      data[i,8] <- NA
+
+    } else {
+
+      data[i,8] <- candidates[[i]]$provider
+
+    }
 
     if(is.null(candidates[[i]]$councilVotes)){
 
