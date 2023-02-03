@@ -79,7 +79,7 @@ fetch_candidates <- function(){
 
   n <- length(candidates)
 
-  data <- data.frame(NA, ncol = 9, nrow = n)
+  data <- data.frame()
 
   pb <- utils::txtProgressBar(min = 0, max = n, style = 3)
 
@@ -88,83 +88,103 @@ fetch_candidates <- function(){
     data[i,1] <- candidates[[i]]$name
     data[i,2] <- candidates[[i]]$stash
 
-    if(is.null(candidates[[i]]$identity$name)){
+    if(is.null(candidates[[i]]$offlineAccumulated)){
 
       data[i,3] <- NA
 
     } else {
 
-      data[i,3] <- candidates[[i]]$identity$name
+      data[i,3] <- candidates[[i]]$offlineAccumulated
 
     }
 
-    if(is.null(candidates[[i]]$identity$subIdentities)){
+    if(is.null(candidates[[i]]$faults)){
 
       data[i,4] <- NA
 
     } else {
 
-      data[i,4] <- length(candidates[[i]]$identity$subIdentities)
+      data[i,4] <- candidates[[i]]$faults
 
     }
 
-    if(is.null(candidates[[i]]$identity$verified)){
+    if(is.null(candidates[[i]]$identity$name)){
 
       data[i,5] <- NA
 
     } else {
 
-      data[i,5] <- candidates[[i]]$identity$verified
+      data[i,5] <- candidates[[i]]$identity$name
 
     }
 
-    if(is.null(candidates[[i]]$identity$`_id`)){
+    if(is.null(candidates[[i]]$identity$subIdentities)){
 
       data[i,6] <- NA
 
     } else {
 
-      data[i,6] <- candidates[[i]]$identity$`_id`
+      data[i,6] <- length(candidates[[i]]$identity$subIdentities)
 
     }
 
-    if(is.null(candidates[[i]]$location)){
+    if(is.null(candidates[[i]]$identity$verified)){
 
       data[i,7] <- NA
 
     } else {
 
-      data[i,7] <- candidates[[i]]$location
+      data[i,7] <- candidates[[i]]$identity$verified
 
     }
 
-    if(is.null(candidates[[i]]$provider)){
+    if(is.null(candidates[[i]]$identity$`_id`)){
 
       data[i,8] <- NA
 
     } else {
 
-      data[i,8] <- candidates[[i]]$provider
+      data[i,8] <- candidates[[i]]$identity$`_id`
 
     }
 
-    if(is.null(candidates[[i]]$councilVotes)){
+    if(is.null(candidates[[i]]$location)){
 
       data[i,9] <- NA
 
     } else {
 
-      data[i,9] <- length(candidates[[i]]$councilVotes)
+      data[i,9] <- candidates[[i]]$location
 
     }
 
-    if(is.null(candidates[[i]]$democracyVoteCount)){
+    if(is.null(candidates[[i]]$provider)){
 
       data[i,10] <- NA
 
     } else {
 
-      data[i,10] <- candidates[[i]]$democracyVoteCount
+      data[i,10] <- candidates[[i]]$provider
+
+    }
+
+    if(is.null(candidates[[i]]$councilVotes)){
+
+      data[i,11] <- NA
+
+    } else {
+
+      data[i,11] <- length(candidates[[i]]$councilVotes)
+
+    }
+
+    if(is.null(candidates[[i]]$democracyVoteCount)){
+
+      data[i,12] <- NA
+
+    } else {
+
+      data[i,12] <- candidates[[i]]$democracyVoteCount
 
     }
 
@@ -174,6 +194,8 @@ fetch_candidates <- function(){
 
   colnames(data) <- c("name",
                       "stash_address",
+                      "offline",
+                      "faluts",
                       "id_name",
                       "n_subid",
                       "id_verified",

@@ -20,8 +20,8 @@ usethis::use_data(eras_data, overwrite = T)
 
 selection <- select_validator(data = eras_data, look.back = 30,
                               criteria = list(pct = 0.6,
-                                              self_stake = 6000,
-                                              total_stake = 1800000,
+                                              self_stake = 5500,
+                                              total_stake = 1900000,
                                               commission = 5,
                                               n_active = 30,
                                               mean_era_points = 60000,
@@ -33,7 +33,9 @@ selection <- selection[!selection$provider == "Hetzner Online GmbH" &
                          selection$id_verified == TRUE &
                          selection$democracyVoteCount >= 1 &
                          selection$councilVoteCount >= 1 &
-                         selection$n_subid <= 3,]
+                         selection$n_subid <= 3 &
+                         selection$faluts == 0 &
+                         selection$offline == 0,]
 
 val_names <- as.vector(na.omit(selection$validator_name))
 
