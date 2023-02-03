@@ -12,7 +12,7 @@ usethis::use_data(candidates, overwrite = T)
 
 # Update watcher data ----
 
-eras_data <- update_watcher_data(data = eras_data, era = 973)
+eras_data <- update_watcher_data(data = eras_data, era = 975)
 
 usethis::use_data(eras_data, overwrite = T)
 
@@ -20,12 +20,12 @@ usethis::use_data(eras_data, overwrite = T)
 
 selection <- select_validator(data = eras_data, look.back = 30,
                               criteria = list(pct = 0.6,
-                                              self_stake = 6500,
+                                              self_stake = 6000,
                                               total_stake = 1800000,
                                               commission = 5,
                                               n_active = 30,
                                               mean_era_points = 60000,
-                                              max_era_points = 90000))
+                                              max_era_points = 85000))
 
 selection <- merge(selection, candidates, by = "stash_address")
 
@@ -40,6 +40,8 @@ val_names <- as.vector(na.omit(selection$validator_name))
 # Synchronize Validators ----
 
 sync_val <- sync_validators(data = eras_data, names = val_names, look.back = 30)
+
+sync_sel <- selection[selection$validator_name %in% unlist(sync_val),]
 
 # Plots ----
 
