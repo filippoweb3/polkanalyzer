@@ -256,17 +256,19 @@ select_validator <- function(data, look.back = 40, criteria){
                                 n = length(era_points),
                                 comm = mean(commission_percent),
                                 ss = mean(self_stake)/10^10,
-                                ts = mean(total_stake)/10^10))
+                                ts = mean(total_stake)/10^10,
+                                last_era = (max(era)-last_era)*-1))
 
-  colnames(sum) <- c("stash_address", "validator_name", "pct", "m_era", "max_era", "n_active", "m_comm", "m_self", "m_total")
+  colnames(sum) <- c("stash_address", "validator_name", "pct", "m_era", "max_era", "n_active", "m_comm", "m_self", "m_total", "last_active")
 
   selection <- subset(sum, m_self >= criteria$self_stake &
                         m_total <= criteria$total_stake &
                         pct >= criteria$pct &
                         m_comm <= criteria$commission &
-                        n_active <= criteria$n_active & n_active >= 5 &
+                        n_active <= criteria$n_active & n_active >= 3 &
                         m_era >= criteria$mean_era_points &
-                        max_era >= criteria$max_era_points)
+                        max_era >= criteria$max_era_points &
+                        last_active <= criteria$last_active)
 
   return(selection)
 
