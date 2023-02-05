@@ -12,7 +12,7 @@ usethis::use_data(candidates, overwrite = T)
 
 # Update watcher data ----
 
-eras_data <- update_watcher_data(data = eras_data, era = 975)
+eras_data <- update_watcher_data(data = eras_data, era = 976)
 
 usethis::use_data(eras_data, overwrite = T)
 
@@ -20,12 +20,13 @@ usethis::use_data(eras_data, overwrite = T)
 
 selection <- select_validator(data = eras_data, look.back = 30,
                               criteria = list(pct = 0.6,
-                                              self_stake = 5500,
-                                              total_stake = 1900000,
+                                              self_stake = 6000, #above 5k
+                                              total_stake = 1900000, #set to 95% of average stake last era
                                               commission = 5,
                                               n_active = 30,
-                                              mean_era_points = 60000,
-                                              max_era_points = 85000))
+                                              mean_era_points = 50000,
+                                              max_era_points = 85000,
+                                              last_active = 15))
 
 selection <- merge(selection, candidates, by = "stash_address")
 
@@ -34,8 +35,8 @@ selection <- selection[!selection$provider == "Hetzner Online GmbH" &
                          selection$democracyVoteCount >= 1 &
                          selection$councilVoteCount >= 1 &
                          selection$n_subid <= 3 &
-                         selection$faluts == 0 &
-                         selection$offline == 0,]
+                         selection$faluts <= 0 &
+                         selection$offline <= 0,]
 
 val_names <- as.vector(na.omit(selection$validator_name))
 
