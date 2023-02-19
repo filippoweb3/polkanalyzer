@@ -79,7 +79,7 @@ fetch_candidates <- function(){
 
   n <- length(candidates)
 
-  data <- data.frame(NA, ncol = 9, nrow = n)
+  data <- data.frame()
 
   pb <- utils::txtProgressBar(min = 0, max = n, style = 3)
 
@@ -88,83 +88,103 @@ fetch_candidates <- function(){
     data[i,1] <- candidates[[i]]$name
     data[i,2] <- candidates[[i]]$stash
 
-    if(is.null(candidates[[i]]$identity$name)){
+    if(is.null(candidates[[i]]$offlineAccumulated)){
 
       data[i,3] <- NA
 
     } else {
 
-      data[i,3] <- candidates[[i]]$identity$name
+      data[i,3] <- candidates[[i]]$offlineAccumulated
 
     }
 
-    if(is.null(candidates[[i]]$identity$subIdentities)){
+    if(is.null(candidates[[i]]$faults)){
 
       data[i,4] <- NA
 
     } else {
 
-      data[i,4] <- length(candidates[[i]]$identity$subIdentities)
+      data[i,4] <- candidates[[i]]$faults
 
     }
 
-    if(is.null(candidates[[i]]$identity$verified)){
+    if(is.null(candidates[[i]]$identity$name)){
 
       data[i,5] <- NA
 
     } else {
 
-      data[i,5] <- candidates[[i]]$identity$verified
+      data[i,5] <- candidates[[i]]$identity$name
 
     }
 
-    if(is.null(candidates[[i]]$identity$`_id`)){
+    if(is.null(candidates[[i]]$identity$subIdentities)){
 
       data[i,6] <- NA
 
     } else {
 
-      data[i,6] <- candidates[[i]]$identity$`_id`
+      data[i,6] <- length(candidates[[i]]$identity$subIdentities)
 
     }
 
-    if(is.null(candidates[[i]]$location)){
+    if(is.null(candidates[[i]]$identity$verified)){
 
       data[i,7] <- NA
 
     } else {
 
-      data[i,7] <- candidates[[i]]$location
+      data[i,7] <- candidates[[i]]$identity$verified
 
     }
 
-    if(is.null(candidates[[i]]$provider)){
+    if(is.null(candidates[[i]]$identity$`_id`)){
 
       data[i,8] <- NA
 
     } else {
 
-      data[i,8] <- candidates[[i]]$provider
+      data[i,8] <- candidates[[i]]$identity$`_id`
 
     }
 
-    if(is.null(candidates[[i]]$councilVotes)){
+    if(is.null(candidates[[i]]$location)){
 
       data[i,9] <- NA
 
     } else {
 
-      data[i,9] <- length(candidates[[i]]$councilVotes)
+      data[i,9] <- candidates[[i]]$location
 
     }
 
-    if(is.null(candidates[[i]]$democracyVoteCount)){
+    if(is.null(candidates[[i]]$provider)){
 
       data[i,10] <- NA
 
     } else {
 
-      data[i,10] <- candidates[[i]]$democracyVoteCount
+      data[i,10] <- candidates[[i]]$provider
+
+    }
+
+    if(is.null(candidates[[i]]$councilVotes)){
+
+      data[i,11] <- NA
+
+    } else {
+
+      data[i,11] <- length(candidates[[i]]$councilVotes)
+
+    }
+
+    if(is.null(candidates[[i]]$democracyVoteCount)){
+
+      data[i,12] <- NA
+
+    } else {
+
+      data[i,12] <- candidates[[i]]$democracyVoteCount
 
     }
 
@@ -174,6 +194,8 @@ fetch_candidates <- function(){
 
   colnames(data) <- c("name",
                       "stash_address",
+                      "offline",
+                      "faluts",
                       "id_name",
                       "n_subid",
                       "id_verified",
@@ -234,17 +256,19 @@ select_validator <- function(data, look.back = 40, criteria){
                                 n = length(era_points),
                                 comm = mean(commission_percent),
                                 ss = mean(self_stake)/10^10,
-                                ts = mean(total_stake)/10^10))
+                                ts = mean(total_stake)/10^10,
+                                last_era = (max(era)-last_era)*-1))
 
-  colnames(sum) <- c("stash_address", "validator_name", "pct", "m_era", "max_era", "n_active", "m_comm", "m_self", "m_total")
+  colnames(sum) <- c("stash_address", "validator_name", "pct", "m_era", "max_era", "n_active", "m_comm", "m_self", "m_total", "last_active")
 
   selection <- subset(sum, m_self >= criteria$self_stake &
                         m_total <= criteria$total_stake &
                         pct >= criteria$pct &
                         m_comm <= criteria$commission &
-                        n_active <= criteria$n_active & n_active >= 5 &
+                        n_active <= criteria$n_active & n_active >= 3 &
                         m_era >= criteria$mean_era_points &
-                        max_era >= criteria$max_era_points)
+                        max_era >= criteria$max_era_points &
+                        last_active <= criteria$last_active)
 
   return(selection)
 
@@ -404,29 +428,6 @@ plot_coverage <- function(data, names, look.back){
 
   }
 
-
-}
-
-fetch_DOT_price <- function(days){
-
-  url <- paste0("https://api.coingecko.com/api/v3/coins/polkadot/market_chart?vs_currency=usd&days=", days)
-
-  response <- GET(url)
-
-  if (response$status_code == 200) {
-
-    polkadot_price_data <- fromJSON(content(response, as = "text"))
-
-    polkadot_price <- data.frame(date = as.POSIXct(polkadot_price_data$prices[,1]/1000, origin = "1970-01-01"),
-                                 price = polkadot_price_data$prices[,2])
-
-    return(polkadot_price)
-
-  } else {
-
-    print("Error fetching price data")
-
-  }
 
 }
 

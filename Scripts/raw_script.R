@@ -12,7 +12,7 @@ usethis::use_data(candidates, overwrite = T)
 
 # Update watcher data ----
 
-eras_data <- update_watcher_data(data = eras_data, era = 973)
+eras_data <- update_watcher_data(data = eras_data, era = 987)
 
 usethis::use_data(eras_data, overwrite = T)
 
@@ -20,12 +20,13 @@ usethis::use_data(eras_data, overwrite = T)
 
 selection <- select_validator(data = eras_data, look.back = 30,
                               criteria = list(pct = 0.6,
-                                              self_stake = 6500,
-                                              total_stake = 1800000,
+                                              self_stake = 5500, #above 5k
+                                              total_stake = 2000000, #set to 95% of average stake last era
                                               commission = 5,
                                               n_active = 30,
-                                              mean_era_points = 60000,
-                                              max_era_points = 90000))
+                                              mean_era_points = 50000,
+                                              max_era_points = 95000,
+                                              last_active = 15))
 
 selection <- merge(selection, candidates, by = "stash_address")
 
@@ -33,13 +34,17 @@ selection <- selection[!selection$provider == "Hetzner Online GmbH" &
                          selection$id_verified == TRUE &
                          selection$democracyVoteCount >= 1 &
                          selection$councilVoteCount >= 1 &
-                         selection$n_subid <= 3,]
+                         selection$n_subid <= 3 &
+                         selection$faluts <= 0 &
+                         selection$offline <= 0,]
 
 val_names <- as.vector(na.omit(selection$validator_name))
 
 # Synchronize Validators ----
 
 sync_val <- sync_validators(data = eras_data, names = val_names, look.back = 30)
+
+sync_sel <- selection[selection$validator_name %in% unlist(sync_val),]
 
 # Plots ----
 
