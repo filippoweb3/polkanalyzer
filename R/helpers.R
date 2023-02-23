@@ -158,33 +158,35 @@ fetch_candidates <- function(){
 
     }
 
+    data[i,10] <- world.cities[world.cities$name == candidates[[i]]$location,]$country.etc[1]
+
     if(is.null(candidates[[i]]$provider)){
-
-      data[i,10] <- NA
-
-    } else {
-
-      data[i,10] <- candidates[[i]]$provider
-
-    }
-
-    if(is.null(candidates[[i]]$councilVotes)){
 
       data[i,11] <- NA
 
     } else {
 
-      data[i,11] <- length(candidates[[i]]$councilVotes)
+      data[i,11] <- candidates[[i]]$provider
 
     }
 
-    if(is.null(candidates[[i]]$democracyVoteCount)){
+    if(is.null(candidates[[i]]$councilVotes)){
 
       data[i,12] <- NA
 
     } else {
 
-      data[i,12] <- candidates[[i]]$democracyVoteCount
+      data[i,12] <- length(candidates[[i]]$councilVotes)
+
+    }
+
+    if(is.null(candidates[[i]]$democracyVoteCount)){
+
+      data[i,13] <- NA
+
+    } else {
+
+      data[i,13] <- candidates[[i]]$democracyVoteCount
 
     }
 
@@ -201,6 +203,7 @@ fetch_candidates <- function(){
                       "id_verified",
                       "id_id",
                       "location",
+                      "country",
                       "provider",
                       "councilVoteCount",
                       "democracyVoteCount")
