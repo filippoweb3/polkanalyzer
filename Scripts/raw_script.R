@@ -26,7 +26,7 @@ selection <- select_validator(data = eras_data, look.back = 30,
                                               commission = 5,
                                               n_active = 31,
                                               mean_era_points = 60000,
-                                              max_era_points = 100000,
+                                              max_era_points = 80000,
                                               last_active = 25))
 
 selection <- merge(selection, candidates, by = "stash_address")
@@ -39,6 +39,9 @@ selection <- selection[!selection$provider == "Hetzner Online GmbH" &
                          selection$faluts <= 0 &
                          selection$offline <= 0,]
 
+minorities <- selection$validator_name[selection$continent %in%
+                          c("Africa", "Asia", "Oceania")]
+
 val_names <- as.vector(na.omit(selection$validator_name))
 
 # Synchronize Validators ----
@@ -46,6 +49,9 @@ val_names <- as.vector(na.omit(selection$validator_name))
 sync_val <- sync_validators(data = eras_data, names = val_names, look.back = 30)
 
 sync_sel <- selection[selection$validator_name %in% unlist(sync_val),]
+
+minorities
+sync_val
 
 # Plots ----
 
