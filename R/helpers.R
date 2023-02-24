@@ -156,18 +156,27 @@ fetch_candidates <- function(){
 
       data[i,9] <- candidates[[i]]$location
 
-
       dist <- stringdist(candidates[[i]]$location, world.cities$name, method = "jw")
 
-      country <- world.cities[dist == min(dist),]
+      country.data <- world.cities[dist == min(dist),]
 
-      if(length(country[,1]) == 1){
+      if(length(country.data[,1]) == 1){
 
-        data[i,10] <- country$country.etc
+        country <- country.data$country.etc
+
+        data[i,10] <- country
+        data[i,11] <- countrycode(sourcevar = country,
+                                  origin = "country.name",
+                                  destination = "continent")
 
       } else {
 
-        data[i,10] <- country$country.etc[country$pop == max(country$pop)]
+        country <- country.data$country.etc[country.data$pop == max(country.data$pop)]
+
+        data[i,10] <- country
+        data[i,11] <- countrycode(sourcevar = country,
+                                  origin = "country.name",
+                                  destination = "continent")
 
       }
 
@@ -175,31 +184,31 @@ fetch_candidates <- function(){
 
     if(is.null(candidates[[i]]$provider)){
 
-      data[i,11] <- NA
+      data[i,12] <- NA
 
     } else {
 
-      data[i,11] <- candidates[[i]]$provider
+      data[i,12] <- candidates[[i]]$provider
 
     }
 
     if(is.null(candidates[[i]]$councilVotes)){
 
-      data[i,12] <- NA
+      data[i,13] <- NA
 
     } else {
 
-      data[i,12] <- length(candidates[[i]]$councilVotes)
+      data[i,13] <- length(candidates[[i]]$councilVotes)
 
     }
 
     if(is.null(candidates[[i]]$democracyVoteCount)){
 
-      data[i,13] <- NA
+      data[i,14] <- NA
 
     } else {
 
-      data[i,13] <- candidates[[i]]$democracyVoteCount
+      data[i,14] <- candidates[[i]]$democracyVoteCount
 
     }
 
@@ -217,6 +226,7 @@ fetch_candidates <- function(){
                       "id_id",
                       "location",
                       "country",
+                      "continent",
                       "provider",
                       "councilVoteCount",
                       "democracyVoteCount")
