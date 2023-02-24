@@ -156,9 +156,22 @@ fetch_candidates <- function(){
 
       data[i,9] <- candidates[[i]]$location
 
-    }
 
-    data[i,10] <- world.cities[world.cities$name == candidates[[i]]$location,]$country.etc[1]
+      dist <- stringdist(candidates[[i]]$location, world.cities$name, method = "jw")
+
+      country <- world.cities[dist == min(dist),]
+
+      if(length(country[,1]) == 1){
+
+        data[i,10] <- country$country.etc
+
+      } else {
+
+        data[i,10] <- country$country.etc[country$pop == max(country$pop)]
+
+      }
+
+    }
 
     if(is.null(candidates[[i]]$provider)){
 
