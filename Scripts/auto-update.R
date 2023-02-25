@@ -1,5 +1,5 @@
-library(rjson)
-library(dplyr)
+#library(rjson)
+#library(dplyr)
 
 load("data/candidates.rda")
 
