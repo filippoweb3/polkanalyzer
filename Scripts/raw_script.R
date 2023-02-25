@@ -25,7 +25,7 @@ selection <- select_validator(data = eras_data, look.back = 30,
                                               total_stake = 2000000, #set to 95% of average stake last era
                                               commission = 5,
                                               n_active = 31,
-                                              mean_era_points = 60000,
+                                              mean_era_points = 50000,
                                               max_era_points = 80000,
                                               last_active = 25))
 
