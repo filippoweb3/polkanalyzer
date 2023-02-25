@@ -31,10 +31,13 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
+      - name: Set credentials
+        run: |
+          git config --global user.email "filippo@web3.foundation"
+          git config --global user.name "filippoweb3"
+
       - name: Check for existing branch
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
           if [[ $(git ls-remote --heads origin refs/heads/data-update | wc -l) == "1" ]]; then
             echo deleting existing branch
             git push origin --delete data-update
@@ -44,6 +47,8 @@ jobs:
 
       - name: Update data
         run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
           git branch data-update
           git checkout data-update
           source("Scripts/auto-update.R")
