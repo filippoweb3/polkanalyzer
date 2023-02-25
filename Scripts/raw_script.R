@@ -1,5 +1,7 @@
 library(rjson)
 library(dplyr)
+library(maps)
+library(countrycode)
 
 # Fetch candidate data ----
 
@@ -12,21 +14,20 @@ usethis::use_data(candidates, overwrite = T)
 
 # Update watcher data ----
 
-eras_data <- update_watcher_data(data = eras_data, era = 987)
+eras_data <- update_watcher_data(data = eras_data, era = 997)
 
 usethis::use_data(eras_data, overwrite = T)
 
 # Select Validators ----
 
 selection <- select_validator(data = eras_data, look.back = 30,
-                              criteria = list(pct = 0.6,
-                                              self_stake = 5500, #above 5k
+                              criteria = list(self_stake = 5000, #above 5k
                                               total_stake = 2000000, #set to 95% of average stake last era
                                               commission = 5,
-                                              n_active = 30,
+                                              n_active = 31,
                                               mean_era_points = 50000,
-                                              max_era_points = 95000,
-                                              last_active = 15))
+                                              max_era_points = 80000,
+                                              last_active = 25))
 
 selection <- merge(selection, candidates, by = "stash_address")
 
@@ -38,6 +39,9 @@ selection <- selection[!selection$provider == "Hetzner Online GmbH" &
                          selection$faluts <= 0 &
                          selection$offline <= 0,]
 
+minorities <- selection$validator_name[selection$continent %in%
+                          c("Africa", "Asia", "Oceania")]
+
 val_names <- as.vector(na.omit(selection$validator_name))
 
 # Synchronize Validators ----
@@ -45,6 +49,9 @@ val_names <- as.vector(na.omit(selection$validator_name))
 sync_val <- sync_validators(data = eras_data, names = val_names, look.back = 30)
 
 sync_sel <- selection[selection$validator_name %in% unlist(sync_val),]
+
+minorities
+sync_val
 
 # Plots ----
 
