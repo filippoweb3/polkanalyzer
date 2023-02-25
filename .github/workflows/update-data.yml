@@ -18,7 +18,6 @@ jobs:
     - name: Install packages
       run: |
         R -e 'install.packages("usethis")'
-    #    R -e 'install.packages("dplyr")'
 
     - name: Check for existing branch
       run: |
