@@ -42,6 +42,8 @@ jobs:
 
       - name: Update data
         run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
           git branch data-update
           git checkout data-update
           source("Scripts/auto-update.R")
