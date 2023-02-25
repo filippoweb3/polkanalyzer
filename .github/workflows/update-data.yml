@@ -37,7 +37,7 @@ jobs:
         git branch data-update
         git checkout data-update
 
-        source("Scripts/auto-update.R")
+        Rscript Scripts/auto-update.R
 
         if [[ `git status --porcelain` ]]; then
           git commit -a -m 'data update'
