@@ -14,7 +14,7 @@ usethis::use_data(candidates, overwrite = T)
 
 # Update watcher data ----
 
-eras_data <- update_watcher_data(data = eras_data, era = 996)
+eras_data <- update_watcher_data(data = eras_data, era = 997)
 
 usethis::use_data(eras_data, overwrite = T)
 
@@ -22,7 +22,7 @@ usethis::use_data(eras_data, overwrite = T)
 
 selection <- select_validator(data = eras_data, look.back = 30,
                               criteria = list(self_stake = 5000, #above 5k
-                                              total_stake = 1800000, #set to 95% of average stake last era
+                                              total_stake = 2000000, #set to 95% of average stake last era
                                               commission = 5,
                                               n_active = 31,
                                               mean_era_points = 60000,
