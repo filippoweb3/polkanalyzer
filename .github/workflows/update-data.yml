@@ -33,8 +33,8 @@ jobs:
 
       - name: Query dependencies
         run: |
-          install.packages('remotes')
-          install.packages('sessioninfo')
+          install.packages('rjson')
+          install.packages('dplyr')
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
@@ -50,23 +50,23 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
-      
+
       - name: Check for existing branch
         run: |
           if [[ $(git ls-remote --heads origin refs/heads/data-update | wc -l) == "1" ]]; then
             echo deleting existing branch
             git push origin --delete data-update
-          else 
+          else
             echo no existing branch found
           fi
-      
+
       - name: Update data
         run: |
           git branch data-update
           git checkout data-update
-          source("R/auto-update.R")
-        shell: Rscript {0} 
-      
+          source("Scripts/auto-update.R")
+        shell: Rscript {0}
+
       - name: Commit, push and open new PR with changes (if any)
         run: |
           if [[ `git status --porcelain` ]]; then
@@ -76,8 +76,8 @@ jobs:
           else
             echo No auction changes detected, skipping update.
           fi
-        
-      
+
+
 
 
 
