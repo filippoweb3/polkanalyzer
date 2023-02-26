@@ -1,9 +1,6 @@
-#library(rjson)
-#library(dplyr)
+library(rjson)
 
-load("data/candidates.rda")
-
-candidates <- 1
+candidates <- fetch_candidates()
 
 usethis::use_data(candidates, overwrite = T)
 

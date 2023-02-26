@@ -17,7 +17,8 @@ jobs:
 
     - name: Install packages
       run: |
-        R -e 'install.packages("usethis")'
+        R -e 'install.packages(c("devtools", "countrycode", "dplyr", "maps", "rjson", "stringdist", "usethis", "utils"))'
+        R -e 'devtools::load_all(".")'
 
     - name: Set credentials
       run: |
