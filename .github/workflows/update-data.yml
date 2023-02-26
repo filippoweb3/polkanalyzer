@@ -1,25 +1,29 @@
 name: Update Data
 on:
 #  schedule:
-#    - cron: '0 * * * *' # every hour
+#    - cron: '0 0 * * *' # every hour
   workflow_dispatch: # Or manually from GitHub UI
 
 jobs:
   autoupdate:
     runs-on: macos-latest
     steps:
+
     - uses: actions/setup-node@v2
       with:
         node-version: "18"
     - uses: actions/checkout@v2
     - uses: r-lib/actions/setup-r@v2
+
     - name: Install packages
       run: |
         R -e 'install.packages("usethis")'
+
     - name: Set credentials
       run: |
         git config --global user.email "actions@github.com"
         git config --global user.name actions-user
+
     - name: Check for existing branch
       run: |
         if (( $(git ls-remote --heads origin refs/heads/data-update | wc -l) == 1 )); then
@@ -28,11 +32,13 @@ jobs:
         else
           echo no existing branch found
         fi
+
     - name: Update data
       run: |
         git branch data-update
         git checkout data-update
         Rscript Scripts/auto-update.R
+
     - name: Commit, push and open new PR with changes (if any)
       run: |
         if [[ `git status --porcelain` ]]; then
