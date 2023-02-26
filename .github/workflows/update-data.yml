@@ -1,7 +1,7 @@
 name: Update Data
 on:
-  schedule:
-    - cron: '0 * * * *' # every hour
+#  schedule:
+#    - cron: '0 * * * *' # every hour
   workflow_dispatch: # Or manually from GitHub UI
 
 jobs:
