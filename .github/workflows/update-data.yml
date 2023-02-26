@@ -22,7 +22,7 @@ jobs:
         git config --global user.name actions-user
     - name: Check for existing branch
       run: |
-        if [[ $(git ls-remote --heads origin refs/heads/data-update | wc -l) == "1" ]]; then
+        if (( $(git ls-remote --heads origin refs/heads/data-update | wc -l) == 1 )); then
           echo deleting existing branch
           git push origin --delete data-update
         else
