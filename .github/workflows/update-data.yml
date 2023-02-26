@@ -35,6 +35,7 @@ jobs:
         if [[ `git status --porcelain` ]]; then
           git commit -a -m 'data update'
           git push --set-upstream origin data-update
+          git fetch origin data-update
           gh pr create --base main --head data-update --title 'Automated data update' --body 'Automated Data Update'
         else
           echo No auction changes detected, skipping update.
