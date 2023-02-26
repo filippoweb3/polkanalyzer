@@ -18,7 +18,6 @@ jobs:
     - name: Install packages
       run: |
         R -e 'install.packages(c("devtools", "countrycode", "dplyr", "maps", "rjson", "stringdist", "usethis", "utils"))'
-        R -e 'devtools::load_all(".")'
 
     - name: Set credentials
       run: |
@@ -38,6 +37,7 @@ jobs:
       run: |
         git branch data-update
         git checkout data-update
+        R -e 'devtools::load_all(".")'
         Rscript Scripts/auto-update.R
 
     - name: Commit, push and open new PR with changes (if any)
