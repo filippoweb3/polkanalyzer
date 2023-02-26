@@ -22,7 +22,7 @@ jobs:
 
     - name: Save packages
       run: |
-        R -e 'saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/cache/depends.Rds", version = 2)'
+        R -e 'saveRDS(remotes::package_deps(packages = c("remotes", "usethis"), dependencies = TRUE), ".github/cache/depends.Rds", version = 2)'
         R -e 'writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/cache/R-version")'
 
     - name: Cache packages
