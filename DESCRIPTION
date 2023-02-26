@@ -11,3 +11,11 @@ Encoding: UTF-8
 LazyData: true
 Depends: 
     R (>= 2.10)
+Imports: 
+    countrycode,
+    dplyr,
+    maps,
+    rjson,
+    stringdist,
+    usethis,
+    utils
