@@ -18,7 +18,7 @@ jobs:
     - name: Install packages
       run: |
         R -e 'install.packages(c("devtools", "countrycode", "dplyr", "maps", "rjson", "stringdist", "usethis", "utils"))'
-        R -e 'devtools::install_github("filippoweb3/Polkanalyzer")'
+        R -e 'devtools::load_all(".")'
 
     - name: Set credentials
       run: |
