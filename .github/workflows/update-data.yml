@@ -18,6 +18,9 @@ jobs:
     - name: Install packages
       run: |
         R -e 'install.packages("usethis")'
+
+    - name: Save packages
+      run: |
         R -e 'saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)'
         R -e 'writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")'
 
