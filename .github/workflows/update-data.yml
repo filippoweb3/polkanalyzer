@@ -5,7 +5,7 @@ on:
   workflow_dispatch: # Or manually from GitHub UI
 
 jobs:
-  autoscrape:
+  autoupdate:
     # The type of runner that the job will run on
     runs-on: macos-latest
 
@@ -44,6 +44,7 @@ jobs:
         if [[ `git status --porcelain` ]]; then
           git commit -a -m 'data update'
           git push --set-upstream origin data-update
+          gh pr create --base main --head data-update --title 'Automated data update' --body 'Automated Data Update'
         else
           echo No auction changes detected, skipping update.
         fi
