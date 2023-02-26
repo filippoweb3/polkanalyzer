@@ -6,24 +6,17 @@ on:
 
 jobs:
   autoupdate:
-    # The type of runner that the job will run on
     runs-on: macos-latest
-
-    # Load repo and install R
     steps:
     - uses: actions/checkout@v2
     - uses: r-lib/actions/setup-r@v2
-
-    # Set-up R
     - name: Install packages
       run: |
         R -e 'install.packages("usethis")'
-
     - name: Set credentials
       run: |
         git config --global user.email "actions@github.com"
         git config --global user.name actions-user
-
     - name: Check for existing branch
       run: |
         if [[ $(git ls-remote --heads origin refs/heads/data-update | wc -l) == "1" ]]; then
@@ -32,15 +25,13 @@ jobs:
         else
           echo no existing branch found
         fi
-
     - name: Update data
       run: |
-
         git branch data-update
         git checkout data-update
-
         Rscript Scripts/auto-update.R
-
+    - name: Commit, push and open new PR with changes (if any)
+      run: |
         if [[ `git status --porcelain` ]]; then
           git commit -a -m 'data update'
           git push --set-upstream origin data-update
