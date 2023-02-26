@@ -18,6 +18,7 @@ jobs:
     - name: Install packages
       run: |
         R -e 'install.packages("usethis")'
+        R -e 'install.packages("remotes")'
 
     - name: Save packages
       run: |
