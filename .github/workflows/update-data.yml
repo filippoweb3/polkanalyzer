@@ -18,22 +18,6 @@ jobs:
     - name: Install packages
       run: |
         R -e 'install.packages("usethis")'
-        R -e 'install.packages("remotes")'
-
-    - name: Save packages
-      run: |
-        R -e 'saveRDS(remotes::package_deps(packages = c("remotes", "usethis"), dependencies = TRUE), ".github/cache/depends.Rds", version = 2)'
-        R -e 'writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/cache/R-version")'
-
-    - name: Cache packages
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.github/cache/depends.Rds
-          ~/.github/cache/R-version
-        key: ${{ runner.os }}-cache-${{ hashFiles('**/*.cache*') }}
-        restore-keys: |
-          ${{ runner.os }}-cache-
 
     - name: Set credentials
       run: |
