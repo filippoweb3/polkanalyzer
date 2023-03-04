@@ -302,7 +302,7 @@ sync_validators <- function(data, names, look.back){
 
   data_sel <- data$eras
 
-  era_coverage <- seq(eras_data$interval[2] - look.back, eras_data$interval[2])
+  era_coverage <- seq(data$interval[2] - look.back, data$interval[2])
 
   final_selection <- list()
 
