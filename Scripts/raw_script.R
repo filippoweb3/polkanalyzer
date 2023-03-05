@@ -39,6 +39,19 @@ selection <- selection[!selection$provider == "Hetzner Online GmbH" &
                          selection$faluts <= 0 &
                          selection$offline <= 0,]
 
+na.omit(selection[,colnames(selection) %in% c("validator_name",
+                                       "m_era",
+                                       "max_era",
+                                       "n_active",
+                                       "m_comm",
+                                       "m_self",
+                                       "m_total",
+                                       "last_active",
+                                       "location",
+                                       "continent",
+                                       "provider")])
+
+
 minorities <- selection$validator_name[selection$continent %in%
                           c("Africa", "Asia", "Oceania")]
 
