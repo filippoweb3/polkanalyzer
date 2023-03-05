@@ -11,51 +11,66 @@ ui <- fluidPage(
 
   titlePanel("Polkanalyzer"),
 
-  sidebarLayout(
+  fluidRow(
 
-    sidebarPanel(width = 5,
+    column(4,
 
-      sliderInput(inputId = "self_stake",
-                  label = "Self Stake (DOT)",
-                  min = 0,
-                  max = 20,
-                  value = 5, post = "K"),
+           sliderInput(inputId = "self_stake",
+                       label = "Self Stake (DOT)",
+                       min = 0,
+                       max = 20,
+                       value = 5, post = "K", step = 0.1),
 
-      sliderInput(inputId = "total_stake",
-                  label = "Total Stake (DOT)",
-                  min = 1.7,
-                  max = 2.5,
-                  value = 2.13, post = "M"),
+           sliderInput(inputId = "total_stake",
+                       label = "Total Stake (DOT)",
+                       min = 1.7,
+                       max = 2.5,
+                       value = 2.13, post = "M", step = 0.001),
 
-      sliderInput(inputId = "comm",
-                  label = "Commission",
-                  min = 0,
-                  max = 10,
-                  value = 5, post = "%"),
+           sliderInput(inputId = "comm",
+                       label = "Commission",
+                       min = 0,
+                       max = 10,
+                       value = 5, post = "%", step = 0.1)
 
-      sliderInput(inputId = "m_points",
-                  label = "Avg. Points",
-                  min = 0,
-                  max = 100,
-                  value = 60, post = "K"),
+           ),
 
-      sliderInput(inputId = "max_points",
-                  label = "Max. Points",
-                  min = 0,
-                  max = 110,
-                  value = 100, post = "K")
+    column(4,
 
-    ),
+           sliderInput(inputId = "m_points",
+                       label = "Avg. Points",
+                       min = 0,
+                       max = 100,
+                       value = 60, post = "K", step = 1),
 
-    mainPanel(width = 12,
-
-      plotOutput(outputId = "map"),
-
-      tableOutput("view")
+           sliderInput(inputId = "max_points",
+                       label = "Max. Points",
+                       min = 0,
+                       max = 110,
+                       value = 100, post = "K", step = 1)
 
     )
+
+  ),
+
+  fluidRow(
+
+    column(width = 12,
+
+           plotOutput(outputId = "map")
+
+           )
+    ),
+
+  fluidRow(
+
+    column(width = 12,
+
+           tableOutput("view")
+
+           )
+    )
   )
-)
 
 
 
