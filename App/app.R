@@ -19,7 +19,7 @@ ui <- fluidPage(
                        label = "Past Eras",
                        min = 3,
                        max = 60,
-                       value = 30, step = 1),
+                       value = 30, step = 1, ticks = FALSE),
 
     ),
 
@@ -29,19 +29,19 @@ ui <- fluidPage(
                        label = "Self Stake (DOT)",
                        min = 0,
                        max = 20,
-                       value = 5, post = "K", step = 0.1),
+                       value = 6, post = "K", step = 0.1, ticks = FALSE),
 
            sliderInput(inputId = "total_stake",
                        label = "Total Stake (DOT)",
                        min = 1.7,
                        max = 2.5,
-                       value = 2.13, post = "M", step = 0.001),
+                       value = 2.13, post = "M", step = 0.001, ticks = FALSE),
 
            sliderInput(inputId = "comm",
                        label = "Commission",
                        min = 0,
                        max = 10,
-                       value = 5, post = "%", step = 0.1)
+                       value = 5, post = "%", step = 0.1, ticks = FALSE)
 
            ),
 
@@ -51,13 +51,13 @@ ui <- fluidPage(
                        label = "Avg. Points",
                        min = 0,
                        max = 100,
-                       value = 60, post = "K", step = 1),
+                       value = 60, post = "K", step = 1, ticks = FALSE),
 
            sliderInput(inputId = "max_points",
                        label = "Max. Points",
                        min = 0,
                        max = 110,
-                       value = 100, post = "K", step = 1)
+                       value = 100, post = "K", step = 1, ticks = FALSE)
 
     )
 
@@ -146,6 +146,16 @@ server <- function(input, output) {
                                                                "m_total",
                                                                "last_active",
                                                                "continent")])
+
+    colnames(selection) <- c("Name",
+                             "Avg. Points",
+                             "Max Points",
+                             "N Active",
+                             "Comm.",
+                             "Self",
+                             "Total",
+                             "Last Active",
+                             "Continent")
 
     selection
 
