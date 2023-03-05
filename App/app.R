@@ -4,7 +4,7 @@ library(shiny)
 ui <- fluidPage(
 
   # App title ----
-  titlePanel("Hello Shiny!"),
+  titlePanel("Polkanalyzer"),
 
   # Sidebar layout with input and output definitions ----
   sidebarLayout(
@@ -13,11 +13,17 @@ ui <- fluidPage(
     sidebarPanel(
 
       # Input: Slider for the number of bins ----
-      sliderInput(inputId = "bins",
-                  label = "Number of bins:",
-                  min = 1,
-                  max = 50,
-                  value = 30)
+      sliderInput(inputId = "self_stake",
+                  label = "Self Stake",
+                  min = 0,
+                  max = 20000,
+                  value = 5000,),
+
+      sliderInput(inputId = "total_stake",
+                  label = "Total Stake",
+                  min = 1800000,
+                  max = 2500000,
+                  value = 2100000)
 
     ),
 
