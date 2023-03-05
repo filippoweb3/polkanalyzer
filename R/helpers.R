@@ -162,19 +162,29 @@ fetch_candidates <- function(){
 
       if(length(country.data[,1]) == 1){
 
+        data[i,10] <- country.data$lat
+        data[i,11] <- country.data$lon
+
         country <- country.data$country.etc
 
-        data[i,10] <- country
-        data[i,11] <- countrycode(sourcevar = country,
+        data[i,12] <- country
+
+        data[i,13] <- countrycode(sourcevar = country,
                                   origin = "country.name",
                                   destination = "continent")
 
       } else {
 
-        country <- country.data$country.etc[country.data$pop == max(country.data$pop)]
+        onecountry.data <- country.data[country.data$pop == max(country.data$pop),]
 
-        data[i,10] <- country
-        data[i,11] <- countrycode(sourcevar = country,
+        data[i,10] <- onecountry.data$lat
+        data[i,11] <- onecountry.data$lon
+
+        country <- onecountry.data$country.etc
+
+        data[i,12] <- country
+
+        data[i,13] <- countrycode(sourcevar = country,
                                   origin = "country.name",
                                   destination = "continent")
 
@@ -184,31 +194,31 @@ fetch_candidates <- function(){
 
     if(is.null(candidates[[i]]$provider)){
 
-      data[i,12] <- NA
+      data[i,14] <- NA
 
     } else {
 
-      data[i,12] <- candidates[[i]]$provider
+      data[i,14] <- candidates[[i]]$provider
 
     }
 
     if(is.null(candidates[[i]]$councilVotes)){
 
-      data[i,13] <- NA
+      data[i,15] <- NA
 
     } else {
 
-      data[i,13] <- length(candidates[[i]]$councilVotes)
+      data[i,15] <- length(candidates[[i]]$councilVotes)
 
     }
 
     if(is.null(candidates[[i]]$democracyVoteCount)){
 
-      data[i,14] <- NA
+      data[i,16] <- NA
 
     } else {
 
-      data[i,14] <- candidates[[i]]$democracyVoteCount
+      data[i,16] <- candidates[[i]]$democracyVoteCount
 
     }
 
@@ -225,6 +235,8 @@ fetch_candidates <- function(){
                       "id_verified",
                       "id_id",
                       "location",
+                      "lat",
+                      "lon",
                       "country",
                       "continent",
                       "provider",
