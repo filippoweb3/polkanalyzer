@@ -302,23 +302,23 @@ sync_validators <- function(data, names, look.back){
 
   data_sel <- data$eras
 
-  era_coverage <- seq(eras_data$interval[2] - look.back, eras_data$interval[2])
+  era_coverage <- seq(data$interval[2] - look.back, data$interval[2])
 
   final_selection <- list()
 
-  for (k in 1:10){#multiple selection rounds for backup coverage
+  for (k in 1:10){
 
     eras <- c()
 
-    partial_selection <- c()
+    partial_selection <- list()
 
-    names <- names[!names %in% unlist(final_selection)]
+    names_left <- names[!names %in% unlist(final_selection)]
 
     for(j in 1:16){
 
-      names_left <- names[!names %in% unlist(partial_selection)]
+      names_left_partial <- names_left[!names_left %in% unlist(partial_selection)]
 
-      if(length(names_left) == 0){
+      if(length(names_left_partial) == 0){
 
         break
 
@@ -326,9 +326,9 @@ sync_validators <- function(data, names, look.back){
 
       best_cov <- c()
 
-      for(i in 1:length(names_left)){ #for each val, maxim history covered eras within the specified interval
+      for(i in 1:length(names_left_partial)){
 
-        era_covered <- data_sel[data_sel$name %in% names_left[i],]$era
+        era_covered <- data_sel[data_sel$name %in% names_left_partial[i],]$era
 
         sum_cov <- unique(c(era_covered, eras))
 
@@ -336,29 +336,29 @@ sync_validators <- function(data, names, look.back){
 
       }
 
-      sel_names <- names_left[best_cov == max(best_cov)] #prioritize val with best coverage
+      sel_names <- names_left_partial[best_cov == max(best_cov)]
 
-      if(length(sel_names) > 1){#if multiple names with best coverage, further selection with average era points
+      if(length(sel_names) > 1){
 
         sub_sel <- data_sel[data_sel$name %in% sel_names,]
 
-        sum_sub_sel <- group_by(sub_sel, name) %>% summarize(m = mean(era_points))
+        sum_sub_sel <- group_by(sub_sel, name) %>% summarize(m = mean(self_stake))
 
-        sel_name <- sum_sub_sel[sum_sub_sel$m == max(sum_sub_sel$m),]$name
+        sel_names <- sum_sub_sel[sum_sub_sel$m == max(sum_sub_sel$m),]$name
 
-        partial_selection[j] <- sel_name
-
-        eras <- unique(c(eras, data_sel[data_sel$name %in% sel_name,]$era))
+        partial_selection[[j]] <- sel_names
 
       } else if(length(sel_names) == 1){
 
-        partial_selection[j] <- sel_names
-
-        eras <- unique(c(eras, data_sel[data_sel$name %in% sel_names,]$era))
+        partial_selection[[j]] <- sel_names
 
       }
 
-      progress <- sum(era_coverage %in% eras)/length(era_coverage)*100
+      data_sel_names <- data_sel[data_sel$name %in% sel_names,]
+
+      eras <- unique(c(eras, data_sel_names[data_sel_names$era %in% era_coverage,]$era))
+
+      progress <- length(eras)/length(era_coverage)*100
 
       print(progress)
 
@@ -370,13 +370,7 @@ sync_validators <- function(data, names, look.back){
 
     }
 
-    final_selection[[k]] <- partial_selection
-
-    if(length(unlist(final_selection)) > 16){
-
-      break
-
-    }
+    final_selection[[k]] <- unlist(partial_selection)
 
   }
 
