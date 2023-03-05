@@ -33,7 +33,19 @@ ui <- fluidPage(
                   label = "Commission",
                   min = 0,
                   max = 10,
-                  value = 5, post = "%")
+                  value = 5, post = "%"),
+
+      sliderInput(inputId = "m_points",
+                  label = "Avg. Points",
+                  min = 0,
+                  max = 100,
+                  value = 60, post = "K"),
+
+      sliderInput(inputId = "max_points",
+                  label = "Max. Points",
+                  min = 0,
+                  max = 110,
+                  value = 100, post = "K")
 
     ),
 
@@ -54,17 +66,19 @@ server <- function(input, output) {
 
   output$view <- renderTable({
 
-    self_stake <- input$self_stake
-    total_stake <- input$total_stake
+    self_stake <- input$self_stake*10^3
+    total_stake <- input$total_stake*10^6
     comm <- input$comm
+    m_points <- input$m_points*10^3
+    max_points <- input$max_points*10^3
 
     selection <- select_validator(data = eras_data, look.back = 30,
-                                  criteria = list(self_stake = self_stake*10^3,
-                                                  total_stake = total_stake*10^6,
+                                  criteria = list(self_stake = self_stake,
+                                                  total_stake = total_stake,
                                                   commission = comm,
                                                   n_active = 31,
-                                                  mean_era_points = 60000,
-                                                  max_era_points = 100000,
+                                                  mean_era_points = m_points,
+                                                  max_era_points = max_points,
                                                   last_active = 31))
 
     selection <- merge(selection, candidates, by = "stash_address")
