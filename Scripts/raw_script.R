@@ -21,8 +21,8 @@ usethis::use_data(eras_data, overwrite = T)
 # Select Validators ----
 
 selection <- select_validator(data = eras_data, look.back = 30,
-                              criteria = list(self_stake = 6000, #above 5k
-                                              total_stake = 2130000, #set to 95% of average stake last era
+                              criteria = list(self_stake = 6000,
+                                              total_stake = 2130000,
                                               commission = 5,
                                               n_active = 31,
                                               mean_era_points = 60000,
