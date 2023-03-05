@@ -46,7 +46,9 @@ ui <- fluidPage(
 
     mainPanel(width = 12,
 
-      tableOutput("view")
+      tableOutput("view"),
+
+      plotOutput(outputId = "map")
 
     )
   )
@@ -94,6 +96,12 @@ server <- function(input, output) {
                                                                "continent")])
 
     selection
+
+  })
+
+  output$map <- renderPlot({
+
+    map("world", fill=TRUE, col="white", bg="white")
 
   })
 
