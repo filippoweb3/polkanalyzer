@@ -46,9 +46,9 @@ ui <- fluidPage(
 
     mainPanel(width = 12,
 
-      tableOutput("view"),
+      plotOutput(outputId = "map"),
 
-      plotOutput(outputId = "map")
+      tableOutput("view")
 
     )
   )
@@ -58,7 +58,7 @@ ui <- fluidPage(
 
 server <- function(input, output) {
 
-  output$view <- renderTable({
+  datasetInput <- reactive({
 
     self_stake <- input$self_stake*10^3
     total_stake <- input$total_stake*10^6
@@ -85,6 +85,19 @@ server <- function(input, output) {
                              selection$faluts <= 0 &
                              selection$offline <= 0,]
 
+  })
+
+
+  output$map <- renderPlot({
+
+    map("world", fill = FALSE, col = rgb(0,0,0,0.5), bg = "white")
+
+  })
+
+  output$view <- renderTable({
+
+    selection <- datasetInput()
+
     selection <- na.omit(selection[,colnames(selection) %in% c("validator_name",
                                                                "m_era",
                                                                "max_era",
@@ -96,12 +109,6 @@ server <- function(input, output) {
                                                                "continent")])
 
     selection
-
-  })
-
-  output$map <- renderPlot({
-
-    map("world", fill = FALSE, col = rgb(0,0,0,0.5), bg = "white")
 
   })
 
