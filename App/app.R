@@ -1,10 +1,13 @@
 library(shiny)
+library(shinythemes)
 library(dplyr)
 library(maps)
 library(countrycode)
 library(Polkanalyzer)
 
 ui <- fluidPage(
+
+  theme = shinytheme("darkly"),
 
   titlePanel("Polkanalyzer"),
 
@@ -58,6 +61,8 @@ ui <- fluidPage(
 
 server <- function(input, output) {
 
+
+
   datasetInput <- reactive({
 
     self_stake <- input$self_stake*10^3
@@ -88,15 +93,19 @@ server <- function(input, output) {
   })
 
 
+
   output$map <- renderPlot({
 
     selection <- datasetInput()
 
-    map("world", fill = FALSE, col = rgb(0,0,0,0.2), bg = "white")
+    map("world", fill = FALSE,
+        col = "grey40", bg = NULL, ylim =c(-60,70))
 
-    points(selection$lon, selection$lat, pch = "+")
+    points(selection$lon, selection$lat, pch = "+", col = "yellow")
 
-  })
+  }, bg = "transparent")
+
+
 
   output$view <- renderTable({
 
