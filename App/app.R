@@ -90,7 +90,11 @@ server <- function(input, output) {
 
   output$map <- renderPlot({
 
-    map("world", fill = FALSE, col = rgb(0,0,0,0.5), bg = "white")
+    selection <- datasetInput()
+
+    map("world", fill = FALSE, col = rgb(0,0,0,0.2), bg = "white")
+
+    points(selection$lon, selection$lat, pch = "+")
 
   })
 
