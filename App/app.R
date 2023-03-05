@@ -4,19 +4,14 @@ library(maps)
 library(countrycode)
 library(Polkanalyzer)
 
-# Define UI for app that draws a histogram ----
 ui <- fluidPage(
 
-  # App title ----
   titlePanel("Polkanalyzer"),
 
-  # Sidebar layout with input and output definitions ----
   sidebarLayout(
 
-    # Sidebar panel for inputs ----
     sidebarPanel(width = 5,
 
-      # Input: Slider for the number of bins ----
       sliderInput(inputId = "self_stake",
                   label = "Self Stake (DOT)",
                   min = 0,
@@ -49,7 +44,6 @@ ui <- fluidPage(
 
     ),
 
-    # Main panel for displaying outputs ----
     mainPanel(width = 12,
 
       tableOutput("view")
@@ -60,9 +54,7 @@ ui <- fluidPage(
 
 
 
-# Define server logic required to draw a histogram ----
 server <- function(input, output) {
-
 
   output$view <- renderTable({
 
