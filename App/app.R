@@ -15,6 +15,16 @@ ui <- fluidPage(
 
     column(4,
 
+           sliderInput(inputId = "look.back",
+                       label = "Past Eras",
+                       min = 3,
+                       max = 60,
+                       value = 30, step = 1),
+
+    ),
+
+    column(4,
+
            sliderInput(inputId = "self_stake",
                        label = "Self Stake (DOT)",
                        min = 0,
@@ -85,8 +95,9 @@ server <- function(input, output) {
     comm <- input$comm
     m_points <- input$m_points*10^3
     max_points <- input$max_points*10^3
+    look_back <- input$look.back
 
-    selection <- select_validator(data = eras_data, look.back = 30,
+    selection <- select_validator(data = eras_data, look.back = look_back,
                                   criteria = list(self_stake = self_stake,
                                                   total_stake = total_stake,
                                                   commission = comm,
