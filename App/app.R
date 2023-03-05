@@ -1,4 +1,8 @@
 library(shiny)
+library(dplyr)
+library(maps)
+library(countrycode)
+library(Polkanalyzer)
 
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(
@@ -16,22 +20,15 @@ ui <- fluidPage(
       sliderInput(inputId = "self_stake",
                   label = "Self Stake",
                   min = 0,
-                  max = 20000,
-                  value = 5000,),
-
-      sliderInput(inputId = "total_stake",
-                  label = "Total Stake",
-                  min = 1800000,
-                  max = 2500000,
-                  value = 2100000)
+                  max = 20,
+                  value = 5, post = "K")
 
     ),
 
     # Main panel for displaying outputs ----
     mainPanel(
 
-      # Output: Histogram ----
-      plotOutput(outputId = "distPlot")
+      tableOutput("view")
 
     )
   )
@@ -42,22 +39,21 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram ----
 server <- function(input, output) {
 
-  # Histogram of the Old Faithful Geyser Data ----
-  # with requested number of bins
-  # This expression that generates a histogram is wrapped in a call
-  # to renderPlot to indicate that:
-  #
-  # 1. It is "reactive" and therefore should be automatically
-  #    re-executed when inputs (input$bins) change
-  # 2. Its output type is a plot
-  output$distPlot <- renderPlot({
 
-    x    <- faithful$waiting
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+  output$view <- renderTable({
 
-    hist(x, breaks = bins, col = "#007bc2", border = "white",
-         xlab = "Waiting time to next eruption (in mins)",
-         main = "Histogram of waiting times")
+    self_stake <- input$self_stake
+
+    selection <- select_validator(data = eras_data, look.back = 30,
+                                  criteria = list(self_stake = self_stake*1000,
+                                                  total_stake = 2130000,
+                                                  commission = 5,
+                                                  n_active = 31,
+                                                  mean_era_points = 60000,
+                                                  max_era_points = 100000,
+                                                  last_active = 31))
+
+    head(selection)
 
   })
 
