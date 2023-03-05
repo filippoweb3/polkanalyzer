@@ -101,7 +101,7 @@ server <- function(input, output) {
 
   output$map <- renderPlot({
 
-    map("world", fill=TRUE, col="white", bg="white")
+    map("world", fill = FALSE, col = rgb(0,0,0,0.5), bg = "white")
 
   })
 
