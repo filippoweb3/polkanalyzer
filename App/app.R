@@ -119,6 +119,14 @@ server <- function(input, output, session) {
                              selection$faluts <= 0 &
                              selection$offline <= 0,]
 
+    val_names <- as.vector(na.omit(selection$validator_name))
+
+    sync_val <- sync_validators(data = eras_data, names = val_names, look.back = look_back)
+
+    selection <- merge(sync_val, selection,by = "validator_name")
+
+    selection <- selection[order(selection$run, selection$coverage),]
+
   })
 
 
@@ -141,6 +149,8 @@ server <- function(input, output, session) {
     selection <- datasetInput()
 
     selection <- na.omit(selection[,colnames(selection) %in% c("validator_name",
+                                                               "run",
+                                                               "coverage",
                                                                "m_era",
                                                                "max_era",
                                                                "n_active",
@@ -151,6 +161,8 @@ server <- function(input, output, session) {
                                                                "continent")])
 
     colnames(selection) <- c("Name",
+                             "Run",
+                             "Coverage",
                              "Avg. Points",
                              "Max Points",
                              "N Active",
