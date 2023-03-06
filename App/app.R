@@ -13,7 +13,7 @@ ui <- fluidPage(
 
   fluidRow(
 
-    column(4,
+    column(3,
 
            sliderInput(inputId = "look.back",
                        label = "Past Eras",
@@ -23,13 +23,13 @@ ui <- fluidPage(
 
     ),
 
-    column(4,
+    column(3,
 
            sliderInput(inputId = "self_stake",
                        label = "Self Stake (DOT)",
                        min = 0,
                        max = 20,
-                       value = 6, post = "K", step = 0.1, ticks = FALSE),
+                       value = 5, post = "K", step = 0.1, ticks = FALSE),
 
            sliderInput(inputId = "total_stake",
                        label = "Total Stake (DOT)",
@@ -45,19 +45,19 @@ ui <- fluidPage(
 
            ),
 
-    column(4,
+    column(3,
 
            sliderInput(inputId = "m_points",
                        label = "Avg. Points",
                        min = 0,
                        max = 100,
-                       value = 60, post = "K", step = 1, ticks = FALSE),
+                       value = 50, post = "K", step = 1, ticks = FALSE),
 
            sliderInput(inputId = "max_points",
                        label = "Max. Points",
                        min = 0,
                        max = 110,
-                       value = 100, post = "K", step = 1, ticks = FALSE)
+                       value = 80, post = "K", step = 1, ticks = FALSE)
 
     )
 
@@ -67,7 +67,7 @@ ui <- fluidPage(
 
     column(width = 12,
 
-           plotOutput(outputId = "map")
+           plotOutput(outputId = "map", fill = TRUE )
 
            )
     ),
@@ -101,10 +101,10 @@ server <- function(input, output) {
                                   criteria = list(self_stake = self_stake,
                                                   total_stake = total_stake,
                                                   commission = comm,
-                                                  n_active = 31,
+                                                  n_active = look_back + 1,
                                                   mean_era_points = m_points,
                                                   max_era_points = max_points,
-                                                  last_active = 31))
+                                                  last_active = look_back + 1))
 
     selection <- merge(selection, candidates, by = "stash_address")
 
