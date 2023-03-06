@@ -55,16 +55,17 @@ na.omit(selection[,colnames(selection) %in% c("validator_name",
 minorities <- selection$validator_name[selection$continent %in%
                           c("Africa", "Asia", "Oceania")]
 
+minorities
+
 val_names <- as.vector(na.omit(selection$validator_name))
 
 # Synchronize Validators ----
 
 sync_val <- sync_validators(data = eras_data, names = val_names, look.back = 30)
 
-sync_sel <- selection[selection$validator_name %in% unlist(sync_val),]
+sync_sel <- merge(sync_val, selection,by = "validator_name")
 
-minorities
-sync_val
+sync_sel <- sync_sel[order(sync_sel$Run, sync_sel$Coverage),]
 
 # Plots ----
 

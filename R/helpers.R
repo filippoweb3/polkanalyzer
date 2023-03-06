@@ -392,7 +392,7 @@ sync_validators <- function(data, names, look.back){
 
   }
 
-  out <- data.frame(Run = runs, Coverage = pcts, Names = unlist(final_selection))
+  out <- data.frame(run = runs, coverage = pcts, validator_name = unlist(final_selection))
 
   return(out)
 
