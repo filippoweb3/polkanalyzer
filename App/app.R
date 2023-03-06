@@ -35,7 +35,7 @@ ui <- fluidPage(
                        label = "Total Stake (DOT)",
                        min = 1.7,
                        max = 2.5,
-                       value = 2.13, post = "M", step = 0.001, ticks = FALSE),
+                       value = 2.13, post = "M", step = 0.01, ticks = FALSE),
 
            sliderInput(inputId = "comm",
                        label = "Commission",
