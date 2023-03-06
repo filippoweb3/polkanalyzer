@@ -318,6 +318,10 @@ sync_validators <- function(data, names, look.back){
 
   final_selection <- list()
 
+  runs <- c()
+
+  pcts <- c()
+
   for (k in 1:10){
 
     eras <- c()
@@ -327,6 +331,8 @@ sync_validators <- function(data, names, look.back){
     names_left <- names[!names %in% unlist(final_selection)]
 
     for(j in 1:16){
+
+      runs <- c(runs, k)
 
       names_left_partial <- names_left[!names_left %in% unlist(partial_selection)]
 
@@ -372,7 +378,7 @@ sync_validators <- function(data, names, look.back){
 
       progress <- length(eras)/length(era_coverage)*100
 
-      print(progress)
+      pcts <- c(pcts, progress)
 
       if(progress == 100){
 
@@ -386,7 +392,9 @@ sync_validators <- function(data, names, look.back){
 
   }
 
-  return(final_selection)
+  out <- data.frame(Run = runs, Coverage = pcts, Names = unlist(final_selection))
+
+  return(out)
 
 }
 
