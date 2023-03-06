@@ -332,8 +332,6 @@ sync_validators <- function(data, names, look.back){
 
     for(j in 1:16){
 
-      runs <- c(runs, k)
-
       names_left_partial <- names_left[!names_left %in% unlist(partial_selection)]
 
       if(length(names_left_partial) == 0){
@@ -341,6 +339,8 @@ sync_validators <- function(data, names, look.back){
         break
 
       }
+
+      runs <- c(runs, k)
 
       best_cov <- c()
 
