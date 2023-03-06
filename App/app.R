@@ -58,14 +58,8 @@ ui <- fluidPage(
     # Main panel for displaying outputs ----
     mainPanel(
 
-      fluidRow(
+        plotOutput(outputId = "map", fill = TRUE)
 
-        column(width = 12,
-
-               plotOutput(outputId = "map", fill = TRUE )
-
-               )
-        )
       )
     ),
 
