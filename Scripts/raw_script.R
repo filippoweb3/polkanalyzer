@@ -65,7 +65,7 @@ sync_val <- sync_validators(data = eras_data, names = val_names, look.back = 30)
 
 sync_sel <- merge(sync_val, selection,by = "validator_name")
 
-sync_sel <- sync_sel[order(sync_sel$Run, sync_sel$Coverage),]
+sync_sel <- sync_sel[order(sync_sel$run, sync_sel$coverage),]
 
 # Plots ----
 
