@@ -23,6 +23,12 @@ ui <- fluidPage(
                   max = 60,
                   value = 30, step = 1, ticks = FALSE),
 
+      sliderInput(inputId = "n.active",
+                  label = "Eras Active",
+                  min = 3,
+                  max = 60,
+                  value = 30, step = 1, ticks = FALSE),
+
       sliderInput(inputId = "self_stake",
                   label = "Self Stake (DOT)",
                   min = 0,
@@ -74,8 +80,14 @@ ui <- fluidPage(
 )
 
 
-server <- function(input, output) {
+server <- function(input, output, session) {
 
+
+  observeEvent(input$look.back, {
+
+    updateSliderInput(session = session, inputId = "n.active", max = input$look.back)
+
+  })
 
 
   datasetInput <- reactive({
@@ -86,12 +98,13 @@ server <- function(input, output) {
     m_points <- input$m_points*10^3
     max_points <- input$max_points*10^3
     look_back <- input$look.back
+    n_active <- input$n.active
 
     selection <- select_validator(data = eras_data, look.back = look_back,
                                   criteria = list(self_stake = self_stake,
                                                   total_stake = total_stake,
                                                   commission = comm,
-                                                  n_active = look_back + 1,
+                                                  n_active = n_active + 1,
                                                   mean_era_points = m_points,
                                                   max_era_points = max_points,
                                                   last_active = look_back + 1))
