@@ -21,12 +21,12 @@ usethis::use_data(eras_data, overwrite = T)
 # Select Validators ----
 
 selection <- select_validator(data = eras_data, look.back = 30,
-                              criteria = list(self_stake = 6000,
+                              criteria = list(self_stake = 5000,
                                               total_stake = 2130000,
                                               commission = 5,
                                               n_active = 31,
-                                              mean_era_points = 60000,
-                                              max_era_points = 100000,
+                                              mean_era_points = 50000,
+                                              max_era_points = 80000,
                                               last_active = 31))
 
 selection <- merge(selection, candidates, by = "stash_address")
