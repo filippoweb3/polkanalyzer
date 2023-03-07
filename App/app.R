@@ -1,5 +1,6 @@
 library(shiny)
 library(shinythemes)
+library(shinycssloaders)
 library(dplyr)
 library(maps)
 library(countrycode)
@@ -64,16 +65,19 @@ ui <- fluidPage(
     # Main panel for displaying outputs ----
     mainPanel(
 
+      shinycssloaders::withSpinner(
+
         plotOutput(outputId = "map", fill = TRUE)
 
       )
-    ),
+    )
+  ),
 
   fluidRow(
 
     column(width = 12,
 
-           tableOutput("view")
+           shinycssloaders::withSpinner(tableOutput("view"))
 
     )
   )
