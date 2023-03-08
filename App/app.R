@@ -1,7 +1,10 @@
 library(shiny)
 library(shinythemes)
 library(shinycssloaders)
+library(plotly)
+
 library(dplyr)
+library(rjson)
 library(maps)
 library(countrycode)
 library(Polkanalyzer)
@@ -34,7 +37,7 @@ ui <- fluidPage(
                   label = "Self Stake (DOT)",
                   min = 0,
                   max = 20,
-                  value = 5, post = "K", step = 0.1, ticks = FALSE),
+                  value = 6, post = "K", step = 0.1, ticks = FALSE),
 
       sliderInput(inputId = "total_stake",
                   label = "Total Stake (DOT)",
@@ -58,7 +61,7 @@ ui <- fluidPage(
                   label = "Max. Points",
                   min = 0,
                   max = 110,
-                  value = 80, post = "K", step = 1, ticks = FALSE)
+                  value = 100, post = "K", step = 1, ticks = FALSE)
 
     ),
 
@@ -67,7 +70,7 @@ ui <- fluidPage(
 
       shinycssloaders::withSpinner(
 
-        plotOutput(outputId = "map", fill = TRUE)
+        plotlyOutput(outputId = "map", fill = TRUE)
 
       )
     )
@@ -87,11 +90,16 @@ ui <- fluidPage(
 server <- function(input, output, session) {
 
 
+
+
   observeEvent(input$look.back, {
 
     updateSliderInput(session = session, inputId = "n.active", max = input$look.back)
 
   })
+
+
+
 
 
   datasetInput <- reactive({
@@ -135,16 +143,68 @@ server <- function(input, output, session) {
 
 
 
-  output$map <- renderPlot({
+
+  output$map <- renderPlotly({ #renderPlot
 
     selection <- datasetInput()
 
-    map("world", fill = FALSE,
-        col = "grey40", bg = NULL, ylim =c(-60,70))
+    g <- list(
 
-    points(selection$lon, selection$lat, pch = "+", col = "yellow")
+      shadowland = FALSE,
+      landcolor = "rgba(0, 0, 0, 0)",
+      showcountries = TRUE,
+      showland = TRUE,
+      showocean = TRUE,
+      oceancolor = "rgba(0, 0, 0, 0)",
+      bgcolor = "rgba(0, 0, 0, 0)",
+      projection = list(
+        type = 'orthographic',
+        rotation = list(
+          lon = 0,
+          lat = 40,
+          roll = 0
+        )
+      )
+    )
 
-  }, bg = "transparent")
+    fig <- plot_geo(selection, lat = ~lat, lon = ~lon, marker = list(color = "orange")) %>%
+      config(displayModeBar = TRUE,
+             modeBarButtons = list(c("zoomInGeo", "zoomOutGeo", "resetGeo")),
+             displaylogo = FALSE)
+
+    fig <- fig %>% add_markers(
+
+      text = ~paste(validator_name, paste("Self: ",round(m_self)), country, sep = "<br />"),
+      symbol = I("circle"), hoverinfo = "text"
+
+    )
+
+    m <- list(
+      l = 10,
+      r = 10,
+      b = 10,
+      t = 10,
+      pad = 0
+    )
+
+    fig <- fig %>% layout(
+
+      geo = g, paper_bgcolor = "rgba(0, 0, 0, 0)", plot_bgcolor = "rgba(0, 0, 0, 0)",
+      margin = m,
+      modebar = list(bgcolor='transparent', color='orange', activecolor='white')
+
+    )
+
+    fig <- fig
+
+    fig
+
+    #map("world", fill = FALSE, col = "grey40", bg = NULL, ylim =c(-60,70))
+    #points(selection$lon, selection$lat, pch = "+", col = "yellow")
+
+  })  #, bg = "transparent"
+
+
 
 
 
