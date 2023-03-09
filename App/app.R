@@ -93,7 +93,7 @@ ui <- fluidPage(
 
     column(width = 12,
 
-           shinycssloaders::withSpinner(tableOutput("view"))
+           div(style = 'overflow-x: scroll', shinycssloaders::withSpinner(tableOutput("view")))
 
     )
   )
