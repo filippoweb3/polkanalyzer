@@ -15,11 +15,19 @@ ui <- fluidPage(
 
   titlePanel("Polkanalyzer"),
 
-
   sidebarLayout(
 
     # Sidebar panel for inputs ----
     sidebarPanel(
+
+      tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: orange}")),
+      tags$style(HTML(".js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1 .irs-bar {background: orange}")),
+      tags$style(HTML(".js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, .js-irs-2 .irs-bar {background: orange}")),
+      tags$style(HTML(".js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 .irs-bar {background: orange}")),
+      tags$style(HTML(".js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4 .irs-bar {background: orange}")),
+      tags$style(HTML(".js-irs-5 .irs-single, .js-irs-5 .irs-bar-edge, .js-irs-5 .irs-bar {background: orange}")),
+      tags$style(HTML(".js-irs-6 .irs-single, .js-irs-6 .irs-bar-edge, .js-irs-6 .irs-bar {background: orange}")),
+
 
       sliderInput(inputId = "look.back",
                   label = "Past Eras",
@@ -97,10 +105,6 @@ server <- function(input, output, session) {
     updateSliderInput(session = session, inputId = "n.active", max = input$look.back)
 
   })
-
-
-
-
 
   datasetInput <- reactive({
 
