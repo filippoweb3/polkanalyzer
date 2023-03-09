@@ -9,7 +9,12 @@ library(maps)
 library(countrycode)
 library(Polkanalyzer)
 
+
 ui <- fluidPage(
+
+  tags$head(
+    includeCSS("www/font.css")
+  ),
 
   theme = shinytheme("darkly"),
 
