@@ -93,7 +93,7 @@ ui <- fluidPage(
 
     column(width = 12,
 
-           div(style = 'overflow-x: scroll', shinycssloaders::withSpinner(tableOutput("view")))
+           shinycssloaders::withSpinner(dataTableOutput("view"))
 
     )
   )
@@ -217,7 +217,7 @@ server <- function(input, output, session) {
 
 
 
-  output$view <- renderTable({
+  output$view <- renderDataTable({
 
     selection <- datasetInput()
 
@@ -233,7 +233,7 @@ server <- function(input, output, session) {
                                                                "last_active",
                                                                "continent")])
 
-    selection[,c(4:5,8)] <- round(selection[,c(4:5,8)]/10^3, 1)
+    selection[,c(3:5,7:8)] <- round(selection[,c(4:5,8)]/10^3, 1)
     selection[,9] <- round(selection[,9]/10^6, 1)
 
     colnames(selection) <- c("Name",
@@ -248,7 +248,12 @@ server <- function(input, output, session) {
                              "Last Active",
                              "Continent")
 
-    selection
+    datatable(selection, options = list(
+      scrollX = TRUE,
+      scrollY = "500px",
+      paging = FALSE
+      )
+    )
 
   })
 
