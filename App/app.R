@@ -174,16 +174,16 @@ server <- function(input, output, session) {
 
     fig <- fig %>% add_markers(
 
-      text = ~paste(validator_name, paste("Self: ",round(m_self)), country, sep = "<br />"),
+      text = ~paste(validator_name, paste("Self: ",round(m_self),"DOT"), paste(location,"|", country), sep = "<br />"),
       symbol = I("circle"), hoverinfo = "text"
 
     )
 
     m <- list(
-      l = 10,
-      r = 10,
-      b = 10,
-      t = 10,
+      l = 0,
+      r = 0,
+      b = 0,
+      t = 0,
       pad = 0
     )
 
