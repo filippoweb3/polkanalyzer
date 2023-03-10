@@ -29,6 +29,31 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
         }
 
 
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+            background: rgba(34, 34, 34, 1) !important;
+            color: white !important;
+            border-color: rgba(34, 34, 34, 1) !important;
+        }
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            background: rgba(34, 34, 34, 1) !important;
+            color: orange !important;
+            border-color: rgba(34, 34, 34, 1) !important;
+        }
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+            background: none;
+            color : rgba(34, 34, 34, 1) !important;
+        }
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: none;
+            color: orange !important;
+            border-color: rgba(34, 34, 34, 1) !important;
+        }
+
 td {
   color: "";
   background-color: "";

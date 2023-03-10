@@ -25,30 +25,7 @@ ui <- fluidPage(
 
   tags$style(
 
-    HTML(".dataTables_wrapper .dataTables_paginate .paginate_button {
-            background: rgba(34, 34, 34, 1) !important;
-            color: white !important;
-            border-color: rgba(34, 34, 34, 1) !important;
-        }"),
-
-    HTML(".dataTables_wrapper .dataTables_paginate .paginate_button.current,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-            background: rgba(34, 34, 34, 1) !important;
-            color: orange !important;
-            border-color: rgba(34, 34, 34, 1) !important;
-        }"),
-
-    HTML(".dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
-            background: none;
-            color : rgba(34, 34, 34, 1) !important;
-        }"),
-
-    HTML(".dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-            background: none;
-            color: orange !important;
-            border-color: rgba(34, 34, 34, 1) !important;
-        }")
+    includeCSS("www/font.css")
 
   ),
 
@@ -64,7 +41,6 @@ ui <- fluidPage(
     column(width = 1),
 
     column(width = 10,
-
 
            sidebarLayout(
 
