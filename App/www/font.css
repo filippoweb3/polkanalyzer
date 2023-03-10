@@ -54,6 +54,18 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
             border-color: rgba(34, 34, 34, 1) !important;
         }
 
+.dataTables_wrapper .dataTables_filter input[type="search"] {
+  color: orange !important;
+  background: rgba(48, 48, 48, 1) !important;
+
+}
+
+.dataTables_wrapper .dataTables_length  select {
+
+  background: orange !important;
+
+}
+
 td {
   color: "";
   background-color: "";
