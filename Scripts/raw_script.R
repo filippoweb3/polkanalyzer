@@ -77,3 +77,28 @@ plot(pct_less_100_comm, xlab = "Eras", ylab = "Pct Valitators < 100% comm", type
 
 plot_coverage(data = eras_data, names = sync_val[[1]], look.back = 30)
 
+g <- list(
+
+  shadowland = TRUE,
+  landcolor = "black",
+  showcountries = TRUE,
+  showland = TRUE,
+  showocean = TRUE,
+  oceancolor = "black",
+  countrycolor = "grey40"
+
+)
+
+fig <- plot_geo(sync_sel, lat = ~lat, lon = ~lon) %>% config(displayModeBar = FALSE)
+fig <- fig %>% add_markers(
+
+  text = ~paste(validator_name, paste("Self: ",round(m_self)), sep = "<br />")
+
+)
+
+fig <- fig %>% layout(
+
+  geo = g, paper_bgcolor = "black", plot_bgcolor = "black"
+
+)
+
