@@ -28,6 +28,8 @@ ui <- fluidPage(
   tags$h1("Polkanalyzer", style = "text-align:center;"),
   tags$h2("A Dashboard for Polkadot's Nominators", style = "text-align:center; font-size:20px;"),
 
+  br(),
+
   fluidRow(
 
     column(width = 1),
