@@ -2,6 +2,7 @@ library(shiny)
 library(shinythemes)
 library(shinycssloaders)
 library(plotly)
+library(DT)
 
 library(dplyr)
 library(rjson)
@@ -32,6 +33,7 @@ ui <- fluidPage(
       tags$style(HTML(".js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4 .irs-bar {background: orange} .js-irs-4 .irs-line {background: transparent}")),
       tags$style(HTML(".js-irs-5 .irs-single, .js-irs-5 .irs-bar-edge, .js-irs-5 .irs-bar {background: orange} .js-irs-5 .irs-line {background: transparent}")),
       tags$style(HTML(".js-irs-6 .irs-single, .js-irs-6 .irs-bar-edge, .js-irs-6 .irs-bar {background: orange} .js-irs-6 .irs-line {background: transparent}")),
+
 
 
       sliderInput(inputId = "look.back",
@@ -83,7 +85,9 @@ ui <- fluidPage(
 
       shinycssloaders::withSpinner(
 
-        plotlyOutput(outputId = "map", fill = TRUE)
+        plotlyOutput(outputId = "map", width = "100%", height = "600px"),
+
+        type = 5, color = "orange", size = 1
 
       )
     )
@@ -91,12 +95,26 @@ ui <- fluidPage(
 
   fluidRow(
 
-    column(width = 12,
+    column(width = 1),
 
-           shinycssloaders::withSpinner(dataTableOutput("view"))
+    column(width = 10,
 
-    )
-  )
+           shinycssloaders::withSpinner(
+
+             dataTableOutput("view"),
+             type = 1, color = "orange", size = 1
+
+             )
+
+    ),
+
+    column(width = 1)
+
+  ),
+
+  hr(),
+  #print("~~~my disclaimer~~~~")
+
 )
 
 
@@ -208,10 +226,8 @@ server <- function(input, output, session) {
 
     fig
 
-    #map("world", fill = FALSE, col = "grey40", bg = NULL, ylim =c(-60,70))
-    #points(selection$lon, selection$lat, pch = "+", col = "yellow")
 
-  })  #, bg = "transparent"
+  })
 
 
 
@@ -248,12 +264,24 @@ server <- function(input, output, session) {
                              "Last Active",
                              "Continent")
 
-    datatable(selection, rownames= F, options = list(
-      scrollX = TRUE,
-      scrollY = "500px",
-      paging = FALSE
-      )
-    )
+    datatable(selection, rownames= F, extensions = "FixedColumns",
+              selection = "none", filter = "none", fillContainer = TRUE,
+              options = list(
+                #scrollX = TRUE,
+                scrollY = "500px",
+                scrollCollapse = TRUE,
+                paging = FALSE,
+                initComplete = JS(
+                  "function(settings, json) {",
+                  "$(this.api().table().header()).css({'background-color':'rgba(48, 48, 48, 1)'});",
+                  "$(this.api().table().container()).css({'font-size': '8pt'});",
+                  "}"),
+                columnDefs = list(list(className = 'dt-center', targets = "_all")),
+                ordering = TRUE
+                #fixedColumns = list(leftColumns = 1)
+                )
+
+              ) %>% formatStyle(columns = 1, backgroundColor = "rgba(48, 48, 48, 1)")
 
   })
 

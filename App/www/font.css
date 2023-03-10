@@ -8,3 +8,24 @@ h2 {
   font-family: "Unbounded-Bold";
   color: white;
 }
+
+table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
+                                  background-color: rgba(48, 48, 48, 1) !important;
+                                  }
+
+
+.dataTables_wrapper .dataTables_info {
+            color: white !important;
+        }
+
+
+.dataTables_scroll
+{
+    overflow:auto;
+}
+
+
+td {
+  color: "";
+  background-color: "";
+}
