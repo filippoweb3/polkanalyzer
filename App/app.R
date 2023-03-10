@@ -13,6 +13,12 @@ library(Polkanalyzer)
 
 ui <- fluidPage(
 
+  headerPanel(
+
+    tags$h3("Polkanalyzer v1.0.0", style = "text-align:right; font-size:10px;")
+
+  ),
+
   tags$head(
     includeCSS("www/font.css")
   ),
@@ -126,7 +132,7 @@ ui <- fluidPage(
   ),
 
   hr(),
-  #print("~~~my disclaimer~~~~")
+  tags$h3("Copyright @filippoweb3", style = "text-align:center; font-size:10px;")
 
 )
 
@@ -281,7 +287,7 @@ server <- function(input, output, session) {
               selection = "none", filter = "none", fillContainer = TRUE,
               options = list(
                 #scrollX = TRUE,
-                scrollY = "500px",
+                scrollY = "450px",
                 scrollCollapse = TRUE,
                 paging = FALSE,
                 initComplete = JS(

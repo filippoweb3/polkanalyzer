@@ -8,6 +8,11 @@ h2 {
   font-family: "Unbounded-Medium";
 }
 
+h3 {
+  src: url(Unbounded-Bold.ttf);
+  font-family: "Unbounded-Light";
+}
+
 * {
   src: url(Unbounded-Bold.ttf);
   font-family: "Unbounded-Bold";
