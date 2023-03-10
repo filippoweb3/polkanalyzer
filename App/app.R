@@ -19,78 +19,91 @@ ui <- fluidPage(
 
   theme = shinytheme("darkly"),
 
-  titlePanel("Polkanalyzer"),
+  tags$h1("Polkanalyzer", style = "text-align:center;"),
+  tags$h2("A Dashboard for Polkadot's Nominators", style = "text-align:center; font-size:20px;"),
 
-  sidebarLayout(
+  fluidRow(
 
-    # Sidebar panel for inputs ----
-    sidebarPanel(
+    column(width = 1),
 
-      tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: orange} .js-irs-0 .irs-line {background: transparent}")),
-      tags$style(HTML(".js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1 .irs-bar {background: orange} .js-irs-1 .irs-line {background: transparent}")),
-      tags$style(HTML(".js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, .js-irs-2 .irs-bar {background: orange} .js-irs-2 .irs-line {background: transparent}")),
-      tags$style(HTML(".js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 .irs-bar {background: orange} .js-irs-3 .irs-line {background: transparent}")),
-      tags$style(HTML(".js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4 .irs-bar {background: orange} .js-irs-4 .irs-line {background: transparent}")),
-      tags$style(HTML(".js-irs-5 .irs-single, .js-irs-5 .irs-bar-edge, .js-irs-5 .irs-bar {background: orange} .js-irs-5 .irs-line {background: transparent}")),
-      tags$style(HTML(".js-irs-6 .irs-single, .js-irs-6 .irs-bar-edge, .js-irs-6 .irs-bar {background: orange} .js-irs-6 .irs-line {background: transparent}")),
+    column(width = 10,
 
 
+           sidebarLayout(
 
-      sliderInput(inputId = "look.back",
-                  label = "Past Eras",
-                  min = 3,
-                  max = 60,
-                  value = 30, step = 1, ticks = FALSE),
+             # Sidebar panel for inputs ----
+             sidebarPanel(
 
-      sliderInput(inputId = "n.active",
-                  label = "Eras Active",
-                  min = 3,
-                  max = 60,
-                  value = 30, step = 1, ticks = FALSE),
+               tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: orange} .js-irs-0 .irs-line {background: transparent}")),
+               tags$style(HTML(".js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1 .irs-bar {background: orange} .js-irs-1 .irs-line {background: transparent}")),
+               tags$style(HTML(".js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, .js-irs-2 .irs-bar {background: orange} .js-irs-2 .irs-line {background: transparent}")),
+               tags$style(HTML(".js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 .irs-bar {background: orange} .js-irs-3 .irs-line {background: transparent}")),
+               tags$style(HTML(".js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4 .irs-bar {background: orange} .js-irs-4 .irs-line {background: transparent}")),
+               tags$style(HTML(".js-irs-5 .irs-single, .js-irs-5 .irs-bar-edge, .js-irs-5 .irs-bar {background: orange} .js-irs-5 .irs-line {background: transparent}")),
+               tags$style(HTML(".js-irs-6 .irs-single, .js-irs-6 .irs-bar-edge, .js-irs-6 .irs-bar {background: orange} .js-irs-6 .irs-line {background: transparent}")),
 
-      sliderInput(inputId = "self_stake",
-                  label = "Self Stake (DOT)",
-                  min = 0,
-                  max = 20,
-                  value = 6, post = "K", step = 0.1, ticks = FALSE),
 
-      sliderInput(inputId = "total_stake",
-                  label = "Total Stake (DOT)",
-                  min = 1.7,
-                  max = 2.5,
-                  value = 2.13, post = "M", step = 0.01, ticks = FALSE),
 
-      sliderInput(inputId = "comm",
-                  label = "Commission",
-                  min = 0,
-                  max = 10,
-                  value = 5, post = "%", step = 0.1, ticks = FALSE),
+               sliderInput(inputId = "look.back",
+                           label = "Past Eras",
+                           min = 3,
+                           max = 60,
+                           value = 30, step = 1, ticks = FALSE),
 
-      sliderInput(inputId = "m_points",
-                  label = "Avg. Points",
-                  min = 0,
-                  max = 100,
-                  value = 50, post = "K", step = 1, ticks = FALSE),
+               sliderInput(inputId = "n.active",
+                           label = "Eras Active",
+                           min = 3,
+                           max = 60,
+                           value = 30, step = 1, ticks = FALSE),
 
-      sliderInput(inputId = "max_points",
-                  label = "Max. Points",
-                  min = 0,
-                  max = 110,
-                  value = 100, post = "K", step = 1, ticks = FALSE)
+               sliderInput(inputId = "self_stake",
+                           label = "Self Stake (DOT)",
+                           min = 0,
+                           max = 20,
+                           value = 6, post = "K", step = 0.1, ticks = FALSE),
 
-    ),
+               sliderInput(inputId = "total_stake",
+                           label = "Total Stake (DOT)",
+                           min = 1.7,
+                           max = 2.5,
+                           value = 2.13, post = "M", step = 0.01, ticks = FALSE),
 
-    # Main panel for displaying outputs ----
-    mainPanel(
+               sliderInput(inputId = "comm",
+                           label = "Commission",
+                           min = 0,
+                           max = 10,
+                           value = 5, post = "%", step = 0.1, ticks = FALSE),
 
-      shinycssloaders::withSpinner(
+               sliderInput(inputId = "m_points",
+                           label = "Avg. Points",
+                           min = 0,
+                           max = 100,
+                           value = 50, post = "K", step = 1, ticks = FALSE),
 
-        plotlyOutput(outputId = "map", width = "100%", height = "600px"),
+               sliderInput(inputId = "max_points",
+                           label = "Max. Points",
+                           min = 0,
+                           max = 110,
+                           value = 100, post = "K", step = 1, ticks = FALSE)
 
-        type = 5, color = "orange", size = 1
+             ),
 
-      )
-    )
+             # Main panel for displaying outputs ----
+             mainPanel(
+
+               shinycssloaders::withSpinner(
+
+                 plotlyOutput(outputId = "map", width = "100%", height = "600px"),
+
+                 type = 5, color = "orange", size = 1
+
+                 )
+               )
+             )
+           ),
+
+    column(width = 1)
+
   ),
 
   fluidRow(

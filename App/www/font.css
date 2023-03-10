@@ -1,6 +1,11 @@
-h2 {
+h1 {
   src: url(Unbounded-Bold.ttf);
   font-family: "Unbounded-Bold";
+}
+
+h2 {
+  src: url(Unbounded-Bold.ttf);
+  font-family: "Unbounded-Medium";
 }
 
 * {
@@ -17,12 +22,6 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
 .dataTables_wrapper .dataTables_info {
             color: white !important;
         }
-
-
-.dataTables_scroll
-{
-    overflow:auto;
-}
 
 
 td {
