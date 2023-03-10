@@ -291,11 +291,15 @@ server <- function(input, output, session) {
                 #scrollX = TRUE,
                 scrollY = "450px",
                 scrollCollapse = TRUE,
-                paging = FALSE,
+                paging = TRUE,
+                lengthMenu = c(16, 32, 48),
                 initComplete = JS(
                   "function(settings, json) {",
                   "$(this.api().table().header()).css({'background-color':'rgba(48, 48, 48, 1)'});",
                   "$(this.api().table().container()).css({'font-size': '8pt'});",
+                  "$('#DataTables_Table_0_length select').css('background-color', 'orange');",
+                  "$('#DataTables_Table_0_filter input').css('background-color', 'orange');",
+                  "$('#DataTables_Table_0_filter input').css('color', 'white');",
                   "}"),
                 columnDefs = list(list(className = 'dt-center', targets = "_all")),
                 ordering = TRUE
@@ -307,6 +311,5 @@ server <- function(input, output, session) {
   })
 
 }
-
 
 shinyApp(ui = ui, server = server)
