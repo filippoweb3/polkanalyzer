@@ -23,6 +23,27 @@ ui <- fluidPage(
     includeCSS("www/font.css")
   ),
 
+  tags$style(
+
+    HTML(".dataTables_wrapper .dataTables_paginate .paginate_button {
+            background-color: rgba(34, 34, 34, 1) !important;
+            color : orange !important;
+        }"),
+
+    HTML(".dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+            background-color: none;
+            color : rgba(34, 34, 34, 1) !important;
+        }"),
+
+    HTML(".dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: none;
+            color: white !important;
+            border-color: rgba(34, 34, 34, 1) !important;
+        }")
+
+  ),
+
   theme = shinytheme("darkly"),
 
   tags$h1("Polkanalyzer", style = "text-align:center;"),
