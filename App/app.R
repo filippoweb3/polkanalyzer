@@ -293,7 +293,7 @@ server <- function(input, output, session) {
     datatable(selection, rownames= F, extensions = "FixedColumns",
               selection = "none", filter = "none", fillContainer = TRUE,
               options = list(
-                #scrollX = TRUE,
+                scrollX = FALSE,
                 scrollY = "450px",
                 scrollCollapse = TRUE,
                 paging = TRUE,

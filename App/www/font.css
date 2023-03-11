@@ -61,9 +61,8 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
 }
 
 .dataTables_wrapper .dataTables_length  select {
-
-  background: orange !important;
-
+  background: rgba(48, 48, 48, 1) !important;
+  color: orange !important;
 }
 
 td {
