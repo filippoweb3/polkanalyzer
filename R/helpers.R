@@ -322,7 +322,7 @@ sync_validators <- function(data, names, look.back){
 
   pcts <- c()
 
-  for (k in 1:10){
+  for (k in 1:5){
 
     eras <- c()
 
