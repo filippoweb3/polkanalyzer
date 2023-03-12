@@ -1,3 +1,4 @@
+library(Polkanalyzer)
 library(shiny)
 library(shinythemes)
 library(shinycssloaders)
@@ -5,10 +6,6 @@ library(plotly)
 library(DT)
 
 library(dplyr)
-library(rjson)
-library(maps)
-library(countrycode)
-library(Polkanalyzer)
 
 
 ui <- fluidPage(
