@@ -291,8 +291,8 @@ server <- function(input, output, session) {
                 paging = TRUE,
                 lengthMenu = c(16, 32, 48),
                 columnDefs = list(list(className = 'dt-center', targets = "_all")),
-                ordering = TRUE
-                #fixedColumns = list(leftColumns = 1)
+                ordering = TRUE,
+                fixedColumns = list(leftColumns = 1)
                 )
 
               ) %>% formatStyle(columns = 1, backgroundColor = "rgba(48, 48, 48, 1)")
