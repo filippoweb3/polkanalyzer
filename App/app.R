@@ -233,11 +233,11 @@ server <- function(input, output, session) {
     )
 
     m <- list(
-      l = 0,
-      r = 0,
-      b = 0,
-      t = 0,
-      pad = 0
+      l = 10,
+      r = 10,
+      b = 10,
+      t = 10,
+      pad = 10
     )
 
     fig <- fig %>% layout(
