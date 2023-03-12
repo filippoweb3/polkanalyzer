@@ -2,6 +2,7 @@ library(rjson)
 library(dplyr)
 library(maps)
 library(countrycode)
+library(stringdist)
 
 # Fetch candidate data ----
 
