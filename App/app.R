@@ -290,11 +290,6 @@ server <- function(input, output, session) {
                 scrollCollapse = TRUE,
                 paging = TRUE,
                 lengthMenu = c(16, 32, 48),
-                initComplete = JS(
-                  "function(settings, json) {",
-                  "$(this.api().table().header()).css({'background-color':'rgba(48, 48, 48, 1)'});",
-                  "$(this.api().table().container()).css({'font-size': '8pt'});",
-                  "}"),
                 columnDefs = list(list(className = 'dt-center', targets = "_all")),
                 ordering = TRUE
                 #fixedColumns = list(leftColumns = 1)
