@@ -65,7 +65,13 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   color: orange !important;
 }
 
-td {
-  color: "";
-  background-color: "";
-}
+.dataTables_wrapper .dataTable thead th {
+          font-size: 14px;
+          background: rgba(48, 48, 48, 1) !important;
+        }
+.dataTables_wrapper .dataTable tfoot th {
+          font-size: 14px;
+        }
+.dataTables_wrapper .dataTable tbody td {
+          font-size: 12px;
+        }
