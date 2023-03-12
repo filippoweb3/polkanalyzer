@@ -21,12 +21,12 @@ usethis::use_data(eras_data, overwrite = T)
 # Select Validators ----
 
 selection <- select_validator(data = eras_data, look.back = 30,
-                              criteria = list(self_stake = 6000,
+                              criteria = list(self_stake = 5000,
                                               total_stake = 2130000,
                                               commission = 5,
                                               n_active = 31,
-                                              mean_era_points = 60000,
-                                              max_era_points = 100000,
+                                              mean_era_points = 50000,
+                                              max_era_points = 80000,
                                               last_active = 31))
 
 selection <- merge(selection, candidates, by = "stash_address")
@@ -39,8 +39,23 @@ selection <- selection[!selection$provider == "Hetzner Online GmbH" &
                          selection$faluts <= 0 &
                          selection$offline <= 0,]
 
+na.omit(selection[,colnames(selection) %in% c("validator_name",
+                                       "m_era",
+                                       "max_era",
+                                       "n_active",
+                                       "m_comm",
+                                       "m_self",
+                                       "m_total",
+                                       "last_active",
+                                       "location",
+                                       "continent",
+                                       "provider")])
+
+
 minorities <- selection$validator_name[selection$continent %in%
                           c("Africa", "Asia", "Oceania")]
+
+minorities
 
 val_names <- as.vector(na.omit(selection$validator_name))
 
@@ -48,10 +63,9 @@ val_names <- as.vector(na.omit(selection$validator_name))
 
 sync_val <- sync_validators(data = eras_data, names = val_names, look.back = 30)
 
-sync_sel <- selection[selection$validator_name %in% unlist(sync_val),]
+sync_sel <- merge(sync_val, selection,by = "validator_name")
 
-minorities
-sync_val
+sync_sel <- sync_sel[order(sync_sel$run, sync_sel$coverage),]
 
 # Plots ----
 
@@ -62,4 +76,29 @@ pct_less_100_comm <- group_by(eras_data$eras, era) %>% summarise(sum(commission_
 plot(pct_less_100_comm, xlab = "Eras", ylab = "Pct Valitators < 100% comm", type = "l")
 
 plot_coverage(data = eras_data, names = sync_val[[1]], look.back = 30)
+
+g <- list(
+
+  shadowland = TRUE,
+  landcolor = "black",
+  showcountries = TRUE,
+  showland = TRUE,
+  showocean = TRUE,
+  oceancolor = "black",
+  countrycolor = "grey40"
+
+)
+
+fig <- plot_geo(sync_sel, lat = ~lat, lon = ~lon) %>% config(displayModeBar = FALSE)
+fig <- fig %>% add_markers(
+
+  text = ~paste(validator_name, paste("Self: ",round(m_self)), sep = "<br />")
+
+)
+
+fig <- fig %>% layout(
+
+  geo = g, paper_bgcolor = "black", plot_bgcolor = "black"
+
+)
 
