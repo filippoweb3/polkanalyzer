@@ -74,7 +74,8 @@ plot_validator(data = eras_data$eras, sync_val[[1]][1], look.back = 30)
 
 pct_less_100_comm <- group_by(eras_data$eras, era) %>% summarise(sum(commission_percent < 100)/length(commission_percent)*100)
 
-plot(pct_less_100_comm, xlab = "Eras", ylab = "Pct Valitators < 100% comm", type = "l")
+plot(pct_less_100_comm, xlab = "Eras", ylim=c(20, 80), ylab = "Pct Valitators < 100% comm", type = "l")
+abline(h = 50, col = "grey70")
 
 plot_coverage(data = eras_data, names = sync_val[[1]], look.back = 30)
 
