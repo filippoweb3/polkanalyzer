@@ -201,7 +201,7 @@ server <- function(input, output, session) {
     g <- list(
 
       shadowland = FALSE,
-      landcolor = "rgba(0, 0, 0, 0)",
+      landcolor = "rgba(48, 48, 48, 1)",
       showcountries = TRUE,
       showland = TRUE,
       showocean = TRUE,
