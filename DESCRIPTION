@@ -18,4 +18,9 @@ Imports:
     rjson,
     stringdist,
     usethis,
-    utils
+    utils,
+    DT,
+    shiny,
+    shinycssloaders,
+    shinythemes,
+    plotly

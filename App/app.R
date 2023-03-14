@@ -1,3 +1,4 @@
+library(Polkanalyzer)
 library(shiny)
 library(shinythemes)
 library(shinycssloaders)
@@ -5,10 +6,6 @@ library(plotly)
 library(DT)
 
 library(dplyr)
-library(rjson)
-library(maps)
-library(countrycode)
-library(Polkanalyzer)
 
 
 ui <- fluidPage(
@@ -204,7 +201,7 @@ server <- function(input, output, session) {
     g <- list(
 
       shadowland = FALSE,
-      landcolor = "rgba(0, 0, 0, 0)",
+      landcolor = "rgba(48, 48, 48, 1)",
       showcountries = TRUE,
       showland = TRUE,
       showocean = TRUE,
@@ -232,13 +229,7 @@ server <- function(input, output, session) {
 
     )
 
-    m <- list(
-      l = 10,
-      r = 10,
-      b = 10,
-      t = 10,
-      pad = 10
-    )
+    m <- list(l = 10, r = 10, b = 10, t = 10, pad = 10)
 
     fig <- fig %>% layout(
 
@@ -294,19 +285,14 @@ server <- function(input, output, session) {
     datatable(selection, rownames= F, extensions = "FixedColumns",
               selection = "none", filter = "none", fillContainer = TRUE,
               options = list(
-                scrollX = FALSE,
+                scrollX = TRUE,
                 scrollY = "450px",
                 scrollCollapse = TRUE,
                 paging = TRUE,
                 lengthMenu = c(16, 32, 48),
-                initComplete = JS(
-                  "function(settings, json) {",
-                  "$(this.api().table().header()).css({'background-color':'rgba(48, 48, 48, 1)'});",
-                  "$(this.api().table().container()).css({'font-size': '8pt'});",
-                  "}"),
                 columnDefs = list(list(className = 'dt-center', targets = "_all")),
-                ordering = TRUE
-                #fixedColumns = list(leftColumns = 1)
+                ordering = TRUE,
+                fixedColumns = list(leftColumns = 1)
                 )
 
               ) %>% formatStyle(columns = 1, backgroundColor = "rgba(48, 48, 48, 1)")
