@@ -7,7 +7,6 @@ library(DT)
 
 library(dplyr)
 
-
 ui <- fluidPage(
 
   headerPanel(
