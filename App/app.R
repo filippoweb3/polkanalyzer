@@ -192,7 +192,6 @@ server <- function(input, output, session) {
 
 
 
-
   output$map <- renderPlotly({ #renderPlot
 
     selection <- datasetInput()
