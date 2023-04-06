@@ -119,6 +119,22 @@ ui <- fluidPage(
 
     column(width = 1),
 
+    column(width = 5,
+           plotlyOutput(outputId = "plotA", width = "100%", height = "200px")
+           ),
+
+    column(width = 5,
+           plotlyOutput(outputId = "plotB", width = "100%", height = "200px")
+    ),
+
+    column(width = 1)
+
+  ),
+
+  fluidRow(
+
+    column(width = 1),
+
     column(width = 10,
 
            shinycssloaders::withSpinner(
@@ -184,9 +200,11 @@ server <- function(input, output, session) {
 
     sync_val <- sync_validators(data = eras_data, names = val_names, look.back = look_back)
 
-    selection <- merge(sync_val, selection,by = "validator_name")
+    selection.sync <- merge(sync_val, selection,by = "validator_name")
 
-    selection <- selection[order(selection$run, selection$coverage),]
+    selection.sync <- selection.sync[order(selection.sync$run, selection.sync$coverage),]
+
+    selection <- list(raw = selection, sync = selection.sync)
 
   })
 
@@ -215,7 +233,7 @@ server <- function(input, output, session) {
       )
     )
 
-    fig <- plot_geo(selection, lat = ~lat, lon = ~lon, marker = list(color = "orange")) %>%
+    fig <- plot_geo(selection$sync, lat = ~lat, lon = ~lon, marker = list(color = "orange")) %>%
       config(displayModeBar = TRUE,
              modeBarButtons = list(c("zoomInGeo", "zoomOutGeo", "resetGeo")),
              displaylogo = FALSE)
@@ -237,22 +255,73 @@ server <- function(input, output, session) {
 
     )
 
-    fig <- fig
-
     fig
-
 
   })
 
 
+  output$plotA <- renderPlotly({
 
+    selection <- datasetInput()
+
+    data <- selection$raw
+
+    m <- list(l = 10, r = 10, b = 10, t = 10, pad = 10)
+
+    plot <- plot_ly(data = data) %>%
+      config(displayModeBar = TRUE,
+             modeBarButtons = list(c("zoomInGeo", "zoomOutGeo", "resetGeo")),
+             displaylogo = FALSE) %>%
+      layout(paper_bgcolor = "rgba(0, 0, 0, 0)",
+             plot_bgcolor = "rgba(0, 0, 0, 0)",
+             xaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(font = list( color = "white"))),
+             yaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(font = list( color = "white"))),
+             font = list(color = "white"),
+             margin = m,
+             modebar = list(bgcolor='transparent', color='orange', activecolor='white'))
+
+
+  })
+
+  output$plotB <- renderPlotly({
+
+    selection <- datasetInput()
+
+    data <- selection$raw
+
+    m <- list(l = 10, r = 10, b = 10, t = 10, pad = 10)
+
+    plot <- plot_ly(data = data) %>%
+      config(displayModeBar = TRUE,
+             modeBarButtons = list(c("zoomInGeo", "zoomOutGeo", "resetGeo")),
+             displaylogo = FALSE) %>%
+      layout(paper_bgcolor = "rgba(0, 0, 0, 0)",
+             plot_bgcolor = "rgba(0, 0, 0, 0)",
+             xaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(font = list( color = "white"))),
+             yaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(font = list( color = "white"))),
+             font = list(color = "white"),
+             margin = m,
+             modebar = list(bgcolor='transparent', color='orange', activecolor='white'))
+
+
+  })
 
 
   output$view <- renderDataTable({
 
     selection <- datasetInput()
 
-    selection <- na.omit(selection[,colnames(selection) %in% c("validator_name",
+    data <- selection$sync
+
+    data <- na.omit(data[,colnames(data) %in% c("validator_name",
                                                                "run",
                                                                "coverage",
                                                                "m_era",
@@ -264,11 +333,12 @@ server <- function(input, output, session) {
                                                                "last_active",
                                                                "continent")])
 
-    selection[,c(3,7)] <- round(selection[,c(3,7)], 1)
-    selection[,c(4:5,8)] <- round(selection[,c(4:5,8)]/10^3, 1)
-    selection[,9] <- round(selection[,9]/10^6, 1)
 
-    colnames(selection) <- c("Name",
+    data[,c(3,7)] <- round(data[,c(3,7)], 1)
+    data[,c(4:5,8)] <- round(data[,c(4:5,8)]/10^3, 1)
+    data[,9] <- round(data[,9]/10^6, 1)
+
+    colnames(data) <- c("Name",
                              "Run",
                              "Coverage",
                              "Avg. Points (kDOT)",
@@ -280,7 +350,7 @@ server <- function(input, output, session) {
                              "Last Active",
                              "Continent")
 
-    datatable(selection, rownames= F, extensions = "FixedColumns",
+    datatable(data, rownames= F, extensions = "FixedColumns",
               selection = "none", filter = "none", fillContainer = TRUE,
               options = list(
                 scrollX = TRUE,
