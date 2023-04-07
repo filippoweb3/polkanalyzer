@@ -275,8 +275,11 @@ server <- function(input, output, session) {
 
     look_back <- input$look.back
 
+    x.max <- max(eras_data$eras$era)
+    x.min <- x.max - look_back
+
     sel_dat <- eras_data$eras[eras_data$eras$name == sel() &
-                                eras_data$eras$era >= (max(eras_data$eras$era) - look_back),]
+                                eras_data$eras$era >= x.min,]
 
     m <- list(l = 10, r = 10, b = 10, t = 10, pad = 10)
 
@@ -287,10 +290,14 @@ server <- function(input, output, session) {
              plot_bgcolor = "rgba(0, 0, 0, 0)",
              xaxis = list(zerolinecolor = "white",
                           gridcolor = "white",
-                          title = list(font = list( color = "white"))),
+                          title = list(text = "Eras"),
+                          range = c(x.min - 1, x.max + 1)
+                          ),
              yaxis = list(zerolinecolor = "white",
                           gridcolor = "white",
-                          title = list(font = list( color = "white"))),
+                          title = list(text = "Era Points"),
+                          range = c(0, 150000)
+                          ),
              font = list(color = "white"),
              margin = m,
              modebar = list(bgcolor='transparent', color='white', activecolor='orange'))
@@ -302,8 +309,11 @@ server <- function(input, output, session) {
 
     look_back <- input$look.back
 
+    x.max <- max(eras_data$eras$era)
+    x.min <- x.max - look_back
+
     sel_dat <- eras_data$eras[eras_data$eras$name == sel() &
-                                eras_data$eras$era >= (max(eras_data$eras$era) - look_back),]
+                                eras_data$eras$era >= x.min,]
 
     m <- list(l = 10, r = 10, b = 10, t = 10, pad = 10)
 
@@ -314,10 +324,14 @@ server <- function(input, output, session) {
              plot_bgcolor = "rgba(0, 0, 0, 0)",
              xaxis = list(zerolinecolor = "white",
                           gridcolor = "white",
-                          title = list(font = list( color = "white"))),
+                          title = list(text = "Eras"),
+                          range = c(x.min - 1, x.max + 1)
+                          ),
              yaxis = list(zerolinecolor = "white",
                           gridcolor = "white",
-                          title = list(font = list( color = "white"))),
+                          title = list(text = "Self Stake"),
+                          range = c(0, 20000)
+                          ),
              font = list(color = "white"),
              margin = m,
              modebar = list(bgcolor='transparent', color='white', activecolor='orange'))
