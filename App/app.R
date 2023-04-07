@@ -233,7 +233,7 @@ server <- function(input, output, session) {
       )
     )
 
-    fig <- plot_geo(selection$sync, lat = ~lat, lon = ~lon, marker = list(color = "orange")) %>%
+    fig <- plot_geo(selection$sync, lat = ~lat, lon = ~lon, marker = list(color = "white")) %>%
       config(displayModeBar = TRUE,
              modeBarButtons = list(c("zoomInGeo", "zoomOutGeo", "resetGeo")),
              displaylogo = FALSE)
@@ -251,9 +251,20 @@ server <- function(input, output, session) {
 
       geo = g, paper_bgcolor = "rgba(0, 0, 0, 0)", plot_bgcolor = "rgba(0, 0, 0, 0)",
       margin = m,
-      modebar = list(bgcolor='transparent', color='orange', activecolor='white')
+      modebar = list(bgcolor='transparent', color='white', activecolor='orange')
 
     )
+
+    if(length(sel())){
+
+      sel_dat <- selection$sync[selection$sync$validator_name == sel(),]
+
+      fig <- fig %>% add_trace(data = sel_dat,
+                               type = "scatter",
+                               mode = "markers", lat = ~lat, lon = ~lon, marker = list(color = "orange", size = 10),
+                               showlegend = FALSE, hoverinfo = "none")
+
+    }
 
     fig
 
@@ -262,16 +273,16 @@ server <- function(input, output, session) {
 
   output$plotA <- renderPlotly({
 
-    selection <- datasetInput()
+    look_back <- input$look.back
 
-    data <- selection$raw
+    sel_dat <- eras_data$eras[eras_data$eras$name == sel() &
+                                eras_data$eras$era >= (max(eras_data$eras$era) - look_back),]
 
     m <- list(l = 10, r = 10, b = 10, t = 10, pad = 10)
 
-    plot <- plot_ly(data = data) %>%
-      config(displayModeBar = TRUE,
-             modeBarButtons = list(c("zoomInGeo", "zoomOutGeo", "resetGeo")),
-             displaylogo = FALSE) %>%
+    plot <- plot_ly(data = sel_dat, x = ~era, y = ~ era_points, color = "orange", colors = c("orange"),
+                    type = "scatter", mode = "lines+markers") %>%
+      config(displayModeBar = FALSE) %>%
       layout(paper_bgcolor = "rgba(0, 0, 0, 0)",
              plot_bgcolor = "rgba(0, 0, 0, 0)",
              xaxis = list(zerolinecolor = "white",
@@ -282,23 +293,23 @@ server <- function(input, output, session) {
                           title = list(font = list( color = "white"))),
              font = list(color = "white"),
              margin = m,
-             modebar = list(bgcolor='transparent', color='orange', activecolor='white'))
+             modebar = list(bgcolor='transparent', color='white', activecolor='orange'))
 
 
   })
 
   output$plotB <- renderPlotly({
 
-    selection <- datasetInput()
+    look_back <- input$look.back
 
-    data <- selection$raw
+    sel_dat <- eras_data$eras[eras_data$eras$name == sel() &
+                                eras_data$eras$era >= (max(eras_data$eras$era) - look_back),]
 
     m <- list(l = 10, r = 10, b = 10, t = 10, pad = 10)
 
-    plot <- plot_ly(data = data) %>%
-      config(displayModeBar = TRUE,
-             modeBarButtons = list(c("zoomInGeo", "zoomOutGeo", "resetGeo")),
-             displaylogo = FALSE) %>%
+    plot <- plot_ly(data = sel_dat, x = ~era, y = ~ self_stake/10^10, color = "orange", colors = c("orange"),
+                    type = "scatter", mode = "lines+markers") %>%
+      config(displayModeBar = FALSE) %>%
       layout(paper_bgcolor = "rgba(0, 0, 0, 0)",
              plot_bgcolor = "rgba(0, 0, 0, 0)",
              xaxis = list(zerolinecolor = "white",
@@ -309,29 +320,29 @@ server <- function(input, output, session) {
                           title = list(font = list( color = "white"))),
              font = list(color = "white"),
              margin = m,
-             modebar = list(bgcolor='transparent', color='orange', activecolor='white'))
+             modebar = list(bgcolor='transparent', color='white', activecolor='orange'))
 
 
   })
 
 
-  output$view <- renderDataTable({
+  summaryTable <- reactive({
 
     selection <- datasetInput()
 
     data <- selection$sync
 
     data <- na.omit(data[,colnames(data) %in% c("validator_name",
-                                                               "run",
-                                                               "coverage",
-                                                               "m_era",
-                                                               "max_era",
-                                                               "n_active",
-                                                               "m_comm",
-                                                               "m_self",
-                                                               "m_total",
-                                                               "last_active",
-                                                               "continent")])
+                                                "run",
+                                                "coverage",
+                                                "m_era",
+                                                "max_era",
+                                                "n_active",
+                                                "m_comm",
+                                                "m_self",
+                                                "m_total",
+                                                "last_active",
+                                                "continent")])
 
 
     data[,c(3,7)] <- round(data[,c(3,7)], 1)
@@ -339,19 +350,28 @@ server <- function(input, output, session) {
     data[,9] <- round(data[,9]/10^6, 1)
 
     colnames(data) <- c("Name",
-                             "Run",
-                             "Coverage",
-                             "Avg. Points (kDOT)",
-                             "Max Points (kDOT)",
-                             "N Active",
-                             "Comm.",
-                             "Self (kDOT)",
-                             "Total (MDOT)",
-                             "Last Active",
-                             "Continent")
+                        "Run",
+                        "Coverage",
+                        "Avg. Points (kDOT)",
+                        "Max Points (kDOT)",
+                        "N Active",
+                        "Comm.",
+                        "Self (kDOT)",
+                        "Total (MDOT)",
+                        "Last Active",
+                        "Continent")
+
+    data
+
+  })
+
+
+  output$view <- renderDataTable({
+
+    data <- summaryTable()
 
     datatable(data, rownames= F, extensions = "FixedColumns",
-              selection = "none", filter = "none", fillContainer = TRUE,
+              selection = "single", filter = "none", fillContainer = TRUE,
               options = list(
                 scrollX = TRUE,
                 scrollY = "450px",
@@ -364,6 +384,16 @@ server <- function(input, output, session) {
                 )
 
               ) %>% formatStyle(columns = 1, backgroundColor = "rgba(48, 48, 48, 1)")
+
+  })
+
+  sel <- reactive({
+
+    sel_row <- input$view_rows_selected
+
+    data <- summaryTable()
+
+    data[sel_row,]$Name
 
   })
 
