@@ -300,7 +300,13 @@ server <- function(input, output, session) {
                           ),
              font = list(color = "white"),
              margin = m,
-             modebar = list(bgcolor='transparent', color='white', activecolor='orange'))
+             modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
+      add_markers(
+
+        text = ~paste(name, paste("Points: ",round(era_points/10^3, 1),"kDOT"), sep = "<br />"),
+        hoverinfo = "text", showlegend = FALSE
+
+      )
 
 
   })
@@ -334,7 +340,13 @@ server <- function(input, output, session) {
                           ),
              font = list(color = "white"),
              margin = m,
-             modebar = list(bgcolor='transparent', color='white', activecolor='orange'))
+             modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
+      add_markers(
+
+        text = ~paste(name, paste("Self Stake: ",round(self_stake/10^10, 1),"DOT"), sep = "<br />"),
+        hoverinfo = "text", showlegend = FALSE
+
+      )
 
 
   })
