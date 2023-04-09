@@ -135,6 +135,22 @@ ui <- fluidPage(
 
     column(width = 1),
 
+    column(width = 5,
+           plotlyOutput(outputId = "plotC", width = "100%", height = "200px")
+    ),
+
+    column(width = 5,
+           plotlyOutput(outputId = "plotD", width = "100%", height = "200px")
+    ),
+
+    column(width = 1)
+
+  ),
+
+  fluidRow(
+
+    column(width = 1),
+
     column(width = 10,
 
            shinycssloaders::withSpinner(
@@ -308,7 +324,6 @@ server <- function(input, output, session) {
 
       )
 
-
   })
 
   output$plotB <- renderPlotly({
@@ -343,11 +358,89 @@ server <- function(input, output, session) {
              modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
       add_markers(
 
-        text = ~paste(name, paste("Self Stake: ",round(self_stake/10^10, 1),"DOT"), sep = "<br />"),
+        text = ~paste(name, paste("Self Stake: ",round(self_stake/10^13, 1),"kDOT"), sep = "<br />"),
         hoverinfo = "text", showlegend = FALSE
 
       )
 
+  })
+
+
+  output$plotC <- renderPlotly({
+
+    look_back <- input$look.back
+
+    x.max <- max(eras_data$eras$era)
+    x.min <- x.max - look_back
+
+    sel_dat <- eras_data$eras[eras_data$eras$name == sel() &
+                                eras_data$eras$era >= x.min,]
+
+    m <- list(l = 10, r = 10, b = 10, t = 10, pad = 10)
+
+    plot <- plot_ly(data = sel_dat, x = ~era, y = ~ commission_percent, color = "orange", colors = c("orange"),
+                    type = "scatter", mode = "lines+markers") %>%
+      config(displayModeBar = FALSE) %>%
+      layout(paper_bgcolor = "rgba(0, 0, 0, 0)",
+             plot_bgcolor = "rgba(0, 0, 0, 0)",
+             xaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(text = "Eras"),
+                          range = c(x.min - 1, x.max + 1)
+             ),
+             yaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(text = "Commission (%)"),
+                          range = c(0, 10)
+             ),
+             font = list(color = "white"),
+             margin = m,
+             modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
+      add_markers(
+
+        text = ~paste(name, paste("Self Stake: ",round(commission_percent, 1),"DOT"), sep = "<br />"),
+        hoverinfo = "text", showlegend = FALSE
+
+      )
+
+  })
+
+  output$plotD <- renderPlotly({
+
+    look_back <- input$look.back
+
+    x.max <- max(eras_data$eras$era)
+    x.min <- x.max - look_back
+
+    sel_dat <- eras_data$eras[eras_data$eras$name == sel() &
+                                eras_data$eras$era >= x.min,]
+
+    m <- list(l = 10, r = 10, b = 10, t = 10, pad = 10)
+
+    plot <- plot_ly(data = sel_dat, x = ~era, y = ~ total_stake/10^10, color = "orange", colors = c("orange"),
+                    type = "scatter", mode = "lines+markers") %>%
+      config(displayModeBar = FALSE) %>%
+      layout(paper_bgcolor = "rgba(0, 0, 0, 0)",
+             plot_bgcolor = "rgba(0, 0, 0, 0)",
+             xaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(text = "Eras"),
+                          range = c(x.min - 1, x.max + 1)
+             ),
+             yaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(text = "Total Stake"),
+                          range = c(0, 3000000)
+             ),
+             font = list(color = "white"),
+             margin = m,
+             modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
+      add_markers(
+
+        text = ~paste(name, paste("Self Stake: ",round(total_stake/10^16, 3),"MDOT"), sep = "<br />"),
+        hoverinfo = "text", showlegend = FALSE
+
+      )
 
   })
 
