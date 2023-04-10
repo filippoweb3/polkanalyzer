@@ -10,6 +10,14 @@ library(dplyr)
 
 ui <- fluidPage(
 
+  titlePanel(
+
+    windowTitle = "Polkanalyzer",
+    title = tags$head(tags$link(rel = "icon",
+                                href = "logo.png", type = "image/png"))
+
+  ),
+
   headerPanel(
 
     tags$h3("Polkanalyzer v1.0.0", style = "text-align:right; font-size:10px;")
