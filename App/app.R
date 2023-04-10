@@ -356,7 +356,7 @@ server <- function(input, output, session) {
              modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
       add_markers(
 
-        text = ~paste(name, paste("Points: ",round(era_points/10^3, 1),"kDOT"), sep = "<br />"),
+        text = ~paste(name, paste("Era: ", era), paste("Points: ",round(era_points/10^3, 1),"kDOT"), sep = "<br />"),
         hoverinfo = "text", showlegend = FALSE
 
       )
@@ -395,7 +395,7 @@ server <- function(input, output, session) {
              modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
       add_markers(
 
-        text = ~paste(name, paste("Self Stake: ",round(self_stake/10^13, 1),"kDOT"), sep = "<br />"),
+        text = ~paste(name, paste("Era: ", era), paste("Self Stake: ",round(self_stake/10^13, 1),"kDOT"), sep = "<br />"),
         hoverinfo = "text", showlegend = FALSE
 
       )
@@ -435,7 +435,7 @@ server <- function(input, output, session) {
              modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
       add_markers(
 
-        text = ~paste(name, paste("Self Stake: ",round(commission_percent, 1),"%"), sep = "<br />"),
+        text = ~paste(name, paste("Era: ", era), paste("Self Stake: ",round(commission_percent, 1),"%"), sep = "<br />"),
         hoverinfo = "text", showlegend = FALSE
 
       )
@@ -474,7 +474,7 @@ server <- function(input, output, session) {
              modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
       add_markers(
 
-        text = ~paste(name, paste("Self Stake: ",round(total_stake/10^16, 3),"MDOT"), sep = "<br />"),
+        text = ~paste(name, paste("Era: ", era), paste("Self Stake: ",round(total_stake/10^16, 3),"MDOT"), sep = "<br />"),
         hoverinfo = "text", showlegend = FALSE
 
       )
