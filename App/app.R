@@ -7,7 +7,6 @@ library(DT)
 
 library(dplyr)
 
-
 ui <- fluidPage(
 
   headerPanel(
@@ -70,13 +69,13 @@ ui <- fluidPage(
                            label = "Self Stake (DOT)",
                            min = 0,
                            max = 20,
-                           value = 6, post = "K", step = 0.1, ticks = FALSE),
+                           value = 7.5, post = "K", step = 0.1, ticks = FALSE),
 
                sliderInput(inputId = "total_stake",
                            label = "Total Stake (DOT)",
                            min = 1.7,
                            max = 2.5,
-                           value = 2.13, post = "M", step = 0.01, ticks = FALSE),
+                           value = 2.1, post = "M", step = 0.01, ticks = FALSE),
 
                sliderInput(inputId = "comm",
                            label = "Commission",
@@ -94,7 +93,7 @@ ui <- fluidPage(
                            label = "Max. Points",
                            min = 0,
                            max = 110,
-                           value = 100, post = "K", step = 1, ticks = FALSE)
+                           value = 80, post = "K", step = 1, ticks = FALSE)
 
              ),
 
@@ -111,6 +110,38 @@ ui <- fluidPage(
                )
              )
            ),
+
+    column(width = 1)
+
+  ),
+
+  fluidRow(
+
+    column(width = 1),
+
+    column(width = 5,
+           plotlyOutput(outputId = "plotA", width = "100%", height = "200px")
+           ),
+
+    column(width = 5,
+           plotlyOutput(outputId = "plotB", width = "100%", height = "200px")
+    ),
+
+    column(width = 1)
+
+  ),
+
+  fluidRow(
+
+    column(width = 1),
+
+    column(width = 5,
+           plotlyOutput(outputId = "plotC", width = "100%", height = "200px")
+    ),
+
+    column(width = 5,
+           plotlyOutput(outputId = "plotD", width = "100%", height = "200px")
+    ),
 
     column(width = 1)
 
@@ -185,12 +216,13 @@ server <- function(input, output, session) {
 
     sync_val <- sync_validators(data = eras_data, names = val_names, look.back = look_back)
 
-    selection <- merge(sync_val, selection,by = "validator_name")
+    selection.sync <- merge(sync_val, selection,by = "validator_name")
 
-    selection <- selection[order(selection$run, selection$coverage),]
+    selection.sync <- selection.sync[order(selection.sync$run, selection.sync$coverage),]
+
+    selection <- list(raw = selection, sync = selection.sync)
 
   })
-
 
 
 
@@ -217,7 +249,7 @@ server <- function(input, output, session) {
       )
     )
 
-    fig <- plot_geo(selection, lat = ~lat, lon = ~lon, marker = list(color = "orange")) %>%
+    fig <- plot_geo(selection$sync, lat = ~lat, lon = ~lon, marker = list(color = "white")) %>%
       config(displayModeBar = TRUE,
              modeBarButtons = list(c("zoomInGeo", "zoomOutGeo", "resetGeo")),
              displaylogo = FALSE)
@@ -235,55 +267,230 @@ server <- function(input, output, session) {
 
       geo = g, paper_bgcolor = "rgba(0, 0, 0, 0)", plot_bgcolor = "rgba(0, 0, 0, 0)",
       margin = m,
-      modebar = list(bgcolor='transparent', color='orange', activecolor='white')
+      modebar = list(bgcolor='transparent', color='white', activecolor='orange')
 
     )
 
-    fig <- fig
+    if(length(sel())){
+
+      sel_dat <- selection$sync[selection$sync$validator_name == sel(),]
+
+      fig <- fig %>% add_trace(data = sel_dat,
+                               type = "scatter",
+                               mode = "markers", lat = ~lat, lon = ~lon, marker = list(color = "orange", size = 10),
+                               showlegend = FALSE, hoverinfo = "none")
+
+    }
 
     fig
-
 
   })
 
 
+  output$plotA <- renderPlotly({
 
+    look_back <- input$look.back
+
+    x.max <- max(eras_data$eras$era)
+    x.min <- x.max - look_back
+
+    sel_dat <- eras_data$eras[eras_data$eras$name == sel() &
+                                eras_data$eras$era >= x.min,]
+
+    m <- list(l = 10, r = 10, b = 10, t = 10, pad = 10)
+
+    plot <- plot_ly(data = sel_dat, x = ~era, y = ~ era_points, color = "orange", colors = c("orange"),
+                    type = "scatter", mode = "lines+markers") %>%
+      config(displayModeBar = FALSE) %>%
+      layout(paper_bgcolor = "rgba(0, 0, 0, 0)",
+             plot_bgcolor = "rgba(0, 0, 0, 0)",
+             xaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(text = "Eras"),
+                          range = c(x.min - 1, x.max + 1)
+                          ),
+             yaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(text = "Era Points"),
+                          range = c(0, 150000)
+                          ),
+             font = list(color = "white"),
+             margin = m,
+             modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
+      add_markers(
+
+        text = ~paste(name, paste("Points: ",round(era_points/10^3, 1),"kDOT"), sep = "<br />"),
+        hoverinfo = "text", showlegend = FALSE
+
+      )
+
+  })
+
+  output$plotB <- renderPlotly({
+
+    look_back <- input$look.back
+
+    x.max <- max(eras_data$eras$era)
+    x.min <- x.max - look_back
+
+    sel_dat <- eras_data$eras[eras_data$eras$name == sel() &
+                                eras_data$eras$era >= x.min,]
+
+    m <- list(l = 10, r = 10, b = 10, t = 10, pad = 10)
+
+    plot <- plot_ly(data = sel_dat, x = ~era, y = ~ self_stake/10^10, color = "orange", colors = c("orange"),
+                    type = "scatter", mode = "lines+markers") %>%
+      config(displayModeBar = FALSE) %>%
+      layout(paper_bgcolor = "rgba(0, 0, 0, 0)",
+             plot_bgcolor = "rgba(0, 0, 0, 0)",
+             xaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(text = "Eras"),
+                          range = c(x.min - 1, x.max + 1)
+                          ),
+             yaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(text = "Self Stake"),
+                          range = c(0, 20000)
+                          ),
+             font = list(color = "white"),
+             margin = m,
+             modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
+      add_markers(
+
+        text = ~paste(name, paste("Self Stake: ",round(self_stake/10^13, 1),"kDOT"), sep = "<br />"),
+        hoverinfo = "text", showlegend = FALSE
+
+      )
+
+  })
+
+
+  output$plotC <- renderPlotly({
+
+    look_back <- input$look.back
+
+    x.max <- max(eras_data$eras$era)
+    x.min <- x.max - look_back
+
+    sel_dat <- eras_data$eras[eras_data$eras$name == sel() &
+                                eras_data$eras$era >= x.min,]
+
+    m <- list(l = 10, r = 10, b = 10, t = 10, pad = 10)
+
+    plot <- plot_ly(data = sel_dat, x = ~era, y = ~ commission_percent, color = "orange", colors = c("orange"),
+                    type = "scatter", mode = "lines+markers") %>%
+      config(displayModeBar = FALSE) %>%
+      layout(paper_bgcolor = "rgba(0, 0, 0, 0)",
+             plot_bgcolor = "rgba(0, 0, 0, 0)",
+             xaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(text = "Eras"),
+                          range = c(x.min - 1, x.max + 1)
+             ),
+             yaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(text = "Commission (%)"),
+                          range = c(0, 10)
+             ),
+             font = list(color = "white"),
+             margin = m,
+             modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
+      add_markers(
+
+        text = ~paste(name, paste("Self Stake: ",round(commission_percent, 1),"%"), sep = "<br />"),
+        hoverinfo = "text", showlegend = FALSE
+
+      )
+
+  })
+
+  output$plotD <- renderPlotly({
+
+    look_back <- input$look.back
+
+    x.max <- max(eras_data$eras$era)
+    x.min <- x.max - look_back
+
+    sel_dat <- eras_data$eras[eras_data$eras$name == sel() &
+                                eras_data$eras$era >= x.min,]
+
+    m <- list(l = 10, r = 10, b = 10, t = 10, pad = 10)
+
+    plot <- plot_ly(data = sel_dat, x = ~era, y = ~ total_stake/10^10, color = "orange", colors = c("orange"),
+                    type = "scatter", mode = "lines+markers") %>%
+      config(displayModeBar = FALSE) %>%
+      layout(paper_bgcolor = "rgba(0, 0, 0, 0)",
+             plot_bgcolor = "rgba(0, 0, 0, 0)",
+             xaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(text = "Eras"),
+                          range = c(x.min - 1, x.max + 1)
+             ),
+             yaxis = list(zerolinecolor = "white",
+                          gridcolor = "white",
+                          title = list(text = "Total Stake"),
+                          range = c(0, 3000000)
+             ),
+             font = list(color = "white"),
+             margin = m,
+             modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
+      add_markers(
+
+        text = ~paste(name, paste("Self Stake: ",round(total_stake/10^16, 3),"MDOT"), sep = "<br />"),
+        hoverinfo = "text", showlegend = FALSE
+
+      )
+
+  })
+
+
+  summaryTable <- reactive({
+
+    selection <- datasetInput()
+
+    data <- selection$sync
+
+    data <- na.omit(data[,colnames(data) %in% c("validator_name",
+                                                "run",
+                                                "coverage",
+                                                "m_era",
+                                                "max_era",
+                                                "n_active",
+                                                "m_comm",
+                                                "m_self",
+                                                "m_total",
+                                                "last_active",
+                                                "continent")])
+
+
+    data[,c(3,7)] <- round(data[,c(3,7)], 1)
+    data[,c(4:5,8)] <- round(data[,c(4:5,8)]/10^3, 1)
+    data[,9] <- round(data[,9]/10^6, 3)
+
+    colnames(data) <- c("Name",
+                        "Run",
+                        "Coverage",
+                        "Avg. Points (kDOT)",
+                        "Max Points (kDOT)",
+                        "N Active",
+                        "Comm.",
+                        "Self (kDOT)",
+                        "Total (MDOT)",
+                        "Last Active",
+                        "Continent")
+
+    data
+
+  })
 
 
   output$view <- renderDataTable({
 
-    selection <- datasetInput()
+    data <- summaryTable()
 
-    selection <- na.omit(selection[,colnames(selection) %in% c("validator_name",
-                                                               "run",
-                                                               "coverage",
-                                                               "m_era",
-                                                               "max_era",
-                                                               "n_active",
-                                                               "m_comm",
-                                                               "m_self",
-                                                               "m_total",
-                                                               "last_active",
-                                                               "continent")])
-
-    selection[,c(3,7)] <- round(selection[,c(3,7)], 1)
-    selection[,c(4:5,8)] <- round(selection[,c(4:5,8)]/10^3, 1)
-    selection[,9] <- round(selection[,9]/10^6, 1)
-
-    colnames(selection) <- c("Name",
-                             "Run",
-                             "Coverage",
-                             "Avg. Points (kDOT)",
-                             "Max Points (kDOT)",
-                             "N Active",
-                             "Comm.",
-                             "Self (kDOT)",
-                             "Total (MDOT)",
-                             "Last Active",
-                             "Continent")
-
-    datatable(selection, rownames= F, extensions = "FixedColumns",
-              selection = "none", filter = "none", fillContainer = TRUE,
+    datatable(data, rownames= F, extensions = "FixedColumns",
+              selection = "single", filter = "none", fillContainer = TRUE,
               options = list(
                 scrollX = TRUE,
                 scrollY = "450px",
@@ -296,6 +503,16 @@ server <- function(input, output, session) {
                 )
 
               ) %>% formatStyle(columns = 1, backgroundColor = "rgba(48, 48, 48, 1)")
+
+  })
+
+  sel <- reactive({
+
+    sel_row <- input$view_rows_selected
+
+    data <- summaryTable()
+
+    data[sel_row,]$Name
 
   })
 

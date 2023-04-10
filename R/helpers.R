@@ -291,8 +291,8 @@ select_validator <- function(data, look.back = 40, criteria){
                       summarise(ep = mean(era_points),
                                 mp = max(era_points),
                                 n = length(era_points),
-                                comm = mean(commission_percent),
-                                ss = mean(self_stake)/10^10,
+                                comm = mean(tail(commission_percent, n = 3)),
+                                ss = mean(tail(self_stake, n = 3))/10^10,
                                 ts = mean(tail(total_stake, n = 3))/10^10,
                                 last_era = abs(max(era)-last_era)))
 

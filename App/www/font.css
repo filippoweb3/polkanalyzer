@@ -23,6 +23,14 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
                                   background-color: rgba(48, 48, 48, 1) !important;
                                   }
 
+table.display.dataTable > tbody > tr.selected > *,
+table.display.dataTable > tbody > tr.odd.selected > *,
+table.display.dataTable > tbody > tr.selected:hover > *  {
+    box-shadow: inset 0 0 0 9999px orange !important;
+    color: #333;
+    background-color: #fff;
+}
+
 .dataTables_wrapper .dataTable thead th {
           font-size: 14px;
           background: rgba(48, 48, 48, 1) !important;
