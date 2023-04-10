@@ -69,13 +69,13 @@ ui <- fluidPage(
                            label = "Self Stake (DOT)",
                            min = 0,
                            max = 20,
-                           value = 6, post = "K", step = 0.1, ticks = FALSE),
+                           value = 7.5, post = "K", step = 0.1, ticks = FALSE),
 
                sliderInput(inputId = "total_stake",
                            label = "Total Stake (DOT)",
                            min = 1.7,
                            max = 2.5,
-                           value = 2.13, post = "M", step = 0.01, ticks = FALSE),
+                           value = 2.1, post = "M", step = 0.01, ticks = FALSE),
 
                sliderInput(inputId = "comm",
                            label = "Commission",
@@ -93,7 +93,7 @@ ui <- fluidPage(
                            label = "Max. Points",
                            min = 0,
                            max = 110,
-                           value = 100, post = "K", step = 1, ticks = FALSE)
+                           value = 80, post = "K", step = 1, ticks = FALSE)
 
              ),
 
@@ -466,7 +466,7 @@ server <- function(input, output, session) {
 
     data[,c(3,7)] <- round(data[,c(3,7)], 1)
     data[,c(4:5,8)] <- round(data[,c(4:5,8)]/10^3, 1)
-    data[,9] <- round(data[,9]/10^6, 1)
+    data[,9] <- round(data[,9]/10^6, 3)
 
     colnames(data) <- c("Name",
                         "Run",
