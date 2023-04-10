@@ -398,7 +398,7 @@ server <- function(input, output, session) {
              modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
       add_markers(
 
-        text = ~paste(name, paste("Self Stake: ",round(commission_percent, 1),"DOT"), sep = "<br />"),
+        text = ~paste(name, paste("Self Stake: ",round(commission_percent, 1),"%"), sep = "<br />"),
         hoverinfo = "text", showlegend = FALSE
 
       )
