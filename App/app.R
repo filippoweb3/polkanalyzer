@@ -1,5 +1,6 @@
+#devtools::install_github("filippoweb3/polkanalyzer")
+#library(shiny)
 library(Polkanalyzer)
-library(shiny)
 library(shinythemes)
 library(shinycssloaders)
 library(plotly)
@@ -120,11 +121,25 @@ ui <- fluidPage(
     column(width = 1),
 
     column(width = 5,
-           plotlyOutput(outputId = "plotA", width = "100%", height = "200px")
-           ),
+
+           shinycssloaders::withSpinner(
+
+              plotlyOutput(outputId = "plotA", width = "100%", height = "200px"),
+
+              type = 1, color = "orange", size = 1
+
+           )
+    ),
 
     column(width = 5,
-           plotlyOutput(outputId = "plotB", width = "100%", height = "200px")
+
+           shinycssloaders::withSpinner(
+
+           plotlyOutput(outputId = "plotB", width = "100%", height = "200px"),
+
+           type = 1, color = "orange", size = 1
+
+           )
     ),
 
     column(width = 1)
@@ -136,11 +151,25 @@ ui <- fluidPage(
     column(width = 1),
 
     column(width = 5,
-           plotlyOutput(outputId = "plotC", width = "100%", height = "200px")
+
+           shinycssloaders::withSpinner(
+
+           plotlyOutput(outputId = "plotC", width = "100%", height = "200px"),
+
+           type = 1, color = "orange", size = 1
+
+           )
     ),
 
     column(width = 5,
-           plotlyOutput(outputId = "plotD", width = "100%", height = "200px")
+
+           shinycssloaders::withSpinner(
+
+           plotlyOutput(outputId = "plotD", width = "100%", height = "200px"),
+
+           type = 1, color = "orange", size = 1
+
+           )
     ),
 
     column(width = 1)
