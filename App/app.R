@@ -1,12 +1,11 @@
-#library(devtools)
-#install_github("filippoweb3/polkanalyzer", force = TRUE)
+library(devtools)
+install_github(repo = "filippoweb3/polkanalyzer", force = TRUE)
 #library(shiny)
 library(Polkanalyzer)
 library(shinythemes)
 library(shinycssloaders)
 library(plotly)
 library(DT)
-
 library(dplyr)
 
 ui <- fluidPage(
