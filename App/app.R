@@ -1,4 +1,5 @@
-#devtools::install_github("filippoweb3/polkanalyzer")
+#library(devtools)
+#install_github("filippoweb3/polkanalyzer", force = TRUE)
 #library(shiny)
 library(Polkanalyzer)
 library(shinythemes)
@@ -51,16 +52,6 @@ ui <- fluidPage(
 
              # Sidebar panel for inputs ----
              sidebarPanel(
-
-               tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: orange} .js-irs-0 .irs-line {background: transparent}")),
-               tags$style(HTML(".js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1 .irs-bar {background: orange} .js-irs-1 .irs-line {background: transparent}")),
-               tags$style(HTML(".js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, .js-irs-2 .irs-bar {background: orange} .js-irs-2 .irs-line {background: transparent}")),
-               tags$style(HTML(".js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 .irs-bar {background: orange} .js-irs-3 .irs-line {background: transparent}")),
-               tags$style(HTML(".js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4 .irs-bar {background: orange} .js-irs-4 .irs-line {background: transparent}")),
-               tags$style(HTML(".js-irs-5 .irs-single, .js-irs-5 .irs-bar-edge, .js-irs-5 .irs-bar {background: orange} .js-irs-5 .irs-line {background: transparent}")),
-               tags$style(HTML(".js-irs-6 .irs-single, .js-irs-6 .irs-bar-edge, .js-irs-6 .irs-bar {background: orange} .js-irs-6 .irs-line {background: transparent}")),
-
-
 
                sliderInput(inputId = "look.back",
                            label = "Past Eras",

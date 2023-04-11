@@ -82,3 +82,34 @@ table.display.dataTable > tbody > tr.selected:hover > *  {
   background: rgba(48, 48, 48, 1) !important;
   color: orange !important;
 }
+
+
+
+
+.js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar, .js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1 .irs-bar, .js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 .irs-bar, .js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4 .irs-bar {
+  background: orange !important;
+  border: orange !important;
+}
+
+.js-irs-0 .irs-line, .js-irs-1 .irs-line, .js-irs-3 .irs-line, .js-irs-4 .irs-line {
+  background: transparent !important;
+  border-top: 1px solid white !important;
+}
+
+
+
+
+.js-irs-2 .irs-single, .js-irs-5 .irs-single, .js-irs-6 .irs-single {
+  background: orange !important;
+}
+
+.js-irs-2 .irs-bar, .js-irs-5 .irs-bar, .js-irs-6 .irs-bar {
+  background: rgba(48, 48, 48, 1) !important;
+  border-top: 1px solid white !important;
+  border-bottom: 1px solid white !important;
+}
+
+.js-irs-2 .irs-line, .js-irs-5 .irs-line, .js-irs-6 .irs-line {
+  background: orange !important;
+  border: orange !important;
+}
