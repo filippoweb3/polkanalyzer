@@ -1,5 +1,5 @@
-library(devtools)
-install_github(repo = "filippoweb3/polkanalyzer", force = TRUE)
+#library(remotes)
+#install_github(repo = "filippoweb3/polkanalyzer")
 #library(shiny)
 library(Polkanalyzer)
 library(shinythemes)
@@ -7,6 +7,11 @@ library(shinycssloaders)
 library(plotly)
 library(DT)
 library(dplyr)
+
+eras_data <- download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/eras_data.rda?raw=true", destfile = "eras_data.rda", method = "libcurl")
+candidates <- download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/candidates.rda?raw=true", destfile = "candidates.rda", method = "libcurl")
+load("eras_data.rda")
+load("candidates.rda")
 
 ui <- fluidPage(
 
