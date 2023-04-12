@@ -113,3 +113,28 @@ table.display.dataTable > tbody > tr.selected:hover > *  {
   background: orange !important;
   border: orange !important;
 }
+
+
+
+.btn{
+  color: white;
+  text-align: left;
+  border-color: white;
+  background-color: rgba(34, 34, 34, 1);
+
+}
+
+#gobutton:active {
+  background: green;
+}
+
+.btn:hover{
+  border-color: orange;
+  background-color: orange;
+  color: rgba(48, 48, 48, 1);
+  font-weight: bold;
+}
+
+.btn:focus{
+  background-color:green;
+}
