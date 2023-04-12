@@ -8,11 +8,6 @@ library(plotly)
 library(DT)
 library(dplyr)
 
-eras_data <- download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/eras_data.rda?raw=true", destfile = "eras_data.rda", method = "libcurl")
-candidates <- download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/candidates.rda?raw=true", destfile = "candidates.rda", method = "libcurl")
-load("eras_data.rda")
-load("candidates.rda")
-
 ui <- fluidPage(
 
   titlePanel(
@@ -56,6 +51,8 @@ ui <- fluidPage(
 
              # Sidebar panel for inputs ----
              sidebarPanel(
+
+               column(12, align = "center", actionButton("do", "Update")),
 
                sliderInput(inputId = "look.back",
                            label = "Past Eras",
@@ -206,8 +203,12 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
-
-
+  observeEvent(input$do, {
+    download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/eras_data.rda?raw=true", destfile = "eras_data.rda", method = "libcurl")
+    download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/candidates.rda?raw=true", destfile = "candidates.rda", method = "libcurl")
+    load("eras_data.rda")
+    load("candidates.rda")
+  })
 
   observeEvent(input$look.back, {
 
