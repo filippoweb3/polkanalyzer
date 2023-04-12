@@ -52,7 +52,7 @@ ui <- fluidPage(
              # Sidebar panel for inputs ----
              sidebarPanel(
 
-               column(12, align = "center", actionButton("do", "Update")),
+               column(12, align = "center", actionButton("do", "Update"), style='padding:20px;'),
 
                sliderInput(inputId = "look.back",
                            label = "Past Eras",
@@ -158,7 +158,7 @@ ui <- fluidPage(
 
            type = 1, color = "orange", size = 1
 
-           )
+           ), style='padding:20px;'
     ),
 
     column(width = 5,
@@ -169,7 +169,7 @@ ui <- fluidPage(
 
            type = 1, color = "orange", size = 1
 
-           )
+           ), style='padding:20px;'
     ),
 
     column(width = 1)
