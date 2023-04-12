@@ -136,5 +136,5 @@ table.display.dataTable > tbody > tr.selected:hover > *  {
 }
 
 .btn:focus{
-  background-color:green;
+  background-color: orange;
 }

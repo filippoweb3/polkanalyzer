@@ -213,7 +213,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$do, {
     session$sendCustomMessage(type = 'testmessage',
-                              message = paste0("Updated to era", eras_data$interval[2]))
+                              message = paste0("Updated to era ", eras_data$interval[2]))
   })
 
   observeEvent(input$look.back, {
