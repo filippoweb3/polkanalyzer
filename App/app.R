@@ -25,7 +25,8 @@ ui <- fluidPage(
   ),
 
   tags$head(
-    includeCSS("www/font.css")
+    includeCSS("www/font.css"),
+    tags$script(src = "message-handler.js")
   ),
 
   tags$style(
@@ -208,6 +209,11 @@ server <- function(input, output, session) {
     download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/candidates.rda?raw=true", destfile = "candidates.rda", method = "libcurl")
     load("eras_data.rda")
     load("candidates.rda")
+  })
+
+  observeEvent(input$do, {
+    session$sendCustomMessage(type = 'testmessage',
+                              message = paste0("Updated to era", eras_data$interval[2]))
   })
 
   observeEvent(input$look.back, {
