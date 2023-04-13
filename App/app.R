@@ -204,6 +204,9 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
+  load("eras_data.rda")
+  load("candidates.rda")
+
   diff <- reactive({
 
     (Sys.Date() - 1) - as.Date("2020-06-02",format="%Y-%m-%d")
@@ -219,18 +222,20 @@ server <- function(input, output, session) {
 
       session$reload()
 
+      load("eras_data.rda") #redundant, but makes sure testmessage prints the right era
+
+      session$sendCustomMessage(type = 'testmessage',
+                                message = paste0("Updated to era ", eras_data$interval[2])
+                                )
+
+    } else {
+
+      session$sendCustomMessage(type = 'testmessage',
+                                message = "Data up-to-date"
+      )
+
     }
 
-  })
-
-  load("eras_data.rda")
-  load("candidates.rda")
-
-  observeEvent(input$do, {
-
-    session$sendCustomMessage(type = 'testmessage',
-                              message = ifelse(eras_data$interval[2] == diff(), "Data up-to-date", paste0("Updated to era ", eras_data$interval[2]))
-                              )
   })
 
   observeEvent(input$look.back, {
