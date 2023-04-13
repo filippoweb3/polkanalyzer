@@ -204,16 +204,33 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
-  observeEvent(input$do, {
-    download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/eras_data.rda?raw=true", destfile = "eras_data.rda", method = "libcurl")
-    download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/candidates.rda?raw=true", destfile = "candidates.rda", method = "libcurl")
-    load("eras_data.rda")
-    load("candidates.rda")
+  diff <- reactive({
+
+    (Sys.Date() - 1) - as.Date("2020-06-02",format="%Y-%m-%d")
+
   })
 
   observeEvent(input$do, {
+
+    if(eras_data$interval[2] < diff()){
+
+      download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/eras_data.rda?raw=true", destfile = "eras_data.rda", method = "libcurl")
+      download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/candidates.rda?raw=true", destfile = "candidates.rda", method = "libcurl")
+
+      session$reload()
+
+    }
+
+  })
+
+  load("eras_data.rda")
+  load("candidates.rda")
+
+  observeEvent(input$do, {
+
     session$sendCustomMessage(type = 'testmessage',
-                              message = paste0("Updated to era ", eras_data$interval[2]))
+                              message = ifelse(eras_data$interval[2] == diff(), "Data up-to-date", paste0("Updated to era ", eras_data$interval[2]))
+                              )
   })
 
   observeEvent(input$look.back, {
