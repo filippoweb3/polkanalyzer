@@ -95,7 +95,25 @@ ui <- fluidPage(
                            label = "Max. Points",
                            min = 0,
                            max = 110,
-                           value = 80, post = "K", step = 1, ticks = FALSE)
+                           value = 80, post = "K", step = 1, ticks = FALSE),
+
+               sliderInput(inputId = "n.fault",
+                           label = "Faulty Events",
+                           min = 0,
+                           max = 10,
+                           value = 0, step = 1, ticks = FALSE),
+
+               sliderInput(inputId = "n.offline",
+                           label = "Offline Events",
+                           min = 0,
+                           max = 10,
+                           value = 0, step = 1, ticks = FALSE),
+
+               sliderInput(inputId = "n.subid",
+                           label = "Sub-identities",
+                           min = 0,
+                           max = 10,
+                           value = 1, step = 1, ticks = FALSE)
 
              ),
 
@@ -253,6 +271,9 @@ server <- function(input, output, session) {
     max_points <- input$max_points*10^3
     look_back <- input$look.back
     n_active <- input$n.active
+    n_fault <- input$n.fault
+    n_offline <- input$n.offline
+    n_subid <- input$n.subid
 
     selection <- select_validator(data = eras_data, look.back = look_back,
                                   criteria = list(self_stake = self_stake,
@@ -269,9 +290,9 @@ server <- function(input, output, session) {
                              selection$id_verified == TRUE &
                              selection$democracyVoteCount >= 1 &
                              selection$councilVoteCount >= 1 &
-                             selection$n_subid <= 3 &
-                             selection$faluts <= 0 &
-                             selection$offline <= 0,]
+                             selection$n_subid <= n_subid &
+                             selection$faluts <= n_fault &
+                             selection$offline <= n_offline,]
 
     val_names <- as.vector(na.omit(selection$validator_name))
 
