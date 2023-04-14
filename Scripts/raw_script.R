@@ -62,7 +62,7 @@ val_names <- as.vector(na.omit(selection$validator_name))
 
 # Synchronize Validators ----
 
-sync_val <- sync_validators(data = eras_data, names = val_names, look.back = 30)
+sync_val <- sync_validators(data = eras_data, names = val_names, look.back = 30, nruns = 2)
 
 sync_sel <- merge(sync_val, selection,by = "validator_name")
 

@@ -310,7 +310,7 @@ select_validator <- function(data, look.back = 40, criteria){
 
 }
 
-sync_validators <- function(data, names, look.back){
+sync_validators <- function(data, names, look.back, nruns = 5){
 
   data_sel <- data$eras
 
@@ -322,7 +322,7 @@ sync_validators <- function(data, names, look.back){
 
   pcts <- c()
 
-  for (k in 1:10){
+  for (k in 1:nruns){
 
     eras <- c()
 

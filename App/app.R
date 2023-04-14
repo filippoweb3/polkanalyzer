@@ -113,7 +113,15 @@ ui <- fluidPage(
                            label = "Sub-identities",
                            min = 0,
                            max = 10,
-                           value = 1, step = 1, ticks = FALSE)
+                           value = 1, step = 1, ticks = FALSE),
+
+               sliderInput(inputId = "n.runs",
+                           label = "Sync Runs",
+                           min = 1,
+                           max = 20,
+                           value = 3, step = 1, ticks = FALSE),
+
+               checkboxInput("id", "Verified Identity", value = TRUE)
 
              ),
 
@@ -274,6 +282,8 @@ server <- function(input, output, session) {
     n_fault <- input$n.fault
     n_offline <- input$n.offline
     n_subid <- input$n.subid
+    ver_id <- input$id
+    n_runs <- input$n.runs
 
     selection <- select_validator(data = eras_data, look.back = look_back,
                                   criteria = list(self_stake = self_stake,
@@ -287,7 +297,7 @@ server <- function(input, output, session) {
     selection <- merge(selection, candidates, by = "stash_address")
 
     selection <- selection[!selection$provider == "Hetzner Online GmbH" &
-                             selection$id_verified == TRUE &
+                             selection$id_verified == ver_id &
                              selection$democracyVoteCount >= 1 &
                              selection$councilVoteCount >= 1 &
                              selection$n_subid <= n_subid &
@@ -296,7 +306,7 @@ server <- function(input, output, session) {
 
     val_names <- as.vector(na.omit(selection$validator_name))
 
-    sync_val <- sync_validators(data = eras_data, names = val_names, look.back = look_back)
+    sync_val <- sync_validators(data = eras_data, names = val_names, look.back = look_back, nruns = n_runs)
 
     selection.sync <- merge(sync_val, selection,by = "validator_name")
 
