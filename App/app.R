@@ -82,7 +82,7 @@ ui <- fluidPage(
                sliderInput(inputId = "comm",
                            label = "Commission",
                            min = 0,
-                           max = 10,
+                           max = 20,
                            value = 5, post = "%", step = 0.1, ticks = FALSE),
 
                sliderInput(inputId = "m_points",
@@ -94,25 +94,25 @@ ui <- fluidPage(
                sliderInput(inputId = "max_points",
                            label = "Max. Points",
                            min = 0,
-                           max = 110,
+                           max = round(max(eras_data$eras$era_points, na.rm = T)/10^3),
                            value = 80, post = "K", step = 1, ticks = FALSE),
 
                sliderInput(inputId = "n.fault",
                            label = "Faulty Events",
                            min = 0,
-                           max = 10,
+                           max = max(candidates$faluts, na.rm = T),
                            value = 0, step = 1, ticks = FALSE),
 
                sliderInput(inputId = "n.offline",
                            label = "Offline Events",
                            min = 0,
-                           max = 10,
+                           max = max(candidates$offline, na.rm = T),
                            value = 0, step = 1, ticks = FALSE),
 
                sliderInput(inputId = "n.subid",
                            label = "Sub-identities",
                            min = 0,
-                           max = 10,
+                           max = max(candidates$n_subid, na.rm = T),
                            value = 1, step = 1, ticks = FALSE),
 
                sliderInput(inputId = "n.runs",
