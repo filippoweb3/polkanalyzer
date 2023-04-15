@@ -223,7 +223,7 @@ ui <- fluidPage(
   ),
 
   hr(),
-  tags$h3("Copyright @filippoweb3", style = "text-align:center; font-size:10px;")
+  tags$h3("GitHub: https://github.com/filippoweb3/polkanalyzer", style = "text-align:center; font-size:10px;")
 
 )
 
