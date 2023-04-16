@@ -86,12 +86,12 @@ table.display.dataTable > tbody > tr.selected:hover > *  {
 
 
 
-.js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar, .js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1 .irs-bar, .js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 .irs-bar, .js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4 .irs-bar {
+.js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar, .js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1 .irs-bar, .js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 .irs-bar, .js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4 .irs-bar, .js-irs-7 .irs-single, .js-irs-7 .irs-bar-edge, .js-irs-7 .irs-bar, .js-irs-8 .irs-single, .js-irs-8 .irs-bar-edge, .js-irs-8 .irs-bar, .js-irs-9 .irs-single, .js-irs-9 .irs-bar-edge, .js-irs-9 .irs-bar, .js-irs-10 .irs-single, .js-irs-10 .irs-bar-edge, .js-irs-10 .irs-bar {
   background: orange !important;
   border: orange !important;
 }
 
-.js-irs-0 .irs-line, .js-irs-1 .irs-line, .js-irs-3 .irs-line, .js-irs-4 .irs-line {
+.js-irs-0 .irs-line, .js-irs-1 .irs-line, .js-irs-3 .irs-line, .js-irs-4 .irs-line, .js-irs-7 .irs-line, .js-irs-8 .irs-line, .js-irs-9 .irs-line, .js-irs-10 .irs-line {
   background: transparent !important;
   border-top: 1px solid white !important;
 }
@@ -112,4 +112,29 @@ table.display.dataTable > tbody > tr.selected:hover > *  {
 .js-irs-2 .irs-line, .js-irs-5 .irs-line, .js-irs-6 .irs-line {
   background: orange !important;
   border: orange !important;
+}
+
+
+
+.btn{
+  color: white;
+  text-align: left;
+  border-color: white;
+  background-color: rgba(34, 34, 34, 1);
+
+}
+
+#gobutton:active {
+  background: green;
+}
+
+.btn:hover{
+  border-color: orange;
+  background-color: orange;
+  color: rgba(48, 48, 48, 1);
+  font-weight: bold;
+}
+
+.btn:focus{
+  background-color: orange;
 }

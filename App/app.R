@@ -8,11 +8,6 @@ library(plotly)
 library(DT)
 library(dplyr)
 
-eras_data <- download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/eras_data.rda?raw=true", destfile = "eras_data.rda", method = "libcurl")
-candidates <- download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/candidates.rda?raw=true", destfile = "candidates.rda", method = "libcurl")
-load("eras_data.rda")
-load("candidates.rda")
-
 ui <- fluidPage(
 
   titlePanel(
@@ -30,7 +25,8 @@ ui <- fluidPage(
   ),
 
   tags$head(
-    includeCSS("www/font.css")
+    includeCSS("www/font.css"),
+    tags$script(src = "message-handler.js")
   ),
 
   tags$style(
@@ -48,82 +44,111 @@ ui <- fluidPage(
 
   fluidRow(
 
-    column(width = 1),
-
-    column(width = 10,
-
-           sidebarLayout(
-
-             # Sidebar panel for inputs ----
-             sidebarPanel(
-
-               sliderInput(inputId = "look.back",
-                           label = "Past Eras",
-                           min = 3,
-                           max = 60,
-                           value = 30, step = 1, ticks = FALSE),
-
-               sliderInput(inputId = "n.active",
-                           label = "Eras Active",
-                           min = 3,
-                           max = 60,
-                           value = 30, step = 1, ticks = FALSE),
-
-               sliderInput(inputId = "self_stake",
-                           label = "Self Stake (DOT)",
-                           min = 0,
-                           max = 20,
-                           value = 7.5, post = "K", step = 0.1, ticks = FALSE),
-
-               sliderInput(inputId = "total_stake",
-                           label = "Total Stake (DOT)",
-                           min = 1.7,
-                           max = 2.5,
-                           value = 2.1, post = "M", step = 0.01, ticks = FALSE),
-
-               sliderInput(inputId = "comm",
-                           label = "Commission",
-                           min = 0,
-                           max = 10,
-                           value = 5, post = "%", step = 0.1, ticks = FALSE),
-
-               sliderInput(inputId = "m_points",
-                           label = "Avg. Points",
-                           min = 0,
-                           max = 100,
-                           value = 50, post = "K", step = 1, ticks = FALSE),
-
-               sliderInput(inputId = "max_points",
-                           label = "Max. Points",
-                           min = 0,
-                           max = 110,
-                           value = 80, post = "K", step = 1, ticks = FALSE)
-
-             ),
-
-             # Main panel for displaying outputs ----
-             mainPanel(
-
-               shinycssloaders::withSpinner(
-
-                 plotlyOutput(outputId = "map", width = "100%", height = "600px"),
-
-                 type = 5, color = "orange", size = 1
-
-                 )
-               )
-             )
-           ),
-
-    column(width = 1)
+    column(12, align = "center", actionButton("do", "Update"), style='padding:20px;')
 
   ),
 
   fluidRow(
 
-    column(width = 1),
+    column(width = 5, offset = 1,
+
+           sliderInput(inputId = "look.back",
+                       label = "Past Eras",
+                       min = 3,
+                       max = 60,
+                       value = 30, step = 1, ticks = FALSE),
+
+           sliderInput(inputId = "n.active",
+                       label = "Eras Active",
+                       min = 3,
+                       max = 60,
+                       value = 30, step = 1, ticks = FALSE),
+
+           sliderInput(inputId = "self_stake",
+                       label = "Self Stake (DOT)",
+                       min = 0,
+                       max = 20,
+                       value = 7.5, post = "K", step = 0.1, ticks = FALSE),
+
+           sliderInput(inputId = "total_stake",
+                       label = "Total Stake (DOT)",
+                       min = 1.7,
+                       max = 2.5,
+                       value = 2.1, post = "M", step = 0.01, ticks = FALSE),
+
+           sliderInput(inputId = "comm",
+                       label = "Commission",
+                       min = 0,
+                       max = 20,
+                       value = 5, post = "%", step = 0.1, ticks = FALSE),
+
+           sliderInput(inputId = "m_points",
+                       label = "Avg. Points",
+                       min = 0,
+                       max = 100,
+                       value = 50, post = "K", step = 1, ticks = FALSE)
+
+    ),
 
     column(width = 5,
+
+
+           sliderInput(inputId = "max_points",
+                       label = "Max. Points",
+                       min = 0,
+                       max = round(max(eras_data$eras$era_points, na.rm = T)/10^3),
+                       value = 80, post = "K", step = 1, ticks = FALSE),
+
+           sliderInput(inputId = "n.fault",
+                       label = "Faulty Events",
+                       min = 0,
+                       max = max(candidates$faluts, na.rm = T),
+                       value = 0, step = 1, ticks = FALSE),
+
+           sliderInput(inputId = "n.offline",
+                       label = "Offline Events",
+                       min = 0,
+                       max = max(candidates$offline, na.rm = T),
+                       value = 0, step = 1, ticks = FALSE),
+
+           sliderInput(inputId = "n.subid",
+                       label = "Sub-identities",
+                       min = 0,
+                       max = max(candidates$n_subid, na.rm = T),
+                       value = 1, step = 1, ticks = FALSE),
+
+           sliderInput(inputId = "n.runs",
+                       label = "Sync Runs",
+                       min = 1,
+                       max = 20,
+                       value = 3, step = 1, ticks = FALSE),
+
+           checkboxInput("id", "Verified Identity", value = TRUE)
+
+    )
+
+  ),
+
+  fluidRow(
+
+    column(width = 6, align = "center", offset = 3,
+
+           shinycssloaders::withSpinner(
+
+             plotlyOutput(outputId = "map", width = "100%", height = "400px"),
+
+             type = 5, color = "orange", size = 1
+
+           )
+
+
+      )
+
+  ),
+
+  fluidRow(
+
+    column(width = 5, offset = 1,
 
            shinycssloaders::withSpinner(
 
@@ -143,17 +168,13 @@ ui <- fluidPage(
            type = 1, color = "orange", size = 1
 
            )
-    ),
-
-    column(width = 1)
+    )
 
   ),
 
   fluidRow(
 
-    column(width = 1),
-
-    column(width = 5,
+    column(width = 5, offset = 1,
 
            shinycssloaders::withSpinner(
 
@@ -161,7 +182,7 @@ ui <- fluidPage(
 
            type = 1, color = "orange", size = 1
 
-           )
+           ), style='padding:20px;'
     ),
 
     column(width = 5,
@@ -172,18 +193,14 @@ ui <- fluidPage(
 
            type = 1, color = "orange", size = 1
 
-           )
-    ),
-
-    column(width = 1)
+           ), style='padding:20px;'
+    )
 
   ),
 
   fluidRow(
 
-    column(width = 1),
-
-    column(width = 10,
+    column(width = 10, offset = 1,
 
            shinycssloaders::withSpinner(
 
@@ -192,22 +209,51 @@ ui <- fluidPage(
 
              )
 
-    ),
-
-    column(width = 1)
+    )
 
   ),
 
   hr(),
-  tags$h3("Copyright @filippoweb3", style = "text-align:center; font-size:10px;")
+  tags$h3("GitHub: https://github.com/filippoweb3/polkanalyzer", style = "text-align:center; font-size:10px;")
 
 )
 
 
 server <- function(input, output, session) {
 
+  load("eras_data.rda")
+  load("candidates.rda")
 
+  diff <- reactive({
 
+    (Sys.Date() - 1) - as.Date("2020-06-02",format="%Y-%m-%d")
+
+  })
+
+  observeEvent(input$do, {
+
+    if(eras_data$interval[2] < diff()){
+
+      download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/eras_data.rda?raw=true", destfile = "eras_data.rda", method = "libcurl")
+      download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/candidates.rda?raw=true", destfile = "candidates.rda", method = "libcurl")
+
+      session$reload()
+
+      load("eras_data.rda") #redundant, but makes sure testmessage prints the right era
+
+      session$sendCustomMessage(type = 'testmessage',
+                                message = paste0("Updated to era ", eras_data$interval[2])
+                                )
+
+    } else {
+
+      session$sendCustomMessage(type = 'testmessage',
+                                message = "Data up-to-date"
+      )
+
+    }
+
+  })
 
   observeEvent(input$look.back, {
 
@@ -224,6 +270,11 @@ server <- function(input, output, session) {
     max_points <- input$max_points*10^3
     look_back <- input$look.back
     n_active <- input$n.active
+    n_fault <- input$n.fault
+    n_offline <- input$n.offline
+    n_subid <- input$n.subid
+    ver_id <- input$id
+    n_runs <- input$n.runs
 
     selection <- select_validator(data = eras_data, look.back = look_back,
                                   criteria = list(self_stake = self_stake,
@@ -237,16 +288,16 @@ server <- function(input, output, session) {
     selection <- merge(selection, candidates, by = "stash_address")
 
     selection <- selection[!selection$provider == "Hetzner Online GmbH" &
-                             selection$id_verified == TRUE &
+                             selection$id_verified == ver_id &
                              selection$democracyVoteCount >= 1 &
                              selection$councilVoteCount >= 1 &
-                             selection$n_subid <= 3 &
-                             selection$faluts <= 0 &
-                             selection$offline <= 0,]
+                             selection$n_subid <= n_subid &
+                             selection$faluts <= n_fault &
+                             selection$offline <= n_offline,]
 
     val_names <- as.vector(na.omit(selection$validator_name))
 
-    sync_val <- sync_validators(data = eras_data, names = val_names, look.back = look_back)
+    sync_val <- sync_validators(data = eras_data, names = val_names, look.back = look_back, nruns = n_runs)
 
     selection.sync <- merge(sync_val, selection,by = "validator_name")
 
