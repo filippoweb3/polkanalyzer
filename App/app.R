@@ -50,7 +50,7 @@ ui <- fluidPage(
 
   fluidRow(
 
-    column(width = 5, offset = 1,
+    column(width = 5, offset = 1, align = "center",
 
            sliderInput(inputId = "look.back",
                        label = "Past Eras",
@@ -90,7 +90,7 @@ ui <- fluidPage(
 
     ),
 
-    column(width = 5,
+    column(width = 5,  align = "center",
 
 
            sliderInput(inputId = "max_points",
