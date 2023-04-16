@@ -44,110 +44,111 @@ ui <- fluidPage(
 
   fluidRow(
 
-    column(width = 1),
-
-    column(width = 10,
-
-           sidebarLayout(
-
-             # Sidebar panel for inputs ----
-             sidebarPanel(
-
-               column(12, align = "center", actionButton("do", "Update"), style='padding:20px;'),
-
-               sliderInput(inputId = "look.back",
-                           label = "Past Eras",
-                           min = 3,
-                           max = 60,
-                           value = 30, step = 1, ticks = FALSE),
-
-               sliderInput(inputId = "n.active",
-                           label = "Eras Active",
-                           min = 3,
-                           max = 60,
-                           value = 30, step = 1, ticks = FALSE),
-
-               sliderInput(inputId = "self_stake",
-                           label = "Self Stake (DOT)",
-                           min = 0,
-                           max = 20,
-                           value = 7.5, post = "K", step = 0.1, ticks = FALSE),
-
-               sliderInput(inputId = "total_stake",
-                           label = "Total Stake (DOT)",
-                           min = 1.7,
-                           max = 2.5,
-                           value = 2.1, post = "M", step = 0.01, ticks = FALSE),
-
-               sliderInput(inputId = "comm",
-                           label = "Commission",
-                           min = 0,
-                           max = 20,
-                           value = 5, post = "%", step = 0.1, ticks = FALSE),
-
-               sliderInput(inputId = "m_points",
-                           label = "Avg. Points",
-                           min = 0,
-                           max = 100,
-                           value = 50, post = "K", step = 1, ticks = FALSE),
-
-               sliderInput(inputId = "max_points",
-                           label = "Max. Points",
-                           min = 0,
-                           max = round(max(eras_data$eras$era_points, na.rm = T)/10^3),
-                           value = 80, post = "K", step = 1, ticks = FALSE),
-
-               sliderInput(inputId = "n.fault",
-                           label = "Faulty Events",
-                           min = 0,
-                           max = max(candidates$faluts, na.rm = T),
-                           value = 0, step = 1, ticks = FALSE),
-
-               sliderInput(inputId = "n.offline",
-                           label = "Offline Events",
-                           min = 0,
-                           max = max(candidates$offline, na.rm = T),
-                           value = 0, step = 1, ticks = FALSE),
-
-               sliderInput(inputId = "n.subid",
-                           label = "Sub-identities",
-                           min = 0,
-                           max = max(candidates$n_subid, na.rm = T),
-                           value = 1, step = 1, ticks = FALSE),
-
-               sliderInput(inputId = "n.runs",
-                           label = "Sync Runs",
-                           min = 1,
-                           max = 20,
-                           value = 3, step = 1, ticks = FALSE),
-
-               checkboxInput("id", "Verified Identity", value = TRUE)
-
-             ),
-
-             # Main panel for displaying outputs ----
-             mainPanel(
-
-               shinycssloaders::withSpinner(
-
-                 plotlyOutput(outputId = "map", width = "100%", height = "600px"),
-
-                 type = 5, color = "orange", size = 1
-
-                 )
-               )
-             )
-           ),
-
-    column(width = 1)
+    column(12, align = "center", actionButton("do", "Update"), style='padding:20px;')
 
   ),
 
   fluidRow(
 
-    column(width = 1),
+    column(width = 5, offset = 1,
+
+           sliderInput(inputId = "look.back",
+                       label = "Past Eras",
+                       min = 3,
+                       max = 60,
+                       value = 30, step = 1, ticks = FALSE),
+
+           sliderInput(inputId = "n.active",
+                       label = "Eras Active",
+                       min = 3,
+                       max = 60,
+                       value = 30, step = 1, ticks = FALSE),
+
+           sliderInput(inputId = "self_stake",
+                       label = "Self Stake (DOT)",
+                       min = 0,
+                       max = 20,
+                       value = 7.5, post = "K", step = 0.1, ticks = FALSE),
+
+           sliderInput(inputId = "total_stake",
+                       label = "Total Stake (DOT)",
+                       min = 1.7,
+                       max = 2.5,
+                       value = 2.1, post = "M", step = 0.01, ticks = FALSE),
+
+           sliderInput(inputId = "comm",
+                       label = "Commission",
+                       min = 0,
+                       max = 20,
+                       value = 5, post = "%", step = 0.1, ticks = FALSE),
+
+           sliderInput(inputId = "m_points",
+                       label = "Avg. Points",
+                       min = 0,
+                       max = 100,
+                       value = 50, post = "K", step = 1, ticks = FALSE)
+
+    ),
 
     column(width = 5,
+
+
+           sliderInput(inputId = "max_points",
+                       label = "Max. Points",
+                       min = 0,
+                       max = round(max(eras_data$eras$era_points, na.rm = T)/10^3),
+                       value = 80, post = "K", step = 1, ticks = FALSE),
+
+           sliderInput(inputId = "n.fault",
+                       label = "Faulty Events",
+                       min = 0,
+                       max = max(candidates$faluts, na.rm = T),
+                       value = 0, step = 1, ticks = FALSE),
+
+           sliderInput(inputId = "n.offline",
+                       label = "Offline Events",
+                       min = 0,
+                       max = max(candidates$offline, na.rm = T),
+                       value = 0, step = 1, ticks = FALSE),
+
+           sliderInput(inputId = "n.subid",
+                       label = "Sub-identities",
+                       min = 0,
+                       max = max(candidates$n_subid, na.rm = T),
+                       value = 1, step = 1, ticks = FALSE),
+
+           sliderInput(inputId = "n.runs",
+                       label = "Sync Runs",
+                       min = 1,
+                       max = 20,
+                       value = 3, step = 1, ticks = FALSE),
+
+           checkboxInput("id", "Verified Identity", value = TRUE)
+
+    )
+
+  ),
+
+  fluidRow(
+
+    column(width = 6, align = "center", offset = 3,
+
+           shinycssloaders::withSpinner(
+
+             plotlyOutput(outputId = "map", width = "100%", height = "400px"),
+
+             type = 5, color = "orange", size = 1
+
+           )
+
+
+      )
+
+  ),
+
+  fluidRow(
+
+    column(width = 5, offset = 1,
 
            shinycssloaders::withSpinner(
 
@@ -167,17 +168,13 @@ ui <- fluidPage(
            type = 1, color = "orange", size = 1
 
            )
-    ),
-
-    column(width = 1)
+    )
 
   ),
 
   fluidRow(
 
-    column(width = 1),
-
-    column(width = 5,
+    column(width = 5, offset = 1,
 
            shinycssloaders::withSpinner(
 
@@ -197,17 +194,13 @@ ui <- fluidPage(
            type = 1, color = "orange", size = 1
 
            ), style='padding:20px;'
-    ),
-
-    column(width = 1)
+    )
 
   ),
 
   fluidRow(
 
-    column(width = 1),
-
-    column(width = 10,
+    column(width = 10, offset = 1,
 
            shinycssloaders::withSpinner(
 
@@ -216,9 +209,7 @@ ui <- fluidPage(
 
              )
 
-    ),
-
-    column(width = 1)
+    )
 
   ),
 
