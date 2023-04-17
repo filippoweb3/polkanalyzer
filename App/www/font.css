@@ -138,3 +138,17 @@ table.display.dataTable > tbody > tr.selected:hover > *  {
 .btn:focus{
   background-color: orange;
 }
+
+#select1 {
+  background-color:blue !important;
+
+}
+
+.selectize-dropdown-content .option {
+  color: white;
+  background: rgba(48, 48, 48, 1);
+}
+.selectize-input .item {
+  color: white !important;
+  background-color: rgba(48, 48, 48, 1) !important;
+}

@@ -67,13 +67,13 @@ ui <- fluidPage(
            sliderInput(inputId = "self_stake",
                        label = "Self Stake (DOT)",
                        min = 0,
-                       max = 20,
+                       max = 50,
                        value = 7.5, post = "K", step = 0.1, ticks = FALSE),
 
            sliderInput(inputId = "total_stake",
                        label = "Total Stake (DOT)",
-                       min = 1.7,
-                       max = 2.5,
+                       min = 1.5,
+                       max = 3,
                        value = 2.1, post = "M", step = 0.01, ticks = FALSE),
 
            sliderInput(inputId = "comm",
@@ -103,7 +103,7 @@ ui <- fluidPage(
                        label = "Faulty Events",
                        min = 0,
                        max = max(candidates$faluts, na.rm = T),
-                       value = 0, step = 1, ticks = FALSE),
+                       value = 1, step = 1, ticks = FALSE),
 
            sliderInput(inputId = "n.offline",
                        label = "Offline Events",
@@ -122,6 +122,13 @@ ui <- fluidPage(
                        min = 1,
                        max = 20,
                        value = 3, step = 1, ticks = FALSE),
+
+           selectInput("provider", "Exclude Providers", {
+             prov.data <- as.data.frame(table(candidates$provider))[order(as.data.frame(table(candidates$provider))$Freq, decreasing = TRUE),] %>%
+               mutate(a = paste0(Var1," #", Freq))
+             prov.data$a
+             },
+             multiple = TRUE),
 
            checkboxInput("id", "Verified Identity", value = TRUE)
 
@@ -285,21 +292,38 @@ server <- function(input, output, session) {
                                                   max_era_points = max_points,
                                                   last_active = look_back + 1))
 
+    if(is.null(input$provider)){
+
+      candidates <- candidates
+
+    } else {
+
+      candidates <- subset(candidates, !provider %in% unlist(lapply(input$provider,
+                                                                   FUN = function(x) strsplit(x,split = " #")[[1]][1])))
+    }
+
     selection <- merge(selection, candidates, by = "stash_address")
 
-    selection <- selection[!selection$provider == "Hetzner Online GmbH" &
-                             selection$id_verified == ver_id &
-                             selection$democracyVoteCount >= 1 &
-                             selection$councilVoteCount >= 1 &
+    selection <- selection[selection$id_verified == ver_id &
+                             #selection$democracyVoteCount >= 1 &
+                             #selection$councilVoteCount >= 1 &
                              selection$n_subid <= n_subid &
                              selection$faluts <= n_fault &
                              selection$offline <= n_offline,]
+
+    if(length(selection[,1]) == 0){
+
+      session$sendCustomMessage(type = 'testmessage',
+                                message = "No data selected. Relax/adjust your selection."
+      )
+
+    }
 
     val_names <- as.vector(na.omit(selection$validator_name))
 
     sync_val <- sync_validators(data = eras_data, names = val_names, look.back = look_back, nruns = n_runs)
 
-    selection.sync <- merge(sync_val, selection,by = "validator_name")
+    selection.sync <- merge(sync_val, selection, by = "validator_name")
 
     selection.sync <- selection.sync[order(selection.sync$run, selection.sync$coverage),]
 
@@ -434,7 +458,7 @@ server <- function(input, output, session) {
              yaxis = list(zerolinecolor = "white",
                           gridcolor = "white",
                           title = list(text = "Self Stake"),
-                          range = c(0, 20000)
+                          range = c(0, 50000)
                           ),
              font = list(color = "white"),
              margin = m,
@@ -481,7 +505,7 @@ server <- function(input, output, session) {
              modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
       add_markers(
 
-        text = ~paste(name, paste("Era: ", era), paste("Self Stake: ",round(commission_percent, 1),"%"), sep = "<br />"),
+        text = ~paste(name, paste("Era: ", era), paste("Commission: ",round(commission_percent, 1),"%"), sep = "<br />"),
         hoverinfo = "text", showlegend = FALSE
 
       )
@@ -520,7 +544,7 @@ server <- function(input, output, session) {
              modebar = list(bgcolor='transparent', color='white', activecolor='orange')) %>%
       add_markers(
 
-        text = ~paste(name, paste("Era: ", era), paste("Self Stake: ",round(total_stake/10^16, 3),"MDOT"), sep = "<br />"),
+        text = ~paste(name, paste("Era: ", era), paste("Total Stake: ",round(total_stake/10^16, 3),"MDOT"), sep = "<br />"),
         hoverinfo = "text", showlegend = FALSE
 
       )
