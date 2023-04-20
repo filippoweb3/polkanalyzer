@@ -83,7 +83,7 @@ ui <- fluidPage(
                        value = 5, post = "%", step = 0.1, ticks = FALSE),
 
            sliderInput(inputId = "m_points",
-                       label = "Avg. Points",
+                       label = "Avg. Era Points",
                        min = 0,
                        max = 100,
                        value = 50, post = "K", step = 1, ticks = FALSE)
@@ -94,7 +94,7 @@ ui <- fluidPage(
 
 
            sliderInput(inputId = "max_points",
-                       label = "Max. Points",
+                       label = "Max. Era Points",
                        min = 0,
                        max = round(max(eras_data$eras$era_points, na.rm = T)/10^3),
                        value = 80, post = "K", step = 1, ticks = FALSE),
