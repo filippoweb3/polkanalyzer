@@ -22,7 +22,7 @@ Before installing R, open your terminal and run the following:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-This will install [Homebrew](https://brew.sh/) on your laptop. Now we can use Homebrew to install R as follows:
+This will install [Homebrew](https://brew.sh/) on your laptop. On new Macs this will also download the Command Line Tools for Xcode. After Homebrew has been installed follow the **Next steps:** guides to add Homebrew to your PATH. Now we can use Homebrew to install R as follows:
 
 ```
 brew install r
@@ -79,7 +79,7 @@ On the top of the app, there are sliders, drop-down menus, and checkboxes to mak
 - Offline Events: Number of offline events in the validator’s lifetime.
 - Sub-identities: Number of [sub-identities](https://wiki.polkadot.network/docs/learn-identity#sub-accounts) of an operator.
 - Sync Runs: Number of [synchronization runs](#stratified-synchronisation). Increasing the number of runs will lead to higher loading time as the app has to perform multiple synchronizations.
-- Exclude Provider: Possibility to exclude [cloud service providers](https://wiki.polkadot.network/docs/learn-staking#network-providers).
+- Exclude Provider: Possibility to exclude [cloud service providers](https://wiki.polkadot.network/docs/learn-staking#network-providers). Note that the number after the `#` shows the number of active validators using the provider in the last available era. Providers are ordered by descending order from the most to the least popular.
 - Verified Identity: Choose whether the validator has a verified [identity](https://wiki.polkadot.network/docs/learn-identity). Recommended to leave this check box checked.
 
 ### World Map
@@ -99,5 +99,9 @@ The selection table shows the selected synchronized validators within each synch
 After the preliminary selection filtered out all validators that do not fit in the chosen selection criteria, we want to make sure that we can cover as many past eras as possible to maximize the chance we can get daily rewards in future eras without using big nodes that are active all the time.
 
 This is achieved through a stratified synchronization that selects validators prioritizing past era coverage. For example, if we select **Past Eras = 30** and **Eras Active = 10**, we will consider only those nodes active for a maximum of 10 eras in the past 30 eras. The synchronization algorithm picks up nodes to fill all past 30 eras; when the era coverage reaches 100%, it starts, again and again, depending on how many **Sync Runs** the user wants to perform (given there are enough validators to perform those runs). If multiple nodes are selected to cover specific eras, the one with the highest self stake is prioritized (as this is the node having the most to lose in case of a [slash](https://wiki.polkadot.network/docs/maintain-guides-validator-payout#slashing)). The results are multiple runs, each including synchronized validators covering 100% of the past 30 eras and together covering the past 30 eras multiple times (i.e., stratified synchronization). Note that the last run might not cover 100% of the past eras.
+
+## Unbounded Font
+
+The app uses the [Polkadot Unbounded font](https://unbounded.polkadot.network/). You need to install the .ttf font files to being able to see them in action when loading the app locally.
 
 
