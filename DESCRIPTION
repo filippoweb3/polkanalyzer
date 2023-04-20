@@ -23,4 +23,5 @@ Imports:
     shiny,
     shinycssloaders,
     shinythemes,
-    plotly
+    plotly,
+    devtools
