@@ -119,7 +119,7 @@ ui <- fluidPage(
            sliderInput(inputId = "n.runs",
                        label = "Sync Runs",
                        min = 1,
-                       max = 20,
+                       max = 30,
                        value = 3, step = 1, ticks = FALSE),
 
            selectInput("provider", "Exclude Provider", {
