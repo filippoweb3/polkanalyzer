@@ -16,17 +16,7 @@ Here I propose this simple tool that allows nominating validators from the 1KV p
 
 Polkanalyzer is a shiny app written in [R](https://posit.co/download/rstudio-desktop/). In the back end of the app, there is an R package containing all the functions necessary to analyze the data and select the validators.
 
-Before installing R, open your terminal and run the following:
-
-```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-This will install [Homebrew](https://brew.sh/) on your laptop. On new Macs this will also download the Command Line Tools for Xcode. After Homebrew has been installed follow the **Next steps:** guides to add Homebrew to your PATH. Now we can use Homebrew to install R as follows:
-
-```
-brew install r
-```
+To install R go to the [CRAN website](https://cran.rstudio.com/) and follow the instructions to install the appropriate version for your operative system.
 
 ## Clone the package
 
@@ -36,24 +26,43 @@ Now that we installed R, we can clone the [Polkanalyzer GitHub repository](https
 git clone https://github.com/filippoweb3/polkanalyzer
 ```
 
-This will extract the content from the repository and save it in your project folder. If you do not have Git installed on your laptop, run `brew install git` in your terminal. To update Polkanalyzer, you can run `git pull` from within the `/Polkanalyzer` folder.
+This will extract the content from the repository and save it in your project folder. If you do not have Git installed on your laptop, run `brew install git` in your terminal. If you need to install [Homebrew](https://brew.sh/) type the following in your terminal:
+
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+To update Polkanalyzer, you can run `git pull` from within the `/Polkanalyzer` folder.
 
 ## Install the package
 
-Currently, the app is not hosted anywhere. The only way to use it is to run it locally on your machine. Before using the app, we must install the Polkanalyzer package in your R environment. In your terminal, go within the `/polkanalyzer` folder and run:
+Currently, the app is not hosted anywhere. The only way to use it is to run it locally on your machine. Before using the app, we must install the Polkanalyzer package in your R environment. In your terminal type `R`, this will open the R console on your terminal. Then type
 
 ```
-R -e devtools::load.all(".")
+install.packages("devtools")
 ```
 
-This will install the Polkanalyzer package within your R environment so the app can use it later. Note that if it is the first time using R, the package installation will trigger the installation of all dependencies (i.e., other packages necessary to run the Polkanalyzer functions).
+this will ask you to select a mirror (just select one of your choice) and then will start downloading all dependencies to install the developer tools. Then you can go within the `/polkanalyzer` folder by typing
+
+```
+setwd("YOUR PATH")
+```
+
+where `YOUR PATH` is the path to the `/polkanalyzer` folder. When you are within the folder (your can check this running `getwd()`) run the following command:
+
+
+```
+devtools::load_all(".")
+```
+
+This will install the Polkanalyzer package with its dependencies within your R environment so the app can use it later. Note that if it is the first time using R, the package installation will trigger the installation of all dependencies (i.e., other packages necessary to run the Polkanalyzer functions).
 
 ## Run the app
 
 Now that Polkanalyzer is installed together with its dependencies, we can locally run the app as follows:
 
 ```
-R -e "shiny::runApp('App', launch.browser = TRUE)"
+shiny::runApp('App', launch.browser = TRUE)
 ```
 
 This will load the app in your default browser.
