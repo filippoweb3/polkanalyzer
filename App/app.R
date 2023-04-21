@@ -83,21 +83,20 @@ ui <- fluidPage(
                        value = 5, post = "%", step = 0.1, ticks = FALSE),
 
            sliderInput(inputId = "m_points",
-                       label = "Avg. Points",
+                       label = "Avg. Era Points",
                        min = 0,
                        max = 100,
-                       value = 50, post = "K", step = 1, ticks = FALSE)
+                       value = 50, post = "K", step = 1, ticks = FALSE),
+
+           sliderInput(inputId = "max_points",
+                       label = "Max. Era Points",
+                       min = 0,
+                       max = round(max(eras_data$eras$era_points, na.rm = T)/10^3),
+                       value = 80, post = "K", step = 1, ticks = FALSE)
 
     ),
 
     column(width = 5,  align = "center",
-
-
-           sliderInput(inputId = "max_points",
-                       label = "Max. Points",
-                       min = 0,
-                       max = round(max(eras_data$eras$era_points, na.rm = T)/10^3),
-                       value = 80, post = "K", step = 1, ticks = FALSE),
 
            sliderInput(inputId = "n.fault",
                        label = "Faulty Events",
@@ -120,15 +119,25 @@ ui <- fluidPage(
            sliderInput(inputId = "n.runs",
                        label = "Sync Runs",
                        min = 1,
-                       max = 20,
+                       max = 30,
                        value = 3, step = 1, ticks = FALSE),
 
-           selectInput("provider", "Exclude Providers", {
+           selectInput("provider", "Exclude Provider", {
              prov.data <- as.data.frame(table(candidates$provider))[order(as.data.frame(table(candidates$provider))$Freq, decreasing = TRUE),] %>%
                mutate(a = paste0(Var1," #", Freq))
              prov.data$a
              },
              multiple = TRUE),
+
+           selectInput("country", "Exclude Country", {
+             unique(na.omit(candidates$country))
+           },
+           multiple = TRUE),
+
+           selectInput("continent", "Exclude Continent", {
+             unique(na.omit(candidates$continent))
+           },
+           multiple = TRUE),
 
            checkboxInput("id", "Verified Identity", value = TRUE)
 
@@ -292,14 +301,20 @@ server <- function(input, output, session) {
                                                   max_era_points = max_points,
                                                   last_active = look_back + 1))
 
-    if(is.null(input$provider)){
-
-      candidates <- candidates
-
-    } else {
+    if(!is.null(input$provider)){
 
       candidates <- subset(candidates, !provider %in% unlist(lapply(input$provider,
                                                                    FUN = function(x) strsplit(x,split = " #")[[1]][1])))
+    }
+
+    if(!is.null(input$country)){
+
+      candidates <- subset(candidates, !country %in% input$country)
+    }
+
+    if(!is.null(input$continent)){
+
+      candidates <- subset(candidates, !continent %in% input$continent)
     }
 
     selection <- merge(selection, candidates, by = "stash_address")
@@ -314,7 +329,7 @@ server <- function(input, output, session) {
     if(length(selection[,1]) == 0){
 
       session$sendCustomMessage(type = 'testmessage',
-                                message = "No data selected. Relax/adjust your selection."
+                                message = "No data selected. Relax your selection criteria."
       )
 
     }
