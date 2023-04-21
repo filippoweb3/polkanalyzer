@@ -55,7 +55,7 @@ where `YOUR PATH` is the path to the `/polkanalyzer` folder. When you are within
 devtools::load_all(".")
 ```
 
-This will install the Polkanalyzer package with its dependencies within your R environment so the app can use it later. Note that if it is the first time using R, the package installation will trigger the installation of all dependencies (i.e., other packages necessary to run the Polkanalyzer functions).
+This will install the Polkanalyzer package with its dependencies (it will ask you to do so, just type `Yes`) within your R environment so the app can use it later. Note that if it is the first time using R, the package installation will trigger the installation of all dependencies (i.e., other packages necessary to run the Polkanalyzer functions).
 
 ## Run the app
 
