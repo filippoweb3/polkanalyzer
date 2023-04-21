@@ -36,19 +36,19 @@ To update Polkanalyzer, you can run `git pull` from within the `/Polkanalyzer` f
 
 ## Install the package
 
-Currently, the app is not hosted anywhere. The only way to use it is to run it locally on your machine. Before using the app, we must install the Polkanalyzer package in your R environment. In your terminal type `R`, this will open the R console on your terminal. Then type
+Currently, the app is not hosted anywhere. The only way to use it is to run it locally on your machine. Before using the app, we must install the Polkanalyzer package in your R environment. In your terminal, type `R`; this will open the R console on your terminal. Then type
 
 ```
 install.packages("devtools")
 ```
 
-this will ask you to select a mirror (just select one of your choice) and then will start downloading all dependencies to install the developer tools. Then you can go within the `/polkanalyzer` folder by typing
+This will ask you to select a mirror (choose the one appropriate for your country) and then download all dependencies to install the developer tools. Then you can go within the `/polkanalyzer` folder by typing
 
 ```
 setwd("YOUR PATH")
 ```
 
-where `YOUR PATH` is the path to the `/polkanalyzer` folder. When you are within the folder (your can check this running `getwd()`) run the following command:
+Where `YOUR PATH` is the path to the `/polkanalyzer` folder. When you are within the folder (your can check this by running `getwd()`) run the following command:
 
 
 ```
@@ -75,7 +75,7 @@ The first thing you must do when using the app is to update the data to the [lat
 
 ### Preliminary Selection
 
-On the top of the app, there are sliders, drop-down menus, and checkboxes to make a preliminary selection of the validators based on nominator preferences. See below a list of selection criteria and a short explanation for each.
+On the app’s top are sliders, drop-down menus, and checkboxes to make a preliminary selection of the validators based on nominator preferences. See below a list of selection criteria and a short explanation for each.
 
 - Past Eras: Number of eras to look back from the present time (restricted to a maximum of 60 eras).
 - Eras Active: Number of eras the validators were active in the Past Eras.
@@ -87,13 +87,13 @@ On the top of the app, there are sliders, drop-down menus, and checkboxes to mak
 - Faulty Events: Number of faulty events in the validator’s lifetime.
 - Offline Events: Number of offline events in the validator’s lifetime.
 - Sub-identities: Number of [sub-identities](https://wiki.polkadot.network/docs/learn-identity#sub-accounts) of an operator.
-- Sync Runs: Number of [synchronization runs](#stratified-synchronisation). Increasing the number of runs will lead to higher loading time as the app has to perform multiple synchronizations.
-- Exclude Provider: Possibility to exclude [cloud service providers](https://wiki.polkadot.network/docs/learn-staking#network-providers). Note that the number after the `#` shows the number of active validators using the provider in the last available era. Providers are ordered by descending order from the most to the least popular.
+- Sync Runs: Number of [synchronization runs](#stratified-synchronisation). Increasing the number of runs will lead to higher loading times as the app has to perform multiple synchronizations.
+- Exclude Provider: Possibility to exclude [cloud service providers](https://wiki.polkadot.network/docs/learn-staking#network-providers). Note that the number after the `#` shows the number of active validators using the provider in the last available era. Providers are ordered in descending order from the most to the least popular.
 - Verified Identity: Choose whether the validator has a verified [identity](https://wiki.polkadot.network/docs/learn-identity). Recommended to leave this check box checked.
 
 ### World Map
 
-Locations of synchronized validators. The user can inspect the node name, self stake, city, and country by hovering on each location.
+Locations of synchronized validators. The user can inspect the node name, self stake, city, and country by hovering over each location.
 
 ### Matrix Plot
 
@@ -101,7 +101,7 @@ Era points, self stake commission, and total stake. This information is similar 
 
 ### Selection Table
 
-The selection table shows the selected synchronized validators within each synchronization run. By clicking each row, the user can see useful metrics for that validator in the [Matrix Plot](#matrix-plot) and the node location in the [World Map](#world-map).
+The selection table shows the selected synchronized validators within each synchronization run. By clicking each row, the user can see valuable metrics for that validator in the [Matrix Plot](#matrix-plot) and the node location in the [World Map](#world-map).
 
 ## Stratified Synchronisation
 
@@ -111,6 +111,6 @@ This is achieved through a stratified synchronization that selects validators pr
 
 ## Unbounded Font
 
-The app uses the [Polkadot Unbounded font](https://unbounded.polkadot.network/). You need to install the .ttf font files to being able to see them in action when loading the app locally.
+The app uses the [Polkadot Unbounded font](https://unbounded.polkadot.network/). When loading the app locally, you must install the .ttf font files to see them in action.
 
 
