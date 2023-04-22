@@ -592,14 +592,14 @@ server <- function(input, output, session) {
 
     colnames(data) <- c("Name",
                         "Run",
-                        "Coverage",
-                        "Avg. Points (kDOT)",
-                        "Max Points (kDOT)",
-                        "N Active",
-                        "Comm.",
-                        "Self (kDOT)",
-                        "Total (MDOT)",
-                        "Last Active",
+                        "Era Coverage",
+                        "Avg. Era Points (kDOT)",
+                        "Max Era Points (kDOT)",
+                        "Active Eras",
+                        "Commission (%)",
+                        "Self Stake (kDOT)",
+                        "Total Stake (MDOT)",
+                        "Last Era Active",
                         "Continent")
 
     data
