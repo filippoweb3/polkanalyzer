@@ -599,7 +599,7 @@ server <- function(input, output, session) {
                         "Commission (%)",
                         "Self Stake (kDOT)",
                         "Total Stake (MDOT)",
-                        "Last Era Active",
+                        "Last Active (eras ago)",
                         "Continent")
 
     data
