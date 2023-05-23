@@ -15,7 +15,7 @@ usethis::use_data(candidates, overwrite = T)
 
 # Update watcher data ----
 
-eras_data <- update_watcher_data(data = eras_data, era = 1082)
+eras_data <- update_watcher_data(data = eras_data, era = 1084)
 
 usethis::use_data(eras_data, overwrite = T)
 
