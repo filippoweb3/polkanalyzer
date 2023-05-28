@@ -44,12 +44,6 @@ ui <- fluidPage(
 
   fluidRow(
 
-    column(12, align = "center", actionButton("do", "Update"), style='padding:20px;')
-
-  ),
-
-  fluidRow(
-
     column(width = 5, offset = 1, align = "center",
 
            sliderInput(inputId = "look.back",
@@ -237,39 +231,11 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
-  load("eras_data.rda")
-  load("candidates.rda")
+  download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/eras_data.rda?raw=true", destfile = "eras_data.rda", method = "libcurl")
+  download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/candidates.rda?raw=true", destfile = "candidates.rda", method = "libcurl")
 
-  diff <- reactive({
-
-    (Sys.Date() - 1) - as.Date("2020-06-02",format="%Y-%m-%d")
-
-  })
-
-  observeEvent(input$do, {
-
-    if(eras_data$interval[2] < diff()){
-
-      download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/eras_data.rda?raw=true", destfile = "eras_data.rda", method = "libcurl")
-      download.file("https://github.com/filippoweb3/polkanalyzer/blob/main/data/candidates.rda?raw=true", destfile = "candidates.rda", method = "libcurl")
-
-      session$reload()
-
-      load("eras_data.rda") #redundant, but makes sure testmessage prints the right era
-
-      session$sendCustomMessage(type = 'testmessage',
-                                message = paste0("Updated to era ", eras_data$interval[2])
-                                )
-
-    } else {
-
-      session$sendCustomMessage(type = 'testmessage',
-                                message = "Data up-to-date"
-      )
-
-    }
-
-  })
+  #load("eras_data.rda")
+  #load("candidates.rda")
 
   observeEvent(input$look.back, {
 
