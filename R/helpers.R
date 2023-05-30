@@ -1,3 +1,4 @@
+#' @export
 fetch_watcher_data <- function(chain, era.interval){
 
   first_era <- era.interval[1] - 1
@@ -71,6 +72,7 @@ fetch_watcher_data <- function(chain, era.interval){
 
 }
 
+#' @export
 fetch_candidates <- function(){
 
   URL <- url("https://polkadot.w3f.community/candidates")
@@ -247,6 +249,7 @@ fetch_candidates <- function(){
 
 }
 
+#' @export
 update_watcher_data <- function(data, era){
 
   chain <- data$chain
@@ -279,6 +282,7 @@ update_watcher_data <- function(data, era){
 
 }
 
+#' @export
 select_validator <- function(data, look.back = 40, criteria){
 
   last_era <- max(data$eras$era)
@@ -310,6 +314,7 @@ select_validator <- function(data, look.back = 40, criteria){
 
 }
 
+#' @export
 sync_validators <- function(data, names, look.back, nruns = 5){
 
   data_sel <- data$eras
@@ -398,6 +403,7 @@ sync_validators <- function(data, names, look.back, nruns = 5){
 
 }
 
+#' @export
 plot_validator <- function(data, validator.name, look.back = 80){
 
   max.era <- max(data$era)
@@ -426,6 +432,7 @@ plot_validator <- function(data, validator.name, look.back = 80){
 
 }
 
+#' @export
 plot_coverage <- function(data, names, look.back){
 
   last_era <- data$interval[2]
