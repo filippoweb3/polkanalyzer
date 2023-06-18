@@ -335,6 +335,12 @@ sync_validators <- function(data, names, look.back, nruns = 5){
 
     names_left <- names[!names %in% unlist(final_selection)]
 
+    if(length(names_left) == 0){
+
+      break
+
+    }
+
     for(j in 1:16){
 
       names_left_partial <- names_left[!names_left %in% unlist(partial_selection)]
@@ -368,6 +374,12 @@ sync_validators <- function(data, names, look.back, nruns = 5){
         sum_sub_sel <- group_by(sub_sel, name) %>% summarize(m = mean(self_stake))
 
         sel_names <- sum_sub_sel[sum_sub_sel$m == max(sum_sub_sel$m),]$name
+
+        if(length(sel_names) > 1){
+
+          sel_names <- sample(sel_names, size = 1)
+
+        }
 
         partial_selection[[j]] <- sel_names
 
