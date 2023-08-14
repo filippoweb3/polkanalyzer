@@ -488,6 +488,124 @@ plot_coverage <- function(data, names, look.back){
 
 }
 
+#' @export
+fetch_watcher_bonds <- function(chain, era.interval) {
 
+  first_era <- era.interval[1] - 1
+
+  last_era <- era.interval[2]
+
+  era_difference <- last_era - first_era
+
+  eras <- list()
+
+  pb <- utils::txtProgressBar(min = 0, max = era_difference, style = 3)
+
+  for(i in 1:era_difference){
+
+    era <- i + first_era
+
+    URL <- url(paste("https://storage.googleapis.com/watcher-csv-exporter/",
+                     chain, "_validators_era_", era, ".csv", sep = ""))
+
+    tab <- tryCatch(
+
+      read.csv(URL),
+      error = function(e) e
+
+    )
+
+    if (inherits(tab, "error")) {
+
+      close(URL)
+
+      next
+
+    }
+
+    n <- length(tab$stakers)
+
+    npos_stakers <- list()
+
+    npos_voters <- list()
+
+    for (j in 1:n) {
+
+      stakers_bonds <- as.numeric(unlist(lapply(strsplit(tab$stakers[j],split = ",")[[1]], FUN = function(x) strsplit(x, split = ";")[[1]][2])))/10^10
+
+      stakers_address <- unlist(lapply(strsplit(tab$stakers[j],split = ",")[[1]], FUN = function(x) strsplit(x, split = ";")[[1]][1]))
+
+      stakers_data <- data.frame(stakers_address, stakers_bonds, val = rep(tab$name[j], length(stakers_bonds)))
+
+      npos_stakers[[j]] <- stakers_data
+
+
+      voters_bonds <- as.numeric(unlist(lapply(strsplit(tab$voters[j],split = ",")[[1]], FUN = function(x) strsplit(x, split = ";")[[1]][2])))/10^10
+
+      voters_address <- unlist(lapply(strsplit(tab$voters[j],split = ",")[[1]], FUN = function(x) strsplit(x, split = ";")[[1]][1]))
+
+      voters_data <- data.frame(voters_address, voters_bonds, val = rep(tab$name[j], length(voters_bonds)))
+
+      npos_voters[[j]] <- voters_data
+
+    }
+
+    all_stakers <- do.call("rbind", npos_stakers)
+
+    all_voters <- do.call("rbind", npos_voters)
+
+
+    all_stakers <- as.data.frame(group_by(all_stakers, stakers_address, val) %>% summarize(active = sum(stakers_bonds), .groups = "keep"))
+    colnames(all_stakers) <- c("address", "active_validator", "active_bond")
+
+    all_voters <- all_voters[all_voters$voters_address %in% all_stakers$address,]
+    colnames(all_voters) <- c("address", "bond", "validator")
+
+    out <- data.frame(era = era, merge(all_stakers, all_voters, by = "address"))
+
+    eras[[i]] <- out[!duplicated(out$address), c(1:2, 5, 4, 3)] #removed 6 column
+
+    utils::setTxtProgressBar(pb, i)
+
+  }
+
+  all_eras <- do.call("rbind", eras)
+
+  return(list(eras = all_eras, chain = chain, interval = era.interval))
+
+}
+
+#' @export
+update_watcher_bonds <- function(data, era){
+
+  chain <- data$chain
+
+  max_era <- data$interval[2]
+
+  if(era == max_era){
+
+    print("Dataset up to date.")
+
+    return(data)
+
+  } else {
+
+    start <- max_era + 1
+
+    new_eras <- fetch_watcher_bonds(chain = chain, era.interval = c(start, era))
+
+    updated <- list(
+
+      eras = rbind(data$eras, new_eras$eras),
+      chain = chain,
+      interval = c(data$interval[1], era)
+
+    )
+
+    return(updated)
+
+  }
+
+}
 
 
