@@ -550,28 +550,26 @@ fetch_watcher_bonds <- function(chain, era.interval) {
 
     }
 
-    all_stakers <- do.call("rbind", npos_stakers)
+    stakers <- do.call("rbind", npos_stakers)
 
-    all_voters <- do.call("rbind", npos_voters)
+    voters <- do.call("rbind", npos_voters)
 
+    colnames(stakers) <- c("address", "active_bond", "active_validator")
+    stakers <- data.frame(era, stakers)
 
-    all_stakers <- as.data.frame(group_by(all_stakers, stakers_address, val) %>% summarize(active = sum(stakers_bonds), .groups = "keep"))
-    colnames(all_stakers) <- c("address", "active_validator", "active_bond")
+    colnames(voters) <- c("address", "bond", "validator")
+    voters <- data.frame(era, voters)
 
-    all_voters <- all_voters[all_voters$voters_address %in% all_stakers$address,]
-    colnames(all_voters) <- c("address", "bond", "validator")
-
-    out <- data.frame(era = era, merge(all_stakers, all_voters, by = "address"))
-
-    eras[[i]] <- out[!duplicated(out$address), c(1:2, 5, 4, 3)] #removed 6 column
+    eras[[i]] <- list(stakers, voters)
 
     utils::setTxtProgressBar(pb, i)
 
   }
 
-  all_eras <- do.call("rbind", eras)
+  all_stakers <- do.call("rbind", lapply(eras, function(x) x[[1]]))
+  all_voters <- do.call("rbind", lapply(eras, function(x) x[[2]]))
 
-  return(list(eras = all_eras, chain = chain, interval = era.interval))
+  return(list(stakers = all_stakers, voters = all_voters, chain = chain, interval = era.interval))
 
 }
 
@@ -596,7 +594,8 @@ update_watcher_bonds <- function(data, era){
 
     updated <- list(
 
-      eras = rbind(data$eras, new_eras$eras),
+      stakers = rbind(data$stakers, new_eras$stakers),
+      voters = rbind(data$voters, new_eras$voters),
       chain = chain,
       interval = c(data$interval[1], era)
 
