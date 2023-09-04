@@ -6,9 +6,9 @@ library(gridExtra)
 
 date <- unique(Sys.Date() + (eras_data$eras$era - max(eras_data$eras$era)))
 
-pct_less_100_comm <- group_by(eras_data$eras, era) %>% summarise(pct = sum(commission_percent < 100)/length(commission_percent)*100)
+pct_less_100_comm <- group_by(eras_data$eras, era) %>% summarise(n100 = sum(commission_percent < 100), n = length(commission_percent))
 
-pct_less_100_comm <- data.frame(date, era = pct_less_100_comm[,1], pct = pct_less_100_comm[,2])
+pct_less_100_comm <- data.frame(date, pct_less_100_comm)
 
 
 ## Node Total Stake ----
@@ -70,30 +70,84 @@ all_stakers_voters <- merge(all_voters, all_stakers, by = "era")
 
 all_stakers_voters$date <- Sys.Date() + (all_stakers_voters$era - max(all_stakers_voters$era))
 
+## Summary Stats ----
+
+
 
 ## Plots ----
 
-plot1 <- ggplot(data = pct_less_100_comm, aes(x = date, y = pct)) +
-  geom_line() +
-  ylab("Nodes < 100% commission") + xlab("Date") +
-  xlim(c(max(date) - 7, max(date))) + ylim(c(50, 60))
+lookback = 14
 
-plot2 <- ggplot(data = tot_stake[tot_stake$era > 400,], aes(x = date, y = m/10^16)) +
+plot1 <- ggplot(data = pct_less_100_comm, aes(x = date, y = n100)) +
+  geom_line() +
+  ylab("Nodes available for nominations") + xlab("Date") +
+  xlim(c(max(date) - lookback, max(date))) + ylim(c(160, 175))
+
+data_plot1 <- pct_less_100_comm[pct_less_100_comm$date >= (max(pct_less_100_comm$date) - lookback),]
+avail_delta <- round((tail(data_plot1$n100, n = 1) - data_plot1$n100[1]), 2)
+avail_start <- round(data_plot1$n100[1], 2)
+avail_end <- round(tail(data_plot1$n100, n = 1), 2)
+availPct <- round((tail(data_plot1$n100, n = 1) - data_plot1$n100[1])/data_plot1$n100[1]*100, 2)
+
+
+plot2 <- ggplot(data = tot_stake, aes(x = date, y = m/10^16)) +
   geom_line() +
   geom_ribbon(aes(ymin = (m - se)/10^16,
                   ymax = (m + se)/10^16), alpha = 0.5) +
-  ylab("Total Stake (MDOT)") + xlab("Date") +
-  xlim(c(max(date) - 7, max(date)))  + ylim(c(2, 2.4))
+  ylab("Average total stake per node (MDOT)") + xlab("Date") +
+  xlim(c(max(date) - lookback, max(date)))  + ylim(c(2, 2.4))
+
+data_plot2 <- tot_stake[tot_stake$date >= (max(tot_stake$date) - lookback),]
+stake_delta <- round((tail(data_plot2$m, n = 1) - data_plot2$m[1])/10^10, 2)
+stake_start <- round(data_plot2$m[1]/10^16, 2)
+stake_end <- round(tail(data_plot2$m, n = 1)/10^16, 2)
+stakePct <- round((tail(data_plot2$m, n = 1) - data_plot2$m[1])/data_plot2$m[1]*100, 2)
+
 
 plot3 <- ggplot(data = mab_data, aes(x = date, y = mab)) +
   geom_line() +
   ylab("Minimum Active Bond (DOT)") + xlab("Date") +
-  xlim(c(max(date) - 7, max(date))) + ylim(c(400, 500))
+  xlim(c(max(date) - lookback, max(date))) + ylim(c(400, 500))
+
+data_plot3 <- mab_data[mab_data$date >= (max(mab_data$date) - lookback),]
+mab_delta <- round((tail(data_plot3$mab, n = 1) - data_plot3$mab[1]), 2)
+mab_end <- round(tail(data_plot3$mab, n = 1), 2)
+mab_start <- round(data_plot3$mab[1], 2)
+mabPct <- round((tail(data_plot3$mab, n = 1) - data_plot3$mab[1])/data_plot3$mab[1]*100, 2)
+
+colors <- c("Voters" = "black", "Stakers" = "blue")
 
 plot4 <- ggplot(data = all_stakers_voters, aes(x = date)) +
-         geom_line(aes(y = n_voters)) +
-         geom_line(aes(y = n_stakers), color="steelblue", linetype="twodash") +
-  ylab("Number of Accounts") + xlab("Date") + geom_hline(yintercept = 22500, color="grey40", linetype="dotted") +
-  xlim(c(max(date) - 7, max(date)))
+         geom_line(aes(y = n_voters, color = "Voters")) +
+         geom_line(aes(y = n_stakers, color = "Stakers")) +
+  labs(x = "Date", y = "Number of Accounts", color = "Legend") +
+  geom_hline(yintercept = 22500, color="grey40", linetype="dotted") +
+  scale_color_manual(values = colors) +
+  xlim(c(max(date) - lookback, max(date)))
 
-grid.arrange(plot1, plot2, plot3, plot4, nrow = 2)
+data_plot4 <- all_stakers_voters[all_stakers_voters$date >= (max(all_stakers_voters$date) - lookback),]
+
+stakers_delta <- round((tail(data_plot4$n_stakers, n = 1) - data_plot4$n_stakers[1]), 2)
+stakers_end <- round(tail(data_plot4$n_stakers, n = 1), 2)
+stakers_start <- round(data_plot4$n_stakers[1], 2)
+stakersPct <- round((tail(data_plot4$n_stakers, n = 1) - data_plot4$n_stakers[1])/data_plot4$n_stakers[1]*100, 2)
+
+voters_delta <- round((tail(data_plot4$n_voters, n = 1) - data_plot4$n_voters[1]), 2)
+voters_end <- round(tail(data_plot4$n_voters, n = 1), 2)
+voters_start <- round(data_plot4$n_voters[1], 2)
+votersPct <- round((tail(data_plot4$n_voters, n = 1) - data_plot4$n_voters[1])/data_plot4$n_voters[1]*100, 2)
+
+grid.arrange(plot3, plot4, plot2, plot1, nrow = 2)
+
+## Text ----
+
+paste("Minimum active bond increased by ", mab_delta, "DOT (", mabPct, "%), from", mab_start, "DOT to", mab_end, "DOT.")
+
+paste("The number of stakers increased by ", stakers_delta, "accounts (", stakersPct, "%), from", stakers_start, " to", stakers_end, "accounts.")
+paste("The number of voters increased by ", voters_delta, "accounts (", votersPct, "%), from", voters_start, " to", voters_end, "accounts.")
+
+paste("Average total stake per node increased by ", stake_delta, "DOT (", stakePct, "%), from", stake_start, "MDOT to", stake_end, "MDOT.")
+
+
+paste("Percentage of nodes available for nomination increased by ", avail_delta, " (", availPct, "%), from", avail_start, "nodes to", avail_end, "nodes.")
+
