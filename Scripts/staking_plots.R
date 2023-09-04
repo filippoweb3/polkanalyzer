@@ -103,6 +103,11 @@ stake_start <- round(data_plot2$m[1]/10^16, 2)
 stake_end <- round(tail(data_plot2$m, n = 1)/10^16, 2)
 stakePct <- round((tail(data_plot2$m, n = 1) - data_plot2$m[1])/data_plot2$m[1]*100, 2)
 
+stake_delta_se <- round((tail(data_plot2$se, n = 1) - data_plot2$se[1])/10^10, 2)
+stake_start_se <- round(data_plot2$se[1]/10^10, 2)
+stake_end_se <- round(tail(data_plot2$se, n = 1)/10^10, 2)
+stakePct_se <- round((tail(data_plot2$se, n = 1) - data_plot2$se[1])/data_plot2$se[1]*100, 2)
+
 
 plot3 <- ggplot(data = mab_data, aes(x = date, y = mab)) +
   geom_line() +
@@ -141,13 +146,13 @@ grid.arrange(plot3, plot4, plot2, plot1, nrow = 2)
 
 ## Text ----
 
-paste("Minimum active bond increased by ", mab_delta, "DOT (", mabPct, "%), from", mab_start, "DOT to", mab_end, "DOT.")
+paste("The minimum active bond increased by ", mab_delta, "DOT (", mabPct, "%), from", mab_start, "DOT to", mab_end, "DOT.")
 
 paste("The number of stakers increased by ", stakers_delta, "accounts (", stakersPct, "%), from", stakers_start, " to", stakers_end, "accounts.")
 paste("The number of voters increased by ", voters_delta, "accounts (", votersPct, "%), from", voters_start, " to", voters_end, "accounts.")
 
-paste("Average total stake per node increased by ", stake_delta, "DOT (", stakePct, "%), from", stake_start, "MDOT to", stake_end, "MDOT.")
+paste("The average total stake per node increased by ", stake_delta, "DOT (", stakePct, "%), from", stake_start, "MDOT to", stake_end, "MDOT.")
+paste("The variability (standard error) in total stake per node increased by ", stake_delta_se, "DOT (", stakePct_se, "%), from", stake_start_se, "DOT to", stake_end_se, "DOT.")
 
-
-paste("Percentage of nodes available for nomination increased by ", avail_delta, " (", availPct, "%), from", avail_start, "nodes to", avail_end, "nodes.")
+paste("The number of nodes available for nomination increased by ", avail_delta, " (", availPct, "%), from", avail_start, "nodes to", avail_end, "nodes.")
 
