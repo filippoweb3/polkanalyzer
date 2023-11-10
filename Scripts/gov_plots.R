@@ -5,17 +5,19 @@ library(grid)
 library(scales)
 
 
-refn <- 240
+refn <- 213
 N <- 9700
-scale <- 1e-3
+scale <- 1e-6
+trans <- "log2"
+suffix <- "M"
 
 mydata <- data.frame()
 
-for (i in 1:6){
+for (i in 1:26){
 
-  id <- seq(0, 5)
+  id <- seq(0, 25)
 
-  mydata <- rbind(mydata, read.csv(paste0("/Users/filippo/Downloads/referenda2_vote-240 (",id[i],").csv")))
+  mydata <- rbind(mydata, read.csv(paste0("/Users/filippo/Downloads/referenda2_vote-213 (",id[i],").csv")))
 
 }
 
@@ -47,26 +49,26 @@ p0 <- ggplot(sum_tab, aes(y=n_acc, x=delegation, fill = Voted)) +
   geom_bar(stat = "identity") +
   labs(y = "Accounts", x = "") +
   scale_fill_manual(values=c("Abstain" = "#89CFF0", "Aye" = "#50C878", "Nay" = "red")) +
-  geom_text(aes(label=replace(n_acc, n_acc == 0, "")), size=3.5, position = position_stack(vjust = 0.5))
+  geom_text(aes(label=replace(n_acc, n_acc < 1, "")), size=3.5, position = position_stack(vjust = 0.5))
 
 p1 <- ggplot(sum_tab, aes(y=n_eff_votes, x = delegation, fill = Voted)) +
   geom_bar(stat = "identity") +
   theme(legend.position="none") +
-  scale_y_continuous(labels = label_number(suffix = "K", scale = scale)) +
+  scale_y_continuous(labels = label_number(suffix = suffix, scale = scale)) +
   labs(y = "Votes (Conviction)", x = "") +
   scale_fill_manual(values=c("#89CFF0","#50C878","red")) +
-  geom_text(aes(label=replace(n_eff_votes, n_eff_votes == 0, "")), size=3.5, position = position_stack(vjust = 0.5))
+  geom_text(aes(label=replace(round(n_eff_votes*scale, 1), round(n_eff_votes*scale, 1) < 1, "")), size=3.5, position = position_stack(vjust = 0.5))
 
 p2 <- ggplot(mydata, aes(x=Value, fill=Voted)) +
   geom_histogram(position="dodge") +
   theme(legend.position="none") +
-  scale_x_continuous(trans='none', labels = label_number(suffix = "K", scale = scale)) +
+  scale_x_continuous(trans = trans, labels = label_number(suffix = suffix, scale = scale)) +
   labs(y = "Count", x = "Votes") +
   scale_fill_manual(values=c("#89CFF0","#50C878","red"))
 
 p3 <- ggplot(mydata, aes(x=Effective.Votes, fill=Voted)) +
   geom_histogram(position="dodge") +
-  scale_x_continuous(trans='log10', labels = label_number(suffix = "K", scale = scale)) +
+  scale_x_continuous(trans = trans, labels = label_number(suffix = suffix, scale = scale)) +
   theme(legend.position="none") +
   labs(y = "Count", x = "Votes (Conviction)") +
   scale_fill_manual(values=c("#89CFF0","#50C878","red"))
