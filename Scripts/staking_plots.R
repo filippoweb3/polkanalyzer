@@ -41,9 +41,9 @@ for (i in 1:n){
 
   sub <- subset(sv, era == eras[i])
 
-  if(sum(sub$active_bond < 120) >= 1){
+  if(sum(sub$active_bond < 100) >= 1){
 
-    sub <- sub[sub$active_bond < 120,]
+    sub <- sub[sub$active_bond < 100,]
 
   } else {
 
@@ -79,9 +79,12 @@ all_stakers_voters$date <- Sys.Date() + (all_stakers_voters$era - max(all_staker
 lookback = 14
 
 plot1 <- ggplot(data = pct_less_100_comm, aes(x = date, y = n100)) +
-  geom_line() +
+  geom_line(colour = "black") +
   ylab("Nodes available for nominations") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date))) + ylim(c(160, 175))
+  xlim(c(max(date) - lookback, max(date))) + ylim(c(100, 200)) #+
+  #theme(panel.background = element_rect(fill = 'darkblue', color = 'purple'),
+  #      panel.grid.major = element_line(color = 'white', linetype = 'dotted', size = 0.2),
+  #      panel.grid.minor = element_line(color = 'white', size = 0.2))
 
 data_plot1 <- pct_less_100_comm[pct_less_100_comm$date >= (max(pct_less_100_comm$date) - lookback),]
 avail_delta <- round((tail(data_plot1$n100, n = 1) - data_plot1$n100[1]), 2)
