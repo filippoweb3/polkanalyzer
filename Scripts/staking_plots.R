@@ -41,15 +41,7 @@ for (i in 1:n){
 
   sub <- subset(sv, era == eras[i])
 
-  if(sum(sub$active_bond < 100) >= 1){
-
-    sub <- sub[sub$active_bond < 100,]
-
-  } else {
-
-    sub <- sub[sub$active_bond == min(sub$active_bond),]
-
-  }
+  sub <- sub[order(sub$active_bond),][c(1:5),]
 
   mab[i] <- median(sub$bond, na.rm = T)
 
@@ -76,7 +68,7 @@ all_stakers_voters$date <- Sys.Date() + (all_stakers_voters$era - max(all_staker
 
 ## Plots ----
 
-lookback = 14
+lookback = 18
 
 plot1 <- ggplot(data = pct_less_100_comm, aes(x = date, y = n100)) +
   geom_line(colour = "black") +
@@ -98,7 +90,7 @@ plot2 <- ggplot(data = tot_stake, aes(x = date, y = m/10^16)) +
   geom_ribbon(aes(ymin = (m - se)/10^16,
                   ymax = (m + se)/10^16), alpha = 0.5) +
   ylab("Average total stake per node (MDOT)") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date)))  + ylim(c(2, 2.4))
+  xlim(c(max(date) - lookback, max(date)))  + ylim(c(2, 2.5))
 
 data_plot2 <- tot_stake[tot_stake$date >= (max(tot_stake$date) - lookback),]
 stake_delta <- round((tail(data_plot2$m, n = 1) - data_plot2$m[1])/10^10, 2)
@@ -115,7 +107,7 @@ stakePct_se <- round((tail(data_plot2$se, n = 1) - data_plot2$se[1])/data_plot2$
 plot3 <- ggplot(data = mab_data, aes(x = date, y = mab)) +
   geom_line() +
   ylab("Minimum Active Bond (DOT)") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date))) + ylim(c(400, 600))
+  xlim(c(max(date) - lookback, max(date))) + ylim(c(300, 800))
 
 data_plot3 <- mab_data[mab_data$date >= (max(mab_data$date) - lookback),]
 mab_delta <- round((tail(data_plot3$mab, n = 1) - data_plot3$mab[1]), 2)
