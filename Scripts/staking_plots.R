@@ -107,7 +107,7 @@ stakePct_se <- round((tail(data_plot2$se, n = 1) - data_plot2$se[1])/data_plot2$
 plot3 <- ggplot(data = mab_data, aes(x = date, y = mab)) +
   geom_line() +
   ylab("Minimum Active Bond (DOT)") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date))) + ylim(c(300, 800))
+  xlim(c(max(date) - lookback, max(date))) + ylim(c(400, 600))
 
 data_plot3 <- mab_data[mab_data$date >= (max(mab_data$date) - lookback),]
 mab_delta <- round((tail(data_plot3$mab, n = 1) - data_plot3$mab[1]), 2)
