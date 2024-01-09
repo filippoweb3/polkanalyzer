@@ -68,7 +68,7 @@ all_stakers_voters$date <- Sys.Date() + (all_stakers_voters$era - max(all_staker
 
 ## Plots ----
 
-lookback = 18
+lookback = 373
 
 plot1 <- ggplot(data = pct_less_100_comm, aes(x = date, y = n100)) +
   geom_line(colour = "black") +
@@ -79,10 +79,10 @@ plot1 <- ggplot(data = pct_less_100_comm, aes(x = date, y = n100)) +
   #      panel.grid.minor = element_line(color = 'white', size = 0.2))
 
 data_plot1 <- pct_less_100_comm[pct_less_100_comm$date >= (max(pct_less_100_comm$date) - lookback),]
-avail_delta <- round((tail(data_plot1$n100, n = 1) - data_plot1$n100[1]), 2)
-avail_start <- round(data_plot1$n100[1], 2)
-avail_end <- round(tail(data_plot1$n100, n = 1), 2)
-availPct <- round((tail(data_plot1$n100, n = 1) - data_plot1$n100[1])/data_plot1$n100[1]*100, 2)
+avail_delta <- round((data_plot1$n100[data_plot1$date == max(data_plot1$date)] - data_plot1$n100[data_plot1$date == min(data_plot1$date)]), 2)
+avail_start <- round(data_plot1$n100[data_plot1$date == min(data_plot1$date)], 2)
+avail_end <- round(data_plot1$n100[data_plot1$date == max(data_plot1$date)], 2)
+availPct <- round((data_plot1$n100[data_plot1$date == max(data_plot1$date)] - data_plot1$n100[data_plot1$date == min(data_plot1$date)])/data_plot1$n100[data_plot1$date == min(data_plot1$date)]*100, 2)
 
 
 plot2 <- ggplot(data = tot_stake, aes(x = date, y = m/10^16)) +
@@ -90,30 +90,30 @@ plot2 <- ggplot(data = tot_stake, aes(x = date, y = m/10^16)) +
   geom_ribbon(aes(ymin = (m - se)/10^16,
                   ymax = (m + se)/10^16), alpha = 0.5) +
   ylab("Average total stake per node (MDOT)") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date)))  + ylim(c(2, 2.5))
+  xlim(c(max(date) - lookback, max(date)))  + ylim(c(1.75, 2.5))
 
 data_plot2 <- tot_stake[tot_stake$date >= (max(tot_stake$date) - lookback),]
-stake_delta <- round((tail(data_plot2$m, n = 1) - data_plot2$m[1])/10^10, 2)
-stake_start <- round(data_plot2$m[1]/10^16, 2)
-stake_end <- round(tail(data_plot2$m, n = 1)/10^16, 2)
-stakePct <- round((tail(data_plot2$m, n = 1) - data_plot2$m[1])/data_plot2$m[1]*100, 2)
+stake_delta <- round((data_plot2$m[data_plot2$date == max(data_plot2$date)] - data_plot2$m[data_plot2$date == min(data_plot2$date)])/10^10, 2)
+stake_start <- round(data_plot2$m[data_plot2$date == min(data_plot2$date)]/10^16, 2)
+stake_end <- round(data_plot2$m[data_plot2$date == max(data_plot2$date)]/10^16, 2)
+stakePct <- round((data_plot2$m[data_plot2$date == max(data_plot2$date)] - data_plot2$m[data_plot2$date == min(data_plot2$date)])/data_plot2$m[data_plot2$date == min(data_plot2$date)]*100, 2)
 
-stake_delta_se <- round((tail(data_plot2$se, n = 1) - data_plot2$se[1])/10^10, 2)
-stake_start_se <- round(data_plot2$se[1]/10^10, 2)
-stake_end_se <- round(tail(data_plot2$se, n = 1)/10^10, 2)
-stakePct_se <- round((tail(data_plot2$se, n = 1) - data_plot2$se[1])/data_plot2$se[1]*100, 2)
+stake_delta_se <- round((data_plot2$se[data_plot2$date == max(data_plot2$date)] - data_plot2$se[data_plot2$date == min(data_plot2$date)])/10^10, 2)
+stake_start_se <- round(data_plot2$se[data_plot2$date == min(data_plot2$date)]/10^10, 2)
+stake_end_se <- round(data_plot2$se[data_plot2$date == max(data_plot2$date)]/10^10, 2)
+stakePct_se <- round((data_plot2$se[data_plot2$date == max(data_plot2$date)] - data_plot2$se[data_plot2$date == min(data_plot2$date)])/data_plot2$se[data_plot2$date == min(data_plot2$date)]*100, 2)
 
 
 plot3 <- ggplot(data = mab_data, aes(x = date, y = mab)) +
   geom_line() +
   ylab("Minimum Active Bond (DOT)") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date))) + ylim(c(400, 600))
+  xlim(c(max(date) - lookback, max(date))) + ylim(c(200, 600))
 
 data_plot3 <- mab_data[mab_data$date >= (max(mab_data$date) - lookback),]
-mab_delta <- round((tail(data_plot3$mab, n = 1) - data_plot3$mab[1]), 2)
-mab_end <- round(tail(data_plot3$mab, n = 1), 2)
-mab_start <- round(data_plot3$mab[1], 2)
-mabPct <- round((tail(data_plot3$mab, n = 1) - data_plot3$mab[1])/data_plot3$mab[1]*100, 2)
+mab_delta <- round((data_plot3$mab[data_plot3$date == max(data_plot3$date)] - data_plot3$mab[data_plot3$date == min(data_plot3$date)]), 2)
+mab_end <- round(data_plot3$mab[data_plot3$date == max(data_plot3$date)], 2)
+mab_start <- round(data_plot3$mab[data_plot3$date == min(data_plot3$date)], 2)
+mabPct <- round((data_plot3$mab[data_plot3$date == max(data_plot3$date)] - data_plot3$mab[data_plot3$date == min(data_plot3$date)])/data_plot3$mab[data_plot3$date == min(data_plot3$date)]*100, 2)
 
 colors <- c("Voters" = "black", "Stakers" = "blue")
 
@@ -127,15 +127,15 @@ plot4 <- ggplot(data = all_stakers_voters, aes(x = date)) +
 
 data_plot4 <- all_stakers_voters[all_stakers_voters$date >= (max(all_stakers_voters$date) - lookback),]
 
-stakers_delta <- round((tail(data_plot4$n_stakers, n = 1) - data_plot4$n_stakers[1]), 2)
-stakers_end <- round(tail(data_plot4$n_stakers, n = 1), 2)
-stakers_start <- round(data_plot4$n_stakers[1], 2)
-stakersPct <- round((tail(data_plot4$n_stakers, n = 1) - data_plot4$n_stakers[1])/data_plot4$n_stakers[1]*100, 2)
+stakers_delta <- round((data_plot4$n_stakers[data_plot4$date == max(data_plot4$date)] - data_plot4$n_stakers[data_plot4$date == min(data_plot4$date)]), 2)
+stakers_end <- round(data_plot4$n_stakers[data_plot4$date == max(data_plot4$date)], 2)
+stakers_start <- round(data_plot4$n_stakers[data_plot4$date == min(data_plot4$date)], 2)
+stakersPct <- round((data_plot4$n_stakers[data_plot4$date == max(data_plot4$date)] - data_plot4$n_stakers[data_plot4$date == min(data_plot4$date)])/data_plot4$n_stakers[data_plot4$date == min(data_plot4$date)]*100, 2)
 
-voters_delta <- round((tail(data_plot4$n_voters, n = 1) - data_plot4$n_voters[1]), 2)
-voters_end <- round(tail(data_plot4$n_voters, n = 1), 2)
-voters_start <- round(data_plot4$n_voters[1], 2)
-votersPct <- round((tail(data_plot4$n_voters, n = 1) - data_plot4$n_voters[1])/data_plot4$n_voters[1]*100, 2)
+voters_delta <- round((data_plot4$n_voters[data_plot4$date == max(data_plot4$date)] - data_plot4$n_voters[data_plot4$date == min(data_plot4$date)]), 2)
+voters_end <- round(data_plot4$n_voters[data_plot4$date == max(data_plot4$date)], 2)
+voters_start <- round(data_plot4$n_voters[data_plot4$date == min(data_plot4$date)], 2)
+votersPct <- round((data_plot4$n_voters[data_plot4$date == max(data_plot4$date)] - data_plot4$n_voters[data_plot4$date == min(data_plot4$date)])/data_plot4$n_voters[data_plot4$date == min(data_plot4$date)]*100, 2)
 
 grid.arrange(plot3, plot4, plot2, plot1, nrow = 2)
 
