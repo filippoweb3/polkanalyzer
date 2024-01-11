@@ -5,10 +5,11 @@ import websockets
 
 async def establish_websocket_connection(uri):
     try:
-        websocket = await websockets.connect(uri, timeout=100)
+        # Increase the max_size parameter to handle larger messages
+        websocket = await websockets.connect(uri, timeout=1000, max_size=2**50)  # Adjust the max_size as needed
         return websocket
-    except (websockets.exceptions.ConnectionClosedError, asyncio.TimeoutError):
-        print(f"Error: Timeout or connection closed while establishing WebSocket connection")
+    except (websockets.exceptions.ConnectionClosedError, asyncio.TimeoutError) as e:
+        print(f"Error: {e} while establishing WebSocket connection")
         return None
 
 async def get_block_data(websocket, block_number):
@@ -48,7 +49,7 @@ async def get_block_data(websocket, block_number):
         # Receive the response
         response_block = await websocket.recv()
 
-        # Parse the JSON response
+         # Parse the JSON response
         block_info = json.loads(response_block)
 
         # Calculate the number of extrinsics
@@ -64,8 +65,8 @@ async def get_block_data(websocket, block_number):
             "extrinsics_size_bytes": extrinsics_size
         }
 
-    except (websockets.exceptions.ConnectionClosedError, asyncio.TimeoutError):
-        print(f"Error: Timeout or connection closed while fetching data for block {block_number}")
+    except (websockets.exceptions.ConnectionClosedError, asyncio.TimeoutError) as e:
+        print(f"Error: {e} while fetching data for block {block_number}")
         return None
 
 async def fetch_and_save_block_data(start_block, end_block, websocket):
@@ -100,6 +101,3 @@ async def main():
 
 # Run the event loop
 asyncio.get_event_loop().run_until_complete(main())
-
-
-
