@@ -27,7 +27,7 @@ extrinsic_number <- function(x){
 
 ncores = 12
 
-blocks <- seq(18987848 - (3600*24)/6, 18987848)
+blocks <- seq(19016648, 19016648 + (3600*24)/6)
 
 groups <- cut(blocks,breaks = ncores, labels = FALSE)
 
@@ -45,7 +45,7 @@ cl <- doMC::registerDoMC(cores = ncores)
 
 t <- foreach(i = 1:ncores) %dopar% {
 
-  out <- system(paste("python3 test_script_1.py", intervals[[i]][1], intervals[[i]][length(intervals[[i]])]), intern = TRUE)
+  out <- system(paste("python3 Scripts/fetch_blocks.py", intervals[[i]][1], intervals[[i]][length(intervals[[i]])]), intern = TRUE)
 
 }
 
