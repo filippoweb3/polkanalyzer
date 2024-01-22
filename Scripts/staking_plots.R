@@ -68,12 +68,12 @@ all_stakers_voters$date <- Sys.Date() + (all_stakers_voters$era - max(all_staker
 
 ## Plots ----
 
-lookback = 373
+lookback = 14
 
 plot1 <- ggplot(data = pct_less_100_comm, aes(x = date, y = n100)) +
   geom_line(colour = "black") +
   ylab("Nodes available for nominations") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date))) + ylim(c(100, 200)) #+
+  xlim(c(max(date) - lookback, max(date))) + ylim(c(150, 200)) #+
   #theme(panel.background = element_rect(fill = 'darkblue', color = 'purple'),
   #      panel.grid.major = element_line(color = 'white', linetype = 'dotted', size = 0.2),
   #      panel.grid.minor = element_line(color = 'white', size = 0.2))
@@ -90,7 +90,7 @@ plot2 <- ggplot(data = tot_stake, aes(x = date, y = m/10^16)) +
   geom_ribbon(aes(ymin = (m - se)/10^16,
                   ymax = (m + se)/10^16), alpha = 0.5) +
   ylab("Average total stake per node (MDOT)") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date)))  + ylim(c(1.75, 2.5))
+  xlim(c(max(date) - lookback, max(date)))  + ylim(c(2.3, 2.6))
 
 data_plot2 <- tot_stake[tot_stake$date >= (max(tot_stake$date) - lookback),]
 stake_delta <- round((data_plot2$m[data_plot2$date == max(data_plot2$date)] - data_plot2$m[data_plot2$date == min(data_plot2$date)])/10^10, 2)
@@ -107,7 +107,7 @@ stakePct_se <- round((data_plot2$se[data_plot2$date == max(data_plot2$date)] - d
 plot3 <- ggplot(data = mab_data, aes(x = date, y = mab)) +
   geom_line() +
   ylab("Minimum Active Bond (DOT)") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date))) + ylim(c(200, 600))
+  xlim(c(max(date) - lookback, max(date))) + ylim(c(500, 600))
 
 data_plot3 <- mab_data[mab_data$date >= (max(mab_data$date) - lookback),]
 mab_delta <- round((data_plot3$mab[data_plot3$date == max(data_plot3$date)] - data_plot3$mab[data_plot3$date == min(data_plot3$date)]), 2)
