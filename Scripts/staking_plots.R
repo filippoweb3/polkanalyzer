@@ -86,18 +86,18 @@ all_stakers_voters$date <- Sys.Date() + (all_stakers_voters$era - max(all_staker
 
 ## Plots ----
 
-lookback = 800
+lookback = 15
 
 
 plot1 <- ggplot(data = mab_data, aes(x = date, y = mab)) +
   geom_line() +
   ylab("Minimum Active Bond (DOT)") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date))) + ylim(c(0, 600))
+  xlim(c(max(date) - lookback, max(date))) + ylim(c(550, 600))
 
 plot1a <- ggplot(data = mab_data, aes(x = date, y = mab.USD)) +
   geom_line() +
   ylab("Minimum Active Bond (USD)") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date))) + ylim(0, 5000)
+  xlim(c(max(date) - lookback, max(date))) + ylim(4000, 6000)
 
 data_plot1 <- mab_data[mab_data$date >= (max(mab_data$date) - lookback),]
 mab_delta <- round((data_plot1$mab[data_plot1$date == max(data_plot1$date)] - data_plot1$mab[data_plot1$date == min(data_plot1$date)]), 2)
@@ -134,14 +134,15 @@ plot3 <- ggplot(data = tot_stake, aes(x = date, y = m/10^16)) +
   geom_ribbon(aes(ymin = (m - se)/10^16,
                   ymax = (m + se)/10^16), alpha = 0.5) +
   ylab("Average total stake per node (MDOT)") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date)))  + ylim(c(1.0, 2.6))
+  xlim(c(max(date) - lookback, max(date))) + ylim(c(2.4, 2.6))
 
 plot3a <- ggplot(data = tot_stake, aes(x = date, y = m.USD/10^16)) +
   geom_line() +
   geom_ribbon(aes(ymin = (m.USD - se.USD)/10^16,
                   ymax = (m.USD + se.USD)/10^16), alpha = 0.5) +
   ylab("Average total stake per node (M USD)") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date)))
+  xlim(c(max(date) - lookback, max(date))) + ylim(c(15, 25))
+
 
 data_plot3 <- tot_stake[tot_stake$date >= (max(tot_stake$date) - lookback),]
 stake_delta <- round((data_plot3$m[data_plot3$date == max(data_plot3$date)] - data_plot3$m[data_plot3$date == min(data_plot3$date)])/10^10, 2)
@@ -158,7 +159,7 @@ stakePct_se <- round((data_plot3$se[data_plot3$date == max(data_plot3$date)] - d
 plot4 <- ggplot(data = pct_less_100_comm, aes(x = date, y = n100)) +
   geom_line(colour = "black") +
   ylab("Nodes available for nominations") + xlab("Date") +
-  xlim(c(max(date) - lookback, max(date))) + ylim(c(100, 200)) #+
+  xlim(c(max(date) - lookback, max(date))) + ylim(c(150, 180)) #+
 #theme(panel.background = element_rect(fill = 'darkblue', color = 'purple'),
 #      panel.grid.major = element_line(color = 'white', linetype = 'dotted', size = 0.2),
 #      panel.grid.minor = element_line(color = 'white', size = 0.2))
