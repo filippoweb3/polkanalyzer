@@ -81,7 +81,7 @@ fetch_candidates <- function(){
 
   n <- length(candidates)
 
-  data <- data.frame()
+  data <- matrix(ncol = 16, nrow = n)
 
   pb <- utils::txtProgressBar(min = 0, max = n, style = 3)
 
