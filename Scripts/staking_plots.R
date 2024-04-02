@@ -5,7 +5,7 @@ library(geckor)
 
 ## DOT Price
 
-dot <- coin_history(coin_id = "polkadot", vs_currency = "usd", days = "max")
+dot <- coin_history(coin_id = "polkadot", vs_currency = "usd", days = "365")
 dot <- as.data.frame(dot)
 dot$timestamp <- as.Date(dot$timestamp, format = "%d.%m.%y")
 dot <- dot[,c(1,4:6)]
